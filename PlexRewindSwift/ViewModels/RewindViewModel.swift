@@ -15,19 +15,100 @@ class RewindViewModel: ObservableObject {
     @Published var availableUsers: [PlexUser] = []
     @Published var selectedUserID: Int?
 
-    @Published var selectedYear: Int =
-        Calendar.current.component(.year, from: Date()) - 1
+    @Published var selectedYear: Int? = nil
     @Published var availableYears: [Int] = []
+
+    @Published var selectedSortOption: SortOption = .byPlays
 
     @Published var isHistorySynced: Bool = false
     @Published var lastSyncDate: Date?
     @Published var formattedLastSyncDate: String?
 
+    @Published var selectedMediaDetail: MediaDetail?
+
     private var fullHistory: [WatchSession] = []
     private let plexService: PlexAPIService
+    private var lastGeneratedHistory: [WatchSession] = []
 
     init(plexService: PlexAPIService = PlexAPIService()) {
         self.plexService = plexService
+    }
+
+    func selectMedia(for mediaID: String, authManager: PlexAuthManager) async {
+        guard let serverID = selectedServerID,
+              let server = availableServers.first(where: { $0.id == serverID }),
+              let connection =
+                server.connections.first(where: { !$0.local })
+                ?? server.connections.first,
+              let token = authManager.getPlexAuthToken()
+        else {
+            return
+        }
+        
+        let serverURL = connection.uri
+        let resourceToken = server.accessToken ?? token
+        
+        var relevantSessions: [WatchSession] = []
+        var title = ""
+        var posterURL: URL?
+        let ratingKey = mediaID
+        
+        if let movie = userStats?.rankedMovies.first(where: { $0.id == mediaID }) {
+            title = movie.title
+            posterURL = movie.posterURL
+            relevantSessions =
+            lastGeneratedHistory.filter { $0.title == title && $0.type == "movie" }
+        } else if let show = userStats?.rankedShows.first(where: { $0.id == mediaID }) {
+            title = show.title
+            posterURL = show.posterURL
+            relevantSessions = lastGeneratedHistory.filter { $0.showTitle == title }
+        } else {
+            return
+        }
+        
+        let details = try? await plexService.fetchMediaDetails(
+            for: ratingKey,
+            serverURL: serverURL,
+            token: resourceToken
+        )
+        
+        let userSessions = Dictionary(grouping: relevantSessions, by: { $0.accountID ?? 0 })
+        
+        let userStats = userSessions.compactMap { (userID, sessions) -> TopUserStat? in
+            guard let user = availableUsers.first(where: { $0.id == userID }) else {
+                return nil
+            }
+            let totalDuration = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+            let thumbURL = user.thumb.flatMap {
+                URL(string: $0)
+            }
+            
+            return TopUserStat(
+                id: userID,
+                userName: user.title,
+                userThumbURL: thumbURL,
+                playCount: sessions.count,
+                formattedDuration: formatDuration(seconds: totalDuration)
+            )
+        }
+        
+        let topUsers = Array(userStats.sorted { $0.playCount > $1.playCount }.prefix(3))
+        let genres = details?.genre?.map { $0.tag } ?? []
+        let artURL = details?.art.flatMap {
+            URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)")
+        }
+        
+        self.selectedMediaDetail = MediaDetail(
+            id: mediaID,
+            title: title,
+            tagline: details?.tagline,
+            posterURL: posterURL,
+            artURL: artURL,
+            summary: details?.summary,
+            year: details?.year,
+            genres: genres,
+            topUsers: topUsers
+        )
     }
 
     func reset() {
@@ -94,10 +175,11 @@ class RewindViewModel: ObservableObject {
         do {
             let serverURL = connection.uri
             let resourceToken = server.accessToken ?? token
-            self.availableUsers = try await plexService.fetchUsers(
+            let allUsers = try await plexService.fetchUsers(
                 serverURL: serverURL,
                 token: resourceToken
             )
+            self.availableUsers = allUsers.filter { !$0.title.isEmpty }
         } catch {
             errorMessage =
                 "Impossible de récupérer les utilisateurs. \(error.localizedDescription)"
@@ -131,7 +213,7 @@ class RewindViewModel: ObservableObject {
                 serverURL: serverURL,
                 token: resourceToken,
                 year: 0,
-                userID: selectedUserID,
+                userID: nil,
                 progressUpdate: { count in
                     await MainActor.run {
                         self.loadingStatusMessage =
@@ -153,7 +235,7 @@ class RewindViewModel: ObservableObject {
 
             self.availableYears = Array(years).sorted(by: >)
 
-            if let mostRecentYear = self.availableYears.first {
+            if selectedYear == nil, let mostRecentYear = self.availableYears.first {
                 self.selectedYear = mostRecentYear
             }
 
@@ -193,13 +275,25 @@ class RewindViewModel: ObservableObject {
         let calendar = Calendar.current
         let historyForYear = fullHistory.filter { session in
             guard let viewedAt = session.viewedAt else { return false }
-            let sessionDate = Date(timeIntervalSince1970: viewedAt)
-            return calendar.component(.year, from: sessionDate) == selectedYear
+
+            if let year = selectedYear,
+                calendar.component(.year, from: Date(timeIntervalSince1970: viewedAt))
+                    != year
+            {
+                return false
+            }
+
+            if let userID = selectedUserID, session.accountID != userID {
+                return false
+            }
+
+            return true
         }
 
         if historyForYear.isEmpty {
+            let yearString = selectedYear.map { String($0) } ?? "la période"
             errorMessage =
-                "Aucun historique de visionnage trouvé pour l'année \(selectedYear)."
+                "Aucun historique de visionnage trouvé pour \(yearString)."
             isLoading = false
             return
         }
@@ -236,6 +330,7 @@ class RewindViewModel: ObservableObject {
         }
 
         loadingStatusMessage = "Finalisation des calculs..."
+        self.lastGeneratedHistory = historyWithDurations
         try? await Task.sleep(nanoseconds: 200_000_000)
         calculateStats(
             from: historyWithDurations,
@@ -245,6 +340,16 @@ class RewindViewModel: ObservableObject {
 
         isLoading = false
         loadingStatusMessage = ""
+    }
+
+    private func formatDuration(seconds: Int) -> String {
+        let hours = seconds / 3600
+        let minutes = (seconds % 3600) / 60
+        if hours > 0 {
+            return "\(hours)h \(minutes)m"
+        } else {
+            return "\(minutes)m"
+        }
     }
 
     private func calculateStats(
@@ -265,44 +370,67 @@ class RewindViewModel: ObservableObject {
             $0 + (($1.duration ?? 0) / 1000)
         }
 
-        let movieCounts = Dictionary(
-            movies.compactMap { $0.title }.map { ($0, 1) },
-            uniquingKeysWith: +
-        )
-        let sortedMovies = movieCounts.sorted { $0.value > $1.value }
+        let moviesGrouped = Dictionary(grouping: movies, by: { $0.title ?? "Film inconnu" })
+        let sortedMovies = moviesGrouped.sorted {
+            switch selectedSortOption {
+            case .byPlays:
+                return $0.value.count > $1.value.count
+            case .byDuration:
+                let duration1 = $0.value.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+                let duration2 = $1.value.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+                return duration1 > duration2
+            }
+        }
 
-        let rankedMovies = sortedMovies.map { (title, count) -> RankedMedia in
-            let representativeMovie = movies.first { $0.title == title }
+        let rankedMovies = sortedMovies.map { (title, sessions) -> RankedMedia in
+            let representativeMovie = sessions.first
             let posterPath = representativeMovie?.thumb
             let posterURL = posterPath.flatMap {
                 URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)")
             }
-            let subtitle = "Regardé \(count) fois"
+            let subtitle = "Regardé \(sessions.count) fois"
+            let movieTotalSeconds = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+            let secondarySubtitle = formatDuration(seconds: movieTotalSeconds)
+
             return RankedMedia(
                 id: representativeMovie?.ratingKey ?? title,
                 title: title,
                 subtitle: subtitle,
+                secondarySubtitle: secondarySubtitle,
                 posterURL: posterURL
             )
         }
 
-        let showCounts = Dictionary(
-            episodes.map { ($0.showTitle, 1) },
-            uniquingKeysWith: +
-        )
-        let sortedShows = showCounts.sorted { $0.value > $1.value }
+        let showsGrouped = Dictionary(grouping: episodes, by: { $0.showTitle })
+        let sortedShows = showsGrouped.sorted {
+            switch selectedSortOption {
+            case .byPlays:
+                return $0.value.count > $1.value.count
+            case .byDuration:
+                let duration1 = $0.value.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+                let duration2 = $1.value.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+                return duration1 > duration2
+            }
+        }
 
-        let rankedShows = sortedShows.map { (title, count) -> RankedMedia in
-            let representativeShow = episodes.first { $0.showTitle == title }
+        let rankedShows = sortedShows.map { (title, sessions) -> RankedMedia in
+            let representativeShow = sessions.first
             let posterPath = representativeShow?.grandparentThumb
             let posterURL = posterPath.flatMap {
                 URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)")
             }
-            let subtitle = "\(count) épisodes vus"
+            let subtitle = "\(sessions.count) épisodes vus"
+            
+            let showTotalSeconds = sessions.reduce(0) {
+                $0 + (($1.duration ?? 0) / 1000)
+            }
+            let secondarySubtitle = formatDuration(seconds: showTotalSeconds)
+            
             return RankedMedia(
-                id: representativeShow?.grandparentTitle ?? title,
+                id: representativeShow?.grandparentRatingKey ?? title,
                 title: title,
                 subtitle: subtitle,
+                secondarySubtitle: secondarySubtitle,
                 posterURL: posterURL
             )
         }

@@ -3,7 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var viewModel: RewindViewModel
-    
+
     var body: some View {
         NavigationStack {
             Form {
@@ -22,7 +22,6 @@ struct SettingsView: View {
                                     for: serverID,
                                     authManager: authManager
                                 )
-                                print(viewModel.availableUsers)
                             }
                         }
                     }
@@ -36,8 +35,8 @@ struct SettingsView: View {
                     }) {
                         Text(
                             viewModel.isHistorySynced
-                            ? "Re-synchroniser l'historique"
-                            : "Synchroniser l'historique complet"
+                                ? "Re-synchroniser l'historique"
+                                : "Synchroniser l'historique complet"
                         )
                     }
                     .disabled(
@@ -50,16 +49,31 @@ struct SettingsView: View {
                 footer: {
                     if let formattedDateText = viewModel.formattedLastSyncDate {
                         Text(formattedDateText)
+                            .textCase(nil)
                     }
                 }
-                
-                Section(header: Text("Création du Rewind")) {
-                    Picker("Année", selection: $viewModel.selectedYear) {
-                        ForEach(viewModel.availableYears, id: \.self) { year in
-                            Text(String(year)).tag(year)
+
+                Section(
+                    header: Text("Création du Rewind"),
+                    footer: Text(
+                        "La génération du Rewind peut prendre du temps car elle récupère la durée de chaque film et épisode individuellement."
+                    )
+                    .textCase(nil)
+                ) {
+                    Picker("Trier par", selection: $viewModel.selectedSortOption) {
+                        ForEach(SortOption.allCases) { option in
+                            Text(option.rawValue).tag(option)
                         }
                     }
 
+                    Picker("Période", selection: $viewModel.selectedYear) {
+                        Text("Toutes").tag(Int?.none)
+                        ForEach(viewModel.availableYears, id: \.self) { year in
+                            Text(String(year)).tag(year as Int?)
+                        }
+                    }
+
+                    
                     if !viewModel.availableUsers.isEmpty {
                         Picker(
                             "Utilisateur",
@@ -74,12 +88,16 @@ struct SettingsView: View {
 
                     Button(action: {
                         Task {
-                            await viewModel.generateRewind(authManager: authManager)
+                            await viewModel.generateRewind(
+                                authManager: authManager
+                            )
                         }
                     }) {
                         HStack {
                             Spacer()
-                            if viewModel.isLoading && !viewModel.loadingStatusMessage.isEmpty {
+                            if viewModel.isLoading
+                                && !viewModel.loadingStatusMessage.isEmpty
+                            {
                                 Text(viewModel.loadingStatusMessage)
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
@@ -91,15 +109,18 @@ struct SettingsView: View {
                     }
                 }
                 .disabled(!viewModel.isHistorySynced || viewModel.isLoading)
-                
+
                 Section {
-                    Button("Se déconnecter", role: .destructive, action: authManager.logout)
+                    Button(
+                        "Se déconnecter",
+                        role: .destructive,
+                        action: authManager.logout
+                    )
                 }
             }
             .navigationTitle("Réglages")
             .onAppear {
                 viewModel.updateFormattedSyncDate()
-
                 if viewModel.availableServers.isEmpty && !viewModel.isLoading {
                     Task {
                         await viewModel.loadServers(authManager: authManager)

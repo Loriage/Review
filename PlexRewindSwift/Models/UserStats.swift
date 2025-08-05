@@ -4,6 +4,7 @@ struct RankedMedia: Identifiable {
     let id: String
     let title: String
     let subtitle: String
+    let secondarySubtitle: String?
     let posterURL: URL?
 }
 

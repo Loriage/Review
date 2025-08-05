@@ -216,4 +216,37 @@ class PlexAPIService {
             throw PlexError.decodingError(error)
         }
     }
+
+    func fetchMediaDetails(
+            for ratingKey: String,
+            serverURL: String,
+            token: String
+    ) async throws -> MetadataItem? {
+        guard let url = URL(
+            string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)"
+        ) else {
+            throw PlexError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(
+            APIConstants.clientIdentifier,
+            forHTTPHeaderField: "X-Plex-Client-Identifier"
+        )
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200
+        else {
+            return nil
+        }
+
+        let decodedResponse = try JSONDecoder().decode(
+            PlexMetadataResponse.self,
+            from: data
+        )
+        return decodedResponse.mediaContainer.metadata.first
+    }
 }

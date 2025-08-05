@@ -2,7 +2,7 @@ import Foundation
 
 struct PlexHistoryResponse: Decodable {
     let mediaContainer: MediaContainer
-    
+
     enum CodingKeys: String, CodingKey {
         case mediaContainer = "MediaContainer"
     }
@@ -18,8 +18,8 @@ struct MediaContainer: Decodable {
 }
 
 struct WatchSession: Decodable, Identifiable {
-    let id = UUID()
-    
+    var id: String { historyKey ?? UUID().uuidString }
+
     let title: String?
     let type: String?
     let viewedAt: TimeInterval?
@@ -27,17 +27,21 @@ struct WatchSession: Decodable, Identifiable {
     let ratingKey: String?
     let parentTitle: String?
     let grandparentTitle: String?
+    let grandparentRatingKey: String?
     let historyKey: String?
-    
+    let accountID: Int?
+
     let thumb: String?
     let grandparentThumb: String?
 
     var showTitle: String {
         return grandparentTitle ?? parentTitle ?? "N/A"
     }
-    
+
     enum CodingKeys: String, CodingKey {
-        case title, type, viewedAt, duration, ratingKey, parentTitle, grandparentTitle, historyKey, thumb, grandparentThumb
+        case title, type, viewedAt, duration, ratingKey, parentTitle,
+            grandparentTitle, grandparentRatingKey, historyKey, thumb,
+            grandparentThumb
+        case accountID = "accountID"
     }
 }
-

@@ -3,6 +3,7 @@ import SwiftUI
 struct MediaHighlightCard: View {
     let title: String
     let subtitle: String
+    let secondarySubtitle: String?
     let posterURL: URL?
 
     var body: some View {
@@ -26,12 +27,21 @@ struct MediaHighlightCard: View {
                         Text(subtitle)
                             .font(.headline.weight(.medium))
                             .foregroundColor(.white.opacity(0.9))
+
+                        if let secondary = secondarySubtitle {
+                            HStack(spacing: 4) {
+                                Image(systemName: "hourglass")
+                                Text(secondary)
+                            }
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.top, 2)
+                        }
                     }
                     .foregroundColor(.white)
                     .padding()
                 }
             )
-
             .aspectRatio(2 / 3, contentMode: .fit)
             .frame(height: 320)
             .background(Color(.secondarySystemBackground))

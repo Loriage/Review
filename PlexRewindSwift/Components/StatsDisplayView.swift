@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct StatsDisplayView: View {
+    @EnvironmentObject var viewModel: RewindViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
     let stats: UserStats
 
     var body: some View {
@@ -44,8 +46,17 @@ struct StatsDisplayView: View {
                                     MediaHighlightCard(
                                         title: movie.title,
                                         subtitle: movie.subtitle,
+                                        secondarySubtitle: movie.secondarySubtitle,
                                         posterURL: movie.posterURL
                                     )
+                                    .onTapGesture {
+                                        Task {
+                                            await viewModel.selectMedia(
+                                                for: movie.id,
+                                                authManager: authManager
+                                            )
+                                        }
+                                    }
                                 }
                             }
                             .padding(.horizontal)
@@ -66,8 +77,17 @@ struct StatsDisplayView: View {
                                     MediaHighlightCard(
                                         title: show.title,
                                         subtitle: show.subtitle,
+                                        secondarySubtitle: show.secondarySubtitle,
                                         posterURL: show.posterURL
                                     )
+                                    .onTapGesture {
+                                        Task {
+                                            await viewModel.selectMedia(
+                                                for: show.id,
+                                                authManager: authManager
+                                            )
+                                        }
+                                    }
                                 }
                             }
                             .padding(.horizontal)
@@ -80,35 +100,9 @@ struct StatsDisplayView: View {
             .padding(.vertical)
         }
         .padding(.horizontal)
-    }
-}
-
-struct StatPill: View {
-    let title: String
-    let value: String
-    let icon: String
-    let color: Color
-    
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.title2.weight(.medium))
-                .foregroundColor(color)
-            
-            VStack {
-                Text(value)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primary)
-                
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .sheet(item: $viewModel.selectedMediaDetail) { detail in
+            MediaDetailView(detail: detail)
         }
-        .padding(.vertical)
-        .frame(maxWidth: .infinity)
-        .background(.thinMaterial)
-        .cornerRadius(20)
     }
 }
