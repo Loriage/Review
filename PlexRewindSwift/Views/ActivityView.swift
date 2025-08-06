@@ -112,7 +112,7 @@ struct ActivityRowView: View {
                     .allowsHitTesting(false)
                 )
 
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(session.showTitle)
                         .font(.headline)
                         .lineLimit(1)
@@ -176,7 +176,18 @@ struct ActivityRowView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                     }
-                    Spacer()
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        if isAudioTranscoding {
+                            BadgeView(text: "AUDIO")
+                        }
+                        if isSoftwareTranscoding {
+                            BadgeView(text: "SW")
+                        }
+                        if isHardwareTranscoding {
+                            BadgeView(text: "HW")
+                        }
+                    }
                 }
             }
             .padding([.bottom, .leading, .trailing])
@@ -203,7 +214,22 @@ struct ActivityRowView: View {
         )
         .cornerRadius(20)
     }
-    
+
+    private var isHardwareTranscoding: Bool {
+        guard let transcode = session.transcodeSession, transcode.videoDecision == "transcode" else { return false }
+        return transcode.transcodeHwRequested
+    }
+        
+    private var isSoftwareTranscoding: Bool {
+        guard let transcode = session.transcodeSession, transcode.videoDecision == "transcode" else { return false }
+        return !transcode.transcodeHwRequested
+    }
+
+    private var isAudioTranscoding: Bool {
+        guard let transcode = session.transcodeSession else { return false }
+        return transcode.audioDecision == "transcode"
+    }
+
     private var serverName: String {
         if let serverID = viewModel.selectedServerID,
            let server = viewModel.availableServers.first(where: { $0.id == serverID }) {
@@ -247,6 +273,24 @@ struct ActivityRowView: View {
             return "\(hours)h \(minutes)m restantes"
         } else {
             return "\(minutes)m restantes"
+        }
+    }
+
+    struct BadgeView: View {
+        let text: String
+        
+        var body: some View {
+            Text(text)
+                .font(.system(size: 10, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 4)
+                .padding(.vertical, 2)
+                .background(
+                    .ultraThinMaterial,
+                    in: RoundedRectangle(cornerRadius: 4)
+                )
+                .background(Color.black.opacity(0.6))
+                .cornerRadius(4)
         }
     }
 }
