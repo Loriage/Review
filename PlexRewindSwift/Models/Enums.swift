@@ -6,3 +6,11 @@ enum SortOption: String, CaseIterable, Identifiable {
 
     var id: String { self.rawValue }
 }
+
+enum ViewState {
+    case loading
+    case content([PlexActivitySession])
+    case forbidden
+    case noServerSelected
+    case empty
+}

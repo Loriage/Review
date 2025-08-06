@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @StateObject var viewModel: PlexMonitorViewModel
+    @EnvironmentObject var activityViewModel: ActivityViewModel
+    @EnvironmentObject var statsViewModel: StatsViewModel
+    @EnvironmentObject var serverViewModel: ServerViewModel
 
     var body: some View {
         TabView {
@@ -9,19 +11,20 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Activité", systemImage: "play.display")
                 }
-                .environmentObject(viewModel)
+                .environmentObject(activityViewModel)
 
-            RewindView()
+            StatsView()
                 .tabItem {
                     Label("Stats", systemImage: "chart.bar.xaxis")
                 }
-                .environmentObject(viewModel)
+                .environmentObject(statsViewModel)
 
             SettingsView()
                 .tabItem {
                     Label("Réglages", systemImage: "gear")
                 }
-                .environmentObject(viewModel)
+                .environmentObject(serverViewModel)
+                .environmentObject(statsViewModel)
         }
     }
 }

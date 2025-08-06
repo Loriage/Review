@@ -2,80 +2,49 @@ import SwiftUI
 
 struct ActivityView: View {
     @EnvironmentObject var authManager: PlexAuthManager
-    @EnvironmentObject var viewModel: PlexMonitorViewModel
+    @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var activityViewModel: ActivityViewModel
     
     let timer = Timer.publish(every: 8, on: .main, in: .common).autoconnect()
 
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.activityAccessForbidden {
-                    VStack(spacing: 15) {
-                        Image(systemName: "lock.shield.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.orange)
-                        Text("Accès non autorisé")
-                            .font(.title2.bold())
-                        Text("Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                    }
-                } else if viewModel.selectedServerID == nil {
-                    VStack(spacing: 15) {
-                        Image(systemName: "server.rack")
-                            .font(.system(size: 60))
-                            .foregroundColor(.secondary)
-                        Text("Aucun serveur sélectionné")
-                            .font(.title2.bold())
-                        Text("Allez dans l'onglet \"Réglages\" pour choisir un serveur Plex.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                    }
-                } else if viewModel.isLoading {
+                switch activityViewModel.state {
+                case .loading:
                     ProgressView()
-                } else if viewModel.currentSessions.isEmpty {
-                    VStack(spacing: 15) {
-                        Image(systemName: "tv.slash")
-                            .font(.system(size: 60))
-                            .foregroundColor(.secondary)
-                        Text("Aucune activité")
-                            .font(.title2.bold())
-                        Text("Rien n'est en cours de lecture sur le serveur sélectionné.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                    }
-                } else {
+                case .content(let sessions):
                     ScrollView {
                         VStack(spacing: 15) {
-                            ForEach(viewModel.currentSessions) { session in
+                            ForEach(sessions) { session in
                                 ActivityRowView(session: session)
-                                    .environmentObject(viewModel)
+                                    .environmentObject(serverViewModel)
                             }
                         }
                         .padding()
                     }
                     .refreshable {
-                        await viewModel.refreshActivity()
+                        await activityViewModel.refreshActivity()
                     }
+                case .forbidden:
+                    PermissionDeniedView()
+                case .noServerSelected:
+                    NoServerView()
+                case .empty:
+                    EmptyStateView()
                 }
             }
             .navigationTitle("Activité en cours")
             .onAppear {
-                if viewModel.availableServers.isEmpty && !viewModel.isLoading {
+                if serverViewModel.availableServers.isEmpty && !serverViewModel.isLoading {
                     Task {
-                        await viewModel.loadServers(authManager: authManager)
+                        await serverViewModel.loadServers()
                     }
                 }
             }
             .onReceive(timer) { _ in
                 Task {
-                    await viewModel.refreshActivity()
+                    await activityViewModel.refreshActivity()
                 }
             }
         }
@@ -83,7 +52,7 @@ struct ActivityView: View {
 }
 
 struct ActivityRowView: View {
-    @EnvironmentObject var viewModel: PlexMonitorViewModel
+    @EnvironmentObject var serverViewModel: ServerViewModel
     let session: PlexActivitySession
 
     @State private var dominantColor: Color = Color(.systemGray4)
@@ -176,8 +145,10 @@ struct ActivityRowView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                     }
+                    
+                    Spacer()
 
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .trailing, spacing: 4) {
                         if isAudioTranscoding {
                             BadgeView(text: "AUDIO")
                         }
@@ -231,8 +202,8 @@ struct ActivityRowView: View {
     }
 
     private var serverName: String {
-        if let serverID = viewModel.selectedServerID,
-           let server = viewModel.availableServers.first(where: { $0.id == serverID }) {
+        if let serverID = serverViewModel.selectedServerID,
+           let server = serverViewModel.availableServers.first(where: { $0.id == serverID }) {
             return server.name
         }
         return "Serveur inconnu"
@@ -240,10 +211,10 @@ struct ActivityRowView: View {
 
     private var userThumbURL: URL? {
         guard let thumbPath = session.user.thumb,
-              let serverID = viewModel.selectedServerID,
-              let server = viewModel.availableServers.first(where: { $0.id == serverID }),
+              let serverID = serverViewModel.selectedServerID,
+              let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
-              let token = viewModel.authManager.getPlexAuthToken(),
+              let token = serverViewModel.authManager.getPlexAuthToken(),
               var components = URLComponents(string: "\(connection.uri)/photo/:/transcode")
         else { return nil }
         
@@ -262,35 +233,6 @@ struct ActivityRowView: View {
     }
     
     private var formattedRemainingTime: String {
-        let seconds = session.remainingTimeInSeconds
-        if seconds <= 0 {
-            return "Terminé"
-        }
-        let hours = seconds / 3600
-        let minutes = (seconds % 3600) / 60
-        
-        if hours > 0 {
-            return "\(hours)h \(minutes)m restantes"
-        } else {
-            return "\(minutes)m restantes"
-        }
-    }
-
-    struct BadgeView: View {
-        let text: String
-        
-        var body: some View {
-            Text(text)
-                .font(.system(size: 10, weight: .bold))
-                .foregroundColor(.white)
-                .padding(.horizontal, 4)
-                .padding(.vertical, 2)
-                .background(
-                    .ultraThinMaterial,
-                    in: RoundedRectangle(cornerRadius: 4)
-                )
-                .background(Color.black.opacity(0.6))
-                .cornerRadius(4)
-        }
+        return TimeFormatter.formatRemainingSeconds(session.remainingTimeInSeconds)
     }
 }
