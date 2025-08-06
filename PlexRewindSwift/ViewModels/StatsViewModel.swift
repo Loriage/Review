@@ -176,13 +176,14 @@ class StatsViewModel: ObservableObject {
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = serverViewModel.authManager.getPlexAuthToken()
         else {
-            return (sessions: [], summary: nil)
+            return ([], nil)
         }
         let serverURL = connection.uri
         let resourceToken = server.accessToken ?? token
 
-        let filteredSessions: [WatchSession]
-        let ratingKeyForSummary: String?
+        var filteredSessions: [WatchSession] = []
+        var summary: String? = nil
+        var ratingKeyForSummary: String?
 
         if session.type == "movie" {
             filteredSessions = fullHistory.filter { $0.ratingKey == session.ratingKey }
@@ -190,19 +191,20 @@ class StatsViewModel: ObservableObject {
         } else {
             guard let showTitle = session.grandparentTitle, !showTitle.isEmpty else {
                 filteredSessions = fullHistory.filter { $0.ratingKey == session.ratingKey }
-                return (sessions: filteredSessions, summary: nil)
+                ratingKeyForSummary = session.ratingKey
+                return (filteredSessions, nil)
             }
             filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
             ratingKeyForSummary = filteredSessions.first?.grandparentRatingKey
         }
 
-        var summary: String? = nil
         if let ratingKey = ratingKeyForSummary {
-            summary = try? await plexService.fetchMediaDetails(
+            let details = try? await plexService.fetchMediaDetails(
                 for: ratingKey,
                 serverURL: serverURL,
                 token: resourceToken
-            )?.summary
+            )
+            summary = details?.summary
         }
 
         return (filteredSessions, summary)

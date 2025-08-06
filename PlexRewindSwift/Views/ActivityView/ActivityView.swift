@@ -53,6 +53,7 @@ struct ActivityView: View {
 
 struct ActivityRowView: View {
     @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
     let session: PlexActivitySession
 
@@ -62,9 +63,9 @@ struct ActivityRowView: View {
         VStack(alignment: .leading, spacing: 0) {
             
             NavigationLink(destination: MediaHistoryView(
-                title: session.showTitle,
-                posterURL: session.posterURL,
-                sessionsFetcher: { await statsViewModel.historyForMedia(session: session) }
+                session: session,
+                serverViewModel: serverViewModel,
+                authManager: authManager
             )) {
                 HStack(spacing: 15) {
                     AsyncImageView(url: session.posterURL, contentMode: .fill) { color in

@@ -34,6 +34,9 @@ struct WatchSession: Decodable, Identifiable {
     let thumb: String?
     let grandparentThumb: String?
 
+    let index: Int?
+    let parentIndex: Int?
+
     var showTitle: String {
         return grandparentTitle ?? parentTitle ?? "N/A"
     }
@@ -41,7 +44,7 @@ struct WatchSession: Decodable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case title, type, viewedAt, duration, ratingKey, parentTitle,
             grandparentTitle, grandparentRatingKey, historyKey, thumb,
-            grandparentThumb
+            grandparentThumb, index, parentIndex
         case accountID = "accountID"
     }
 }

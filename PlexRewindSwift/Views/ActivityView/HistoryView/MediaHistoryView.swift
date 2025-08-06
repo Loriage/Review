@@ -1,28 +1,32 @@
+
 import SwiftUI
 
 struct MediaHistoryView: View {
-    let title: String
-    let posterURL: URL?
-    let sessionsFetcher: () async -> (sessions: [WatchSession], summary: String?)
-    
-    @State private var sessions: [WatchSession] = []
-    @State private var summary: String?
-    @State private var isLoading = true
+    @StateObject private var viewModel: MediaHistoryViewModel
+
+    init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+        _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
+            session: session,
+            plexService: PlexAPIService(),
+            serverViewModel: serverViewModel,
+            authManager: authManager
+        ))
+    }
 
     var body: some View {
         Group {
-            if isLoading {
+            if viewModel.isLoading {
                 loadingView
-            } else if sessions.isEmpty {
+            } else if viewModel.historyItems.isEmpty {
                 emptyView
             } else {
                 contentView
             }
         }
-        .navigationTitle(title)
+        .navigationTitle(viewModel.session.showTitle)
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            await loadInitialData()
+            await viewModel.loadData()
         }
     }
 
@@ -55,16 +59,16 @@ struct MediaHistoryView: View {
             historySection
         }
         .refreshable {
-            await refreshData()
+            await viewModel.refreshData()
         }
     }
-
+    
     private var headerSection: some View {
         Section {
-            VStack {
+            VStack(spacing: 20) {
                 HStack {
                     Spacer()
-                    AsyncImageView(url: posterURL, contentMode: .fit)
+                    AsyncImageView(url: viewModel.session.posterURL, contentMode: .fit)
                         .frame(height: 250)
                         .cornerRadius(16)
                         .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
@@ -73,58 +77,51 @@ struct MediaHistoryView: View {
                 .padding(.top, 5)
                 .padding(.bottom, 20)
 
-                if let summary = summary, !summary.isEmpty {
+                if let summary = viewModel.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Résumé")
                             .font(.title2.bold())
-                            .padding(.bottom, 2)
+                            .padding(.horizontal)
                         Text(summary)
                             .font(.body)
                             .foregroundColor(.secondary)
+                            .padding(.horizontal)
                     }
                 }
             }
+            .padding(.bottom)
         }
         .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
     }
-
+    
     private var historySection: some View {
         Section(header: Text("Historique des visionnages")) {
-            ForEach(sessions) { session in
-                VStack(alignment: .leading, spacing: 4) {
-                    if session.type == "episode" {
-                        Text(session.title ?? "Épisode inconnu")
+            ForEach(viewModel.historyItems, id: \MediaHistoryItem.id) { item in
+                VStack(alignment: .leading, spacing: 5) {
+                    if item.session.type == "episode" {
+                        Text(item.session.showTitle)
                             .font(.headline)
                     } else {
-                        Text(session.title ?? "Titre inconnu")
+                        Text(item.session.title ?? "Titre inconnu")
                             .font(.headline)
                     }
                     
-                    if let viewedAt = session.viewedAt {
-                        Text("Vu le: \(Date(timeIntervalSince1970: viewedAt).formatted(date: .long, time: .shortened))")
-                            .font(.caption)
+                    if item.session.type == "episode" {
+                        Text("S\(item.session.parentIndex ?? 0) - E\(item.session.index ?? 0) - \(item.session.title ?? "Titre inconnu")")
+                            .font(.subheadline)
                             .foregroundColor(.secondary)
+                    }
+                    
+                    if let viewedAt = item.session.viewedAt {
+                        Text("\(item.userName ?? "Utilisateur inconnu") - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
+                            .font(.caption)
+                            .foregroundColor(.secondary.opacity(0.8))
                     }
                 }
                 .padding(.vertical, 8)
             }
         }
-    }
-
-    private func loadInitialData() async {
-        if sessions.isEmpty {
-            isLoading = true
-            let result = await sessionsFetcher()
-            self.sessions = result.sessions
-            self.summary = result.summary
-            isLoading = false
-        }
-    }
-
-    private func refreshData() async {
-        let result = await sessionsFetcher()
-        self.sessions = result.sessions
-        self.summary = result.summary
     }
 }
