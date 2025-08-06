@@ -1,11 +1,3 @@
-//
-//  OnboardingView.swift
-//  PlexRewindSwift
-//
-//  Created by Bruno DURAND on 04/08/2025.
-//
-
-
 import SwiftUI
 
 struct OnboardingView: View {
@@ -17,7 +9,7 @@ struct OnboardingView: View {
             
             Image(systemName: "film.stack.fill")
                 .font(.system(size: 80))
-                .foregroundColor(.orange)
+                .foregroundColor(.accentColor)
             
             Text("Bienvenue sur Plex Rewind")
                 .font(.largeTitle)
@@ -43,7 +35,7 @@ struct OnboardingView: View {
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.orange)
+                        .background(Color.accentColor)
                         .cornerRadius(12)
                 }
             }

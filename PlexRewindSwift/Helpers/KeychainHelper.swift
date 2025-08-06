@@ -1,18 +1,10 @@
-//
-//  KeychainHelper.swift
-//  PlexRewindSwift
-//
-//  Created by Bruno DURAND on 04/08/2025.
-//
-
-
 import Foundation
 import Security
 
 class KeychainHelper {
     
     static let standard = KeychainHelper()
-    private let service = "com.yourapp.PlexRewindSwift.authtoken" // Changez pour un identifiant unique
+    private let service = "com.nohitdev.PlexRewindSwift.authtoken"
 
     private init() {}
 
@@ -24,10 +16,8 @@ class KeychainHelper {
             kSecValueData: data
         ] as [String: Any]
 
-        // Supprimer l'ancien item s'il existe
         SecItemDelete(query as CFDictionary)
 
-        // Ajouter le nouvel item
         let status = SecItemAdd(query as CFDictionary, nil)
         guard status == errSecSuccess else {
             throw KeychainError.saveError(status)
@@ -67,8 +57,7 @@ class KeychainHelper {
             throw KeychainError.deleteError(status)
         }
     }
-    
-    // Pour stocker/lire des strings plus facilement
+
     func saveString(_ string: String, for account: String) throws {
         guard let data = string.data(using: .utf8) else { return }
         try save(data, for: account)

@@ -19,6 +19,6 @@ struct TimeFormatter {
         if seconds <= 0 {
             return "Terminé"
         }
-        return "-\(formatSeconds(seconds)) restantes"
+        return "\(formatSeconds(seconds)) restantes"
     }
 }

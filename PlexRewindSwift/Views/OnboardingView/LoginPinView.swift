@@ -1,11 +1,3 @@
-//
-//  LoginPinView.swift
-//  PlexRewindSwift
-//
-//  Created by Bruno DURAND on 04/08/2025.
-//
-
-
 import SwiftUI
 
 struct LoginPinView: View {

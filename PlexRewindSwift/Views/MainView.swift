@@ -14,12 +14,10 @@ struct MainView: View {
                 .environmentObject(serverViewModel)
                 .environmentObject(activityViewModel)
                 .environmentObject(statsViewModel)
-        }
-        else if authManager.pin != nil {
+        } else if authManager.pin != nil {
             LoginPinView()
                 .environmentObject(authManager)
-        }
-        else {
+        } else {
             OnboardingView()
                 .environmentObject(authManager)
         }
