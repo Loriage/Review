@@ -10,6 +10,8 @@ struct TopUserStat: Identifiable {
 
 struct MediaDetail: Identifiable {
     let id: String
+    let serverIdentifier: String
+    let mediaType: String
     let title: String
     let tagline: String?
     let posterURL: URL?

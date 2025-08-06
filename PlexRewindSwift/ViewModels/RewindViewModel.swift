@@ -46,6 +46,7 @@ class RewindViewModel: ObservableObject {
         }
         
         let serverURL = connection.uri
+        let serverIdentifier = server.clientIdentifier
         let resourceToken = server.accessToken ?? token
         
         var relevantSessions: [WatchSession] = []
@@ -53,14 +54,17 @@ class RewindViewModel: ObservableObject {
         var posterURL: URL?
         let ratingKey = mediaID
         
+        var mediaType = ""
+            
         if let movie = userStats?.rankedMovies.first(where: { $0.id == mediaID }) {
             title = movie.title
             posterURL = movie.posterURL
-            relevantSessions =
-            lastGeneratedHistory.filter { $0.title == title && $0.type == "movie" }
+            mediaType = "movie"
+            relevantSessions = lastGeneratedHistory.filter { $0.title == title && $0.type == "movie" }
         } else if let show = userStats?.rankedShows.first(where: { $0.id == mediaID }) {
             title = show.title
             posterURL = show.posterURL
+            mediaType = "show"
             relevantSessions = lastGeneratedHistory.filter { $0.showTitle == title }
         } else {
             return
@@ -100,6 +104,8 @@ class RewindViewModel: ObservableObject {
         
         self.selectedMediaDetail = MediaDetail(
             id: mediaID,
+            serverIdentifier: serverIdentifier,
+            mediaType: mediaType,
             title: title,
             tagline: details?.tagline,
             posterURL: posterURL,
