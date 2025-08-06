@@ -53,63 +53,76 @@ struct ActivityView: View {
 
 struct ActivityRowView: View {
     @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var statsViewModel: StatsViewModel
     let session: PlexActivitySession
 
     @State private var dominantColor: Color = Color(.systemGray4)
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 15) {
-                AsyncImageView(url: session.posterURL, contentMode: .fill) { color in
-                    self.dominantColor = color
-                }
-                .frame(width: 60, height: 90)
-                .cornerRadius(8)
-                .overlay(
-                    ZStack {
-                        if session.player.state == "paused" {
-                            Rectangle()
-                                .fill(.black.opacity(0.5))
-                            
-                            Image(systemName: "pause.fill")
-                                .font(.title)
-                                .foregroundColor(.white)
-                                .shadow(radius: 5)
-                        }
+        VStack(alignment: .leading, spacing: 0) {
+            
+            NavigationLink(destination: MediaHistoryView(
+                title: session.showTitle,
+                posterURL: session.posterURL,
+                sessionsFetcher: { await statsViewModel.historyForMedia(session: session) }
+            )) {
+                HStack(spacing: 15) {
+                    AsyncImageView(url: session.posterURL, contentMode: .fill) { color in
+                        self.dominantColor = color
                     }
+                    .frame(width: 60, height: 90)
                     .cornerRadius(8)
-                    .allowsHitTesting(false)
-                )
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(session.showTitle)
-                        .font(.headline)
-                        .lineLimit(1)
-
-                    if session.type == "episode", let seasonNumber = session.parentIndex, let episodeNumber = session.index {
-                        Text(session.title)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                    .overlay(
+                        ZStack {
+                            if session.player.state == "paused" {
+                                Rectangle()
+                                    .fill(.black.opacity(0.5))
+                                
+                                Image(systemName: "pause.fill")
+                                    .font(.title)
+                                    .foregroundColor(.white)
+                                    .shadow(radius: 5)
+                            }
+                        }
+                        .cornerRadius(8)
+                        .allowsHitTesting(false)
+                    )
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(session.showTitle)
+                            .font(.headline)
                             .lineLimit(1)
-
-                        Text("S\(seasonNumber) - E\(episodeNumber)")
-                            .font(.subheadline)
+                        
+                        if session.type == "episode", let seasonNumber = session.parentIndex, let episodeNumber = session.index {
+                            Text(session.title)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+                            
+                            Text("S\(seasonNumber) - E\(episodeNumber)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+                        } else if session.type == "movie", let year = session.year {
+                            Text(String(year))
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Text(formattedRemainingTime)
+                            .font(.subheadline.monospacedDigit())
                             .foregroundColor(.secondary)
-                            .lineLimit(1)
-                    } else if session.type == "movie", let year = session.year {
-                        Text(String(year))
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .padding(.top, 2)
                     }
-
-                    Text(formattedRemainingTime)
-                        .font(.subheadline.monospacedDigit())
-                        .foregroundColor(.secondary)
-                        .padding(.top, 2)
+                    
+                    Spacer(minLength: 0)
                 }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
             }
-            .padding([.top, .leading, .trailing])
-
+            .buttonStyle(.plain)
+            
             ProgressView(value: session.progress)
                 .progressViewStyle(
                     CustomLinearProgressViewStyle(
@@ -118,13 +131,17 @@ struct ActivityRowView: View {
                         height: 5
                     )
                 )
-            VStack {
+            
+            NavigationLink(destination: UserHistoryView(
+                userName: session.user.title,
+                sessionsFetcher: { await statsViewModel.historyForUser(userID: Int(session.user.id) ?? 0) }
+            )) {
                 HStack(spacing: 15) {
                     AsyncImageView(url: userThumbURL)
                         .frame(width: 50, height: 50)
                         .padding(.horizontal, 5)
                         .clipShape(Circle())
-
+                    
                     VStack(alignment: .leading, spacing: 2) {
                         Text(session.user.title)
                             .font(.subheadline.bold())
@@ -132,7 +149,7 @@ struct ActivityRowView: View {
                         Text(streamDescription)
                             .font(.caption)
                             .foregroundColor(.secondary)
-
+                        
                         HStack{
                             if session.player.local {
                                 Text("Local")
@@ -146,8 +163,8 @@ struct ActivityRowView: View {
                         .foregroundColor(.secondary)
                     }
                     
-                    Spacer()
-
+                    Spacer(minLength: 0)
+                    
                     VStack(alignment: .trailing, spacing: 4) {
                         if isAudioTranscoding {
                             BadgeView(text: "AUDIO")
@@ -160,8 +177,11 @@ struct ActivityRowView: View {
                         }
                     }
                 }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
             }
-            .padding([.bottom, .leading, .trailing])
+            .buttonStyle(.plain)
         }
         .background(
             .thinMaterial,
@@ -169,19 +189,19 @@ struct ActivityRowView: View {
         )
         .background(
             MeshGradient(
-                    width: 3,
-                    height: 3,
-                    points: [
-                        [0, 0], [0.5, 0], [1, 0],
-                        [0, 0.5], [0.5, 0.5], [1, 0.5],
-                        [0, 1], [0.5, 1], [1, 1]
-                    ],
-                    colors: [
-                        .clear, dominantColor.opacity(0.2), .clear,
-                        Color.accentColor.opacity(0.1), dominantColor.opacity(0.2), Color.accentColor.opacity(0.1),
-                        .clear, .clear, dominantColor.opacity(0.2)
-                    ]
-                )
+                width: 3,
+                height: 3,
+                points: [
+                    [0, 0], [0.5, 0], [1, 0],
+                    [0, 0.5], [0.5, 0.5], [1, 0.5],
+                    [0, 1], [0.5, 1], [1, 1]
+                ],
+                colors: [
+                    .clear, dominantColor.opacity(0.3), .clear,
+                    Color.accentColor.opacity(0.2), dominantColor.opacity(0.3), Color.accentColor.opacity(0.2),
+                    .clear, .clear, dominantColor.opacity(0.2)
+                ]
+            )
         )
         .cornerRadius(20)
     }

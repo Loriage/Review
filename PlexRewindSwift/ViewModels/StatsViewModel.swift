@@ -166,6 +166,57 @@ class StatsViewModel: ObservableObject {
         loadingStatusMessage = ""
     }
 
+    func historyForMedia(session: PlexActivitySession) async -> (sessions: [WatchSession], summary: String?) {
+        if !isHistorySynced {
+            await syncFullHistory()
+        }
+
+        guard let serverID = serverViewModel.selectedServerID,
+              let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
+              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
+              let token = serverViewModel.authManager.getPlexAuthToken()
+        else {
+            return (sessions: [], summary: nil)
+        }
+        let serverURL = connection.uri
+        let resourceToken = server.accessToken ?? token
+
+        let filteredSessions: [WatchSession]
+        let ratingKeyForSummary: String?
+
+        if session.type == "movie" {
+            filteredSessions = fullHistory.filter { $0.ratingKey == session.ratingKey }
+            ratingKeyForSummary = session.ratingKey
+        } else {
+            guard let showTitle = session.grandparentTitle, !showTitle.isEmpty else {
+                filteredSessions = fullHistory.filter { $0.ratingKey == session.ratingKey }
+                return (sessions: filteredSessions, summary: nil)
+            }
+            filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
+            ratingKeyForSummary = filteredSessions.first?.grandparentRatingKey
+        }
+
+        var summary: String? = nil
+        if let ratingKey = ratingKeyForSummary {
+            summary = try? await plexService.fetchMediaDetails(
+                for: ratingKey,
+                serverURL: serverURL,
+                token: resourceToken
+            )?.summary
+        }
+
+        return (filteredSessions, summary)
+    }
+
+    func historyForUser(userID: Int) async -> [WatchSession] {
+        if !isHistorySynced {
+            await syncFullHistory()
+        }
+        
+        guard userID != 0 else { return [] }
+        return fullHistory.filter { $0.accountID == userID }
+    }
+
     func selectMedia(for mediaID: String) async {
         guard let serverID = serverViewModel.selectedServerID,
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),

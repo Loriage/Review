@@ -12,6 +12,7 @@ struct MainTabView: View {
                     Label("Activité", systemImage: "play.display")
                 }
                 .environmentObject(activityViewModel)
+                .environmentObject(statsViewModel)
 
             StatsView()
                 .tabItem {
