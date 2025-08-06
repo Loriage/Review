@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var authManager: PlexAuthManager
-    @EnvironmentObject var viewModel: RewindViewModel
+    @EnvironmentObject var viewModel: PlexMonitorViewModel
 
     var body: some View {
         NavigationStack {

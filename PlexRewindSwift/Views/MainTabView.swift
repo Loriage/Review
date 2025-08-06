@@ -1,13 +1,19 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @StateObject private var viewModel = RewindViewModel()
-    
+    @StateObject var viewModel: PlexMonitorViewModel
+
     var body: some View {
         TabView {
+            ActivityView()
+                .tabItem {
+                    Label("Activité", systemImage: "play.display")
+                }
+                .environmentObject(viewModel)
+
             RewindView()
                 .tabItem {
-                    Label("Rewind", systemImage: "play.rectangle.fill")
+                    Label("Stats", systemImage: "chart.bar.xaxis")
                 }
                 .environmentObject(viewModel)
 

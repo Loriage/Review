@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct StatsDisplayView: View {
-    @EnvironmentObject var viewModel: RewindViewModel
+    @EnvironmentObject var viewModel: PlexMonitorViewModel
     @EnvironmentObject var authManager: PlexAuthManager
     let stats: UserStats
 

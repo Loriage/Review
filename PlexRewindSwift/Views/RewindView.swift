@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RewindView: View {
-    @EnvironmentObject var viewModel: RewindViewModel
+    @EnvironmentObject var viewModel: PlexMonitorViewModel
     
     var body: some View {
         NavigationStack {

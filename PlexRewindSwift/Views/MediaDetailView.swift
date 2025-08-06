@@ -28,7 +28,6 @@ struct MediaDetailView: View {
             posterSection
             summarySection
             topUsersSection
-            plexButton
         }
         .padding(.horizontal)
         .padding(.bottom, 50)
@@ -91,26 +90,6 @@ struct MediaDetailView: View {
                     .padding(.horizontal)
                 }
             }
-        }
-    }
-
-    private var plexButton: some View {
-        Button {
-            let mediaTypeForURL = detail.mediaType == "movie" ? "movie" : "show"
-            let urlString = "plex://server/\(detail.serverIdentifier)/com.plexapp.plugins.library/library/metadata/\(detail.id)/play?type=\(mediaTypeForURL)"
-            
-            if let url = URL(string: urlString) {
-                print(url)
-                openURL(url)
-            }
-        } label: {
-            Label("Voir dans Plex", systemImage: "play.tv.fill")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.orange)
-                .cornerRadius(15)
         }
     }
 }

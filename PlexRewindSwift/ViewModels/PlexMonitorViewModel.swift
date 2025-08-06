@@ -2,36 +2,113 @@ import Foundation
 import Combine
 
 @MainActor
-class RewindViewModel: ObservableObject {
+class PlexMonitorViewModel: ObservableObject {
 
     @Published var userStats: UserStats?
+    @Published var isHistorySynced: Bool = false
+    @Published var lastSyncDate: Date?
+
+    @Published var currentSessions: [PlexActivitySession] = []
+    @Published var activityAccessForbidden = false
+
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var loadingStatusMessage: String = ""
-
     @Published var availableServers: [PlexResource] = []
     @Published var selectedServerID: String?
-
     @Published var availableUsers: [PlexUser] = []
-    @Published var selectedUserID: Int?
 
+    @Published var selectedUserID: Int?
     @Published var selectedYear: Int? = nil
     @Published var availableYears: [Int] = []
 
     @Published var selectedSortOption: SortOption = .byPlays
-
-    @Published var isHistorySynced: Bool = false
-    @Published var lastSyncDate: Date?
     @Published var formattedLastSyncDate: String?
 
     @Published var selectedMediaDetail: MediaDetail?
 
-    private var fullHistory: [WatchSession] = []
     private let plexService: PlexAPIService
-    private var lastGeneratedHistory: [WatchSession] = []
+    private let geolocationService = GeolocationService()
+    let authManager: PlexAuthManager
 
-    init(plexService: PlexAPIService = PlexAPIService()) {
+    private var refreshTimer: Timer?
+    private var fullHistory: [WatchSession] = []
+
+    private var cancellables = Set<AnyCancellable>()
+
+    init(authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
+        self.authManager = authManager
         self.plexService = plexService
+        setupBindings()
+    }
+
+    private func setupBindings() {
+        $selectedServerID
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] serverID in
+                Task {
+                    if serverID != nil {
+                        await self?.refreshActivity()
+                    } else {
+                        self?.currentSessions = []
+                    }
+                }
+            }
+            .store(in: &cancellables)
+    }
+    func refreshActivity() async {
+        guard !isLoading,
+              let serverID = selectedServerID,
+              let server = availableServers.first(where: { $0.id == serverID }),
+              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
+              let token = authManager.getPlexAuthToken()
+        else {
+            self.currentSessions = []
+            return
+        }
+        
+        let serverURL = connection.uri
+        let resourceToken = server.accessToken ?? token
+        
+        do {
+            var sessions = try await plexService.fetchCurrentActivity(serverURL: serverURL, token: resourceToken)
+            self.activityAccessForbidden = false
+            
+            for i in sessions.indices {
+                let session = sessions[i]
+                
+                let imagePath = session.type == "episode" ? (session.parentThumb ?? session.grandparentThumb ?? session.thumb) : session.thumb
+                if let path = imagePath, var components = URLComponents(string: "\(serverURL)/photo/:/transcode") {
+                    components.queryItems = [
+                        URLQueryItem(name: "url", value: path),
+                        URLQueryItem(name: "width", value: "300"),
+                        URLQueryItem(name: "height", value: "450"),
+                        URLQueryItem(name: "minSize", value: "1"),
+                        URLQueryItem(name: "X-Plex-Token", value: resourceToken)
+                    ]
+                    sessions[i].posterURL = components.url
+                }
+                
+                if !session.player.local {
+                    sessions[i].location = await geolocationService.fetchLocation(for: session.player.address)
+                }
+            }
+            
+            self.currentSessions = sessions
+            
+        } catch let error as PlexError {
+            if case .serverError(let statusCode) = error, statusCode == 403 {
+                self.activityAccessForbidden = true
+            } else {
+                self.activityAccessForbidden = false
+            }
+            self.currentSessions = []
+            print("Erreur de rafraîchissement de l'activité: \(error.localizedDescription)")
+        } catch {
+            self.activityAccessForbidden = false
+            self.currentSessions = []
+            print("Erreur inconnue de rafraîchissement: \(error.localizedDescription)")
+        }
     }
 
     func selectMedia(for mediaID: String, authManager: PlexAuthManager) async {
@@ -60,12 +137,12 @@ class RewindViewModel: ObservableObject {
             title = movie.title
             posterURL = movie.posterURL
             mediaType = "movie"
-            relevantSessions = lastGeneratedHistory.filter { $0.title == title && $0.type == "movie" }
+            relevantSessions = fullHistory.filter { $0.title == title && $0.type == "movie" }
         } else if let show = userStats?.rankedShows.first(where: { $0.id == mediaID }) {
             title = show.title
             posterURL = show.posterURL
             mediaType = "show"
-            relevantSessions = lastGeneratedHistory.filter { $0.showTitle == title }
+            relevantSessions = fullHistory.filter { $0.showTitle == title }
         } else {
             return
         }
@@ -336,7 +413,7 @@ class RewindViewModel: ObservableObject {
         }
 
         loadingStatusMessage = "Finalisation des calculs..."
-        self.lastGeneratedHistory = historyWithDurations
+        self.fullHistory = historyWithDurations
         try? await Task.sleep(nanoseconds: 200_000_000)
         calculateStats(
             from: historyWithDurations,

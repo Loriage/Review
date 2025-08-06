@@ -5,7 +5,8 @@ struct MainView: View {
     
     var body: some View {
         if authManager.isAuthenticated {
-            MainTabView()
+            let viewModel = PlexMonitorViewModel(authManager: authManager)
+            MainTabView(viewModel: viewModel)
                 .environmentObject(authManager)
         }
         else if authManager.pin != nil {
