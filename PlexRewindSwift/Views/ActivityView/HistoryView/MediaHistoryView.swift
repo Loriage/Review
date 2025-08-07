@@ -2,8 +2,10 @@
 import SwiftUI
 
 struct MediaHistoryView: View {
-    @StateObject private var viewModel: MediaHistoryViewModel
+    @StateObject var viewModel: MediaHistoryViewModel
     @StateObject private var actionsViewModel: MediaActionsViewModel
+
+    @EnvironmentObject var activityViewModel: ActivityViewModel
 
     @ScaledMetric var width: CGFloat = 50
     @State private var showingSettings = false
@@ -110,7 +112,11 @@ struct MediaHistoryView: View {
             .presentationDetents([.height(220)])
             .presentationBackground(.thinMaterial)
         }
-        .sheet(isPresented: $showImageSelector) {
+        .sheet(isPresented: $showImageSelector, onDismiss: {
+            Task {
+                await viewModel.refreshSession()
+            }
+        }) {
             ImageSelectorView(
                 session: viewModel.session,
                 serverViewModel: actionsViewModel.serverViewModel,
@@ -119,6 +125,7 @@ struct MediaHistoryView: View {
         }
         .animation(.spring(), value: actionsViewModel.hudMessage)
         .task {
+            viewModel.activityViewModel = self.activityViewModel
             await viewModel.loadData()
         }
     }

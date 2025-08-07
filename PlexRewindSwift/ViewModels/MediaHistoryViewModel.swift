@@ -11,8 +11,10 @@ class MediaHistoryViewModel: ObservableObject {
     @Published var historyItems: [MediaHistoryItem] = []
     @Published var summary: String?
     @Published var isLoading = true
-    
-    let session: PlexActivitySession
+
+    @Published var session: PlexActivitySession
+
+    var activityViewModel: ActivityViewModel?
 
     private let serverViewModel: ServerViewModel
     private let statsViewModel: StatsViewModel
@@ -47,5 +49,17 @@ class MediaHistoryViewModel: ObservableObject {
         }
         
         self.isLoading = false
+    }
+
+    func refreshSession() async {
+        guard let activityViewModel = activityViewModel else { return }
+
+        await activityViewModel.refreshActivity()
+
+        if case .content(let sessions) = activityViewModel.state {
+            if let updatedSession = sessions.first(where: { $0.id == self.session.id }) {
+                self.session = updatedSession
+            }
+        }
     }
 }
