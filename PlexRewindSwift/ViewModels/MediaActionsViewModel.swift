@@ -12,8 +12,8 @@ class MediaActionsViewModel: ObservableObject {
     @Published var alert: ActionAlert?
 
     private let plexService: PlexAPIService
-    private let serverViewModel: ServerViewModel
-    private let authManager: PlexAuthManager
+    let serverViewModel: ServerViewModel
+    let authManager: PlexAuthManager
     private let mediaRatingKey: String
     private let mediaTitle: String
 

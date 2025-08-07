@@ -7,6 +7,7 @@ struct MediaHistoryView: View {
 
     @ScaledMetric var width: CGFloat = 50
     @State private var showingSettings = false
+    @State private var showImageSelector = false
     @State private var dominantColor: Color = Color(.systemGray4)
 
     init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
@@ -70,7 +71,9 @@ struct MediaHistoryView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     Button {
                         showingSettings = false
-                        Task { await actionsViewModel.changeImage() }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            showImageSelector = true
+                        }
                     } label: {
                         Label("Modifier l'image", systemImage: "photo")
                     }
@@ -106,6 +109,13 @@ struct MediaHistoryView: View {
             .foregroundColor(.primary)
             .presentationDetents([.height(220)])
             .presentationBackground(.thinMaterial)
+        }
+        .sheet(isPresented: $showImageSelector) {
+            ImageSelectorView(
+                session: viewModel.session,
+                serverViewModel: actionsViewModel.serverViewModel,
+                authManager: actionsViewModel.authManager
+            )
         }
         .animation(.spring(), value: actionsViewModel.hudMessage)
         .task {

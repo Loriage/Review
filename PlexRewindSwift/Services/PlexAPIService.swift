@@ -1,26 +1,5 @@
 import Foundation
 
-enum PlexError: Error, LocalizedError {
-    case invalidURL
-    case networkError(Error)
-    case decodingError(Error)
-    case noData
-    case serverError(statusCode: Int)
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL: return "L'URL du serveur est invalide."
-        case .networkError(let error):
-            return "Erreur réseau: \(error.localizedDescription)"
-        case .decodingError:
-            return "Erreur lors de la lecture des données du serveur."
-        case .noData: return "Aucune donnée reçue du serveur."
-        case .serverError(let statusCode):
-            return "Erreur du serveur (code: \(statusCode))."
-        }
-    }
-}
-
 class PlexAPIService {
     func fetchWatchHistory(
         serverURL: String,
@@ -298,6 +277,38 @@ class PlexAPIService {
 
     func analyzeMedia(for ratingKey: String, serverURL: String, token: String) async throws {
         let urlString = "\(serverURL)/library/metadata/\(ratingKey)/analyze?X-Plex-Token=\(token)"
+        try await performPutRequest(for: urlString)
+    }
+
+    func fetchArtworks(for ratingKey: String, serverURL: String, token: String) async throws -> [PlexArtwork] {
+        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)/posters?X-Plex-Token=\(token)") else {
+            throw PlexError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+        
+        do {
+            let decodedResponse = try JSONDecoder().decode(PlexArtworkResponse.self, from: data)
+
+            return decodedResponse.mediaContainer.metadata
+        } catch {
+            throw PlexError.decodingError(error)
+        }
+    }
+
+    func setArtwork(for ratingKey: String, artworkKey: String, serverURL: String, token: String) async throws {
+        guard let encodedArtworkURL = artworkKey.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            throw PlexError.invalidURL
+        }
+
+        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/poster?url=\(encodedArtworkURL)&X-Plex-Token=\(token)"
         try await performPutRequest(for: urlString)
     }
 }
