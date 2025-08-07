@@ -3,6 +3,7 @@ import CoreGraphics
 
 struct AsyncImageView: View {
     let url: URL?
+    var refreshTrigger: UUID?
     var contentMode: ContentMode = .fill
     var onColorExtracted: ((Color) -> Void)?
 
@@ -30,9 +31,8 @@ struct AsyncImageView: View {
             }
         }
         .onAppear(perform: loadImage)
-        .onChange(of: url) {
-            loadImage()
-        }
+        .onChange(of: url) { loadImage() }
+        .onChange(of: refreshTrigger) { loadImage() }
     }
 
     private func extractDominantColor(from image: UIImage) -> Color? {

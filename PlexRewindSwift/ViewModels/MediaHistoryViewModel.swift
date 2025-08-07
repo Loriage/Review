@@ -13,16 +13,37 @@ class MediaHistoryViewModel: ObservableObject {
     @Published var isLoading = true
 
     @Published var session: PlexActivitySession
+    @Published var imageRefreshId = UUID()
 
     var activityViewModel: ActivityViewModel?
 
     private let serverViewModel: ServerViewModel
     private let statsViewModel: StatsViewModel
+    private let authManager: PlexAuthManager
 
-    init(session: PlexActivitySession, serverViewModel: ServerViewModel, statsViewModel: StatsViewModel) {
+    init(session: PlexActivitySession, serverViewModel: ServerViewModel, statsViewModel: StatsViewModel, authManager: PlexAuthManager) {
         self.session = session
         self.serverViewModel = serverViewModel
         self.statsViewModel = statsViewModel
+        self.authManager = authManager
+    }
+
+    var displayPosterURL: URL? {
+        let ratingKey = session.type == "episode" ? session.grandparentRatingKey : session.ratingKey
+        
+        guard let key = ratingKey,
+              let serverID = serverViewModel.selectedServerID,
+              let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
+              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
+              let token = authManager.getPlexAuthToken()
+        else {
+            return session.posterURL
+        }
+        
+        let resourceToken = server.accessToken ?? token
+        let urlString = "\(connection.uri)/library/metadata/\(key)/thumb?X-Plex-Token=\(resourceToken)"
+        
+        return URL(string: urlString)
     }
 
     func loadData() async {
@@ -59,6 +80,7 @@ class MediaHistoryViewModel: ObservableObject {
         if case .content(let sessions) = activityViewModel.state {
             if let updatedSession = sessions.first(where: { $0.id == self.session.id }) {
                 self.session = updatedSession
+                self.imageRefreshId = UUID()
             }
         }
     }

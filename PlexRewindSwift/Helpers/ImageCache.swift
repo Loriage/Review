@@ -15,4 +15,8 @@ class ImageCache {
     func set(_ image: UIImage, for url: URL) {
         cache.setObject(image, forKey: url as NSURL)
     }
+
+    func invalidate(url: URL) {
+        cache.removeObject(forKey: url as NSURL)
+    }
 }

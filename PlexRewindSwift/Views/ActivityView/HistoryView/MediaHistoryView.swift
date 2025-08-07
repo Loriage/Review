@@ -4,8 +4,8 @@ import SwiftUI
 struct MediaHistoryView: View {
     @StateObject var viewModel: MediaHistoryViewModel
     @StateObject private var actionsViewModel: MediaActionsViewModel
-
     @EnvironmentObject var activityViewModel: ActivityViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
 
     @ScaledMetric var width: CGFloat = 50
     @State private var showingSettings = false
@@ -16,7 +16,8 @@ struct MediaHistoryView: View {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
             session: session,
             serverViewModel: serverViewModel,
-            statsViewModel: statsViewModel
+            statsViewModel: statsViewModel,
+            authManager: authManager
         ))
         _actionsViewModel = StateObject(wrappedValue: MediaActionsViewModel(
             session: session,
@@ -113,6 +114,9 @@ struct MediaHistoryView: View {
             .presentationBackground(.thinMaterial)
         }
         .sheet(isPresented: $showImageSelector, onDismiss: {
+            if let url = viewModel.displayPosterURL {
+                ImageCache.shared.invalidate(url: url)
+            }
             Task {
                 await viewModel.refreshSession()
             }
@@ -167,15 +171,13 @@ struct MediaHistoryView: View {
         Section {
             VStack(spacing: 20) {
                 HStack {
-                    Spacer()
-
-                    AsyncImageView(url: viewModel.session.posterURL, contentMode: .fit) { color in
+                    AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit) { color in
                         self.dominantColor = color
                     }
-                        .frame(height: 250)
-                        .cornerRadius(16)
-                        .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
-                    Spacer()
+                    .aspectRatio(2/3, contentMode: .fit)
+                    .frame(height: 250)
+                    .cornerRadius(16)
+                    .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
                 }
                 .padding(.top, 5)
                 .padding(.bottom, 20)
@@ -184,11 +186,9 @@ struct MediaHistoryView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Résumé")
                             .font(.title2.bold())
-                            .padding(.horizontal)
                         Text(summary)
                             .font(.body)
                             .foregroundColor(.secondary)
-                            .padding(.horizontal)
                     }
                 }
             }
