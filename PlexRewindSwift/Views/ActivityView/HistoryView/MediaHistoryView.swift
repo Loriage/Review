@@ -3,6 +3,7 @@ import SwiftUI
 
 struct MediaHistoryView: View {
     @StateObject private var viewModel: MediaHistoryViewModel
+    @ScaledMetric var width: CGFloat = 50
 
     init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
@@ -77,7 +78,26 @@ struct MediaHistoryView: View {
                 .padding(.top, 5)
                 .padding(.bottom, 20)
 
-                if let summary = viewModel.summary, !summary.isEmpty {
+                HStack {
+                    HStack {
+                        Image(systemName: "pencil")
+                            .frame(width: width, alignment: .center)
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Image(systemName: "photo.badge.magnifyingglass")
+                            .frame(width: width, alignment: .center)
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .frame(width: width, alignment: .center)
+                            .foregroundColor(.gray)
+                    }
+                }
+                .font(.title2)
+
+                if let summary = viewModel.session.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Résumé")
                             .font(.title2.bold())
@@ -116,7 +136,7 @@ struct MediaHistoryView: View {
                     
                     if let viewedAt = item.session.viewedAt {
                         Text("\(item.userName ?? "Utilisateur inconnu") - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
-                            .font(.caption)
+                            .font(.subheadline)
                             .foregroundColor(.secondary.opacity(0.8))
                     }
                 }

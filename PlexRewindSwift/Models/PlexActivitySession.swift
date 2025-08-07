@@ -33,6 +33,7 @@ struct PlexActivitySession: Decodable, Identifiable {
     let parentThumb: String?
     let grandparentThumb: String?
     let thumb: String?
+    let summary: String?
     
     let parentIndex: Int?
     let index: Int?
@@ -128,6 +129,6 @@ struct PlexActivitySession: Decodable, Identifiable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case ratingKey, sessionKey, title, type, duration, viewOffset, art, contentRating, grandparentTitle, parentThumb, grandparentThumb, thumb, parentIndex, index, year, media = "Media", user = "User", player = "Player", session = "Session", transcodeSession = "TranscodeSession"
+        case ratingKey, sessionKey, title, type, duration, viewOffset, art, contentRating, grandparentTitle, parentThumb, grandparentThumb, thumb, summary, parentIndex, index, year, media = "Media", user = "User", player = "Player", session = "Session", transcodeSession = "TranscodeSession"
     }
 }
