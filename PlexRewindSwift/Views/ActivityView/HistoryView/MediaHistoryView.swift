@@ -3,6 +3,8 @@ import SwiftUI
 
 struct MediaHistoryView: View {
     @StateObject private var viewModel: MediaHistoryViewModel
+    @StateObject private var actionsViewModel: MediaActionsViewModel
+
     @ScaledMetric var width: CGFloat = 50
     @State private var showingSettings = false
     @State private var dominantColor: Color = Color(.systemGray4)
@@ -13,16 +15,35 @@ struct MediaHistoryView: View {
             serverViewModel: serverViewModel,
             statsViewModel: statsViewModel
         ))
+        _actionsViewModel = StateObject(wrappedValue: MediaActionsViewModel(
+            session: session,
+            plexService: PlexAPIService(),
+            serverViewModel: serverViewModel,
+            authManager: authManager
+        ))
     }
 
     var body: some View {
-        Group {
-            if viewModel.isLoading {
-                loadingView
-            } else if viewModel.historyItems.isEmpty {
-                emptyView
-            } else {
-                contentView
+        ZStack{
+            Group {
+                if viewModel.isLoading {
+                    loadingView
+                } else if viewModel.historyItems.isEmpty {
+                    emptyView
+                } else {
+                    contentView
+                }
+            }
+            if let hudMessage = actionsViewModel.hudMessage {
+                HUDView(hudMessage: hudMessage)
+                    .transition(.scale.combined(with: .opacity))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            if hudMessage == actionsViewModel.hudMessage {
+                                actionsViewModel.hudMessage = nil
+                            }
+                        }
+                    }
             }
         }
         .navigationTitle(viewModel.session.showTitle)
@@ -45,28 +66,40 @@ struct MediaHistoryView: View {
                         .padding(.top, 10)
                         .padding(.bottom, 30)
                 }
-
+                
                 VStack(alignment: .leading, spacing: 24) {
-                    Button { showingSettings = false } label: {
+                    Button {
+                        showingSettings = false
+                        Task { await actionsViewModel.changeImage() }
+                    } label: {
                         Label("Modifier l'image", systemImage: "photo")
                     }
                     
-                    Button { showingSettings = false } label: {
+                    Button {
+                        showingSettings = false
+                        Task { await actionsViewModel.refreshMetadata() }
+                    } label: {
                         Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
                     }
                     
-                    Button { showingSettings = false } label: {
+                    Button {
+                        showingSettings = false
+                        Task { await actionsViewModel.analyzeMedia() }
+                    } label: {
                         Label("Analyse", systemImage: "wand.and.rays")
                     }
                     
-                    Button { showingSettings = false } label: {
+                    Button {
+                        showingSettings = false
+                        Task { await actionsViewModel.fixMatch() }
+                    } label: {
                         Label("Corriger l'association...", systemImage: "pencil")
                     }
                 }
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
-
+                
                 Spacer()
             }
             .buttonStyle(.plain)
@@ -74,6 +107,7 @@ struct MediaHistoryView: View {
             .presentationDetents([.height(220)])
             .presentationBackground(.thinMaterial)
         }
+        .animation(.spring(), value: actionsViewModel.hudMessage)
         .task {
             await viewModel.loadData()
         }
