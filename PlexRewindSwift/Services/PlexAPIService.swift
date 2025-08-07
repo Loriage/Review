@@ -311,4 +311,40 @@ class PlexAPIService {
         let urlString = "\(serverURL)/library/metadata/\(ratingKey)/poster?url=\(encodedArtworkURL)&X-Plex-Token=\(token)"
         try await performPutRequest(for: urlString)
     }
+
+    func fetchMatches(for ratingKey: String, serverURL: String, token: String) async throws -> [PlexMatch] {
+        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/matches?manual=1&X-Plex-Token=\(token)"
+        guard let url = URL(string: urlString) else {
+            throw PlexError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+
+        let decodedResponse = try JSONDecoder().decode(PlexMatchResponse.self, from: data)
+        return decodedResponse.mediaContainer.searchResults
+    }
+
+    func applyMatch(for ratingKey: String, guid: String, name: String, year: Int?, serverURL: String, token: String) async throws {
+        guard let encodedGuid = guid.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            throw PlexError.invalidURL
+        }
+
+        var urlString = "\(serverURL)/library/metadata/\(ratingKey)/match?guid=\(encodedGuid)&name=\(encodedName)"
+        
+        if let year = year {
+            urlString += "&year=\(year)"
+        }
+        
+        urlString += "&X-Plex-Token=\(token)"
+        
+        try await performPutRequest(for: urlString)
+    }
 }

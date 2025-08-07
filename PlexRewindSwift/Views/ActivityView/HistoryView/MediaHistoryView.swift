@@ -8,7 +8,10 @@ struct MediaHistoryView: View {
     @EnvironmentObject var authManager: PlexAuthManager
 
     @ScaledMetric var width: CGFloat = 50
+
     @State private var showingSettings = false
+    @State private var showFixMatchView = false
+
     @State private var showImageSelector = false
     @State private var dominantColor: Color = Color(.systemGray4)
 
@@ -97,7 +100,9 @@ struct MediaHistoryView: View {
                     
                     Button {
                         showingSettings = false
-                        Task { await actionsViewModel.fixMatch() }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            showFixMatchView = true
+                        }
                     } label: {
                         Label("Corriger l'association...", systemImage: "pencil")
                     }
@@ -122,6 +127,17 @@ struct MediaHistoryView: View {
             }
         }) {
             ImageSelectorView(
+                session: viewModel.session,
+                serverViewModel: actionsViewModel.serverViewModel,
+                authManager: actionsViewModel.authManager
+            )
+        }
+        .sheet(isPresented: $showFixMatchView, onDismiss: {
+            Task {
+                await viewModel.refreshSession()
+            }
+        }) {
+            FixMatchView(
                 session: viewModel.session,
                 serverViewModel: actionsViewModel.serverViewModel,
                 authManager: actionsViewModel.authManager
