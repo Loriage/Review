@@ -4,6 +4,8 @@ import SwiftUI
 struct MediaHistoryView: View {
     @StateObject private var viewModel: MediaHistoryViewModel
     @ScaledMetric var width: CGFloat = 50
+    @State private var showingSettings = false
+    @State private var dominantColor: Color = Color(.systemGray4)
 
     init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
@@ -26,13 +28,53 @@ struct MediaHistoryView: View {
         }
         .navigationTitle(viewModel.session.showTitle)
         .navigationBarTitleDisplayMode(.inline)
-        /*.toolbar {
+        .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {isShowingSettings = true}) {
+                Button(action: {
+                    showingSettings = true
+                }) {
                     Image(systemName: "gearshape.fill")
                 }
             }
-        }*/
+        }
+        .sheet(isPresented: $showingSettings) {
+            VStack(spacing: 0) {
+                HStack(alignment: .center) {
+                    Capsule()
+                        .fill(Color.secondary)
+                        .frame(width: 40, height: 5)
+                        .padding(.top, 10)
+                        .padding(.bottom, 30)
+                }
+
+                VStack(alignment: .leading, spacing: 24) {
+                    Button { showingSettings = false } label: {
+                        Label("Modifier l'image", systemImage: "photo")
+                    }
+                    
+                    Button { showingSettings = false } label: {
+                        Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
+                    }
+                    
+                    Button { showingSettings = false } label: {
+                        Label("Analyse", systemImage: "wand.and.rays")
+                    }
+                    
+                    Button { showingSettings = false } label: {
+                        Label("Corriger l'association...", systemImage: "pencil")
+                    }
+                }
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+
+                Spacer()
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.primary)
+            .presentationDetents([.height(220)])
+            .presentationBackground(.thinMaterial)
+        }
         .task {
             await viewModel.loadData()
         }
@@ -76,7 +118,10 @@ struct MediaHistoryView: View {
             VStack(spacing: 20) {
                 HStack {
                     Spacer()
-                    AsyncImageView(url: viewModel.session.posterURL, contentMode: .fit)
+
+                    AsyncImageView(url: viewModel.session.posterURL, contentMode: .fit) { color in
+                        self.dominantColor = color
+                    }
                         .frame(height: 250)
                         .cornerRadius(16)
                         .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
