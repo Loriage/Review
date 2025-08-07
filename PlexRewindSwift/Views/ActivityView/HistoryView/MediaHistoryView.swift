@@ -26,6 +26,13 @@ struct MediaHistoryView: View {
         }
         .navigationTitle(viewModel.session.showTitle)
         .navigationBarTitleDisplayMode(.inline)
+        /*.toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {isShowingSettings = true}) {
+                    Image(systemName: "gearshape.fill")
+                }
+            }
+        }*/
         .task {
             await viewModel.loadData()
         }
@@ -77,25 +84,6 @@ struct MediaHistoryView: View {
                 }
                 .padding(.top, 5)
                 .padding(.bottom, 20)
-
-                HStack {
-                    HStack {
-                        Image(systemName: "pencil")
-                            .frame(width: width, alignment: .center)
-                            .foregroundColor(.gray)
-                    }
-                    HStack {
-                        Image(systemName: "photo.badge.magnifyingglass")
-                            .frame(width: width, alignment: .center)
-                            .foregroundColor(.gray)
-                    }
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .frame(width: width, alignment: .center)
-                            .foregroundColor(.gray)
-                    }
-                }
-                .font(.title2)
 
                 if let summary = viewModel.session.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
