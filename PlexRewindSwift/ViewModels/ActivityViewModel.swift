@@ -44,18 +44,11 @@ class ActivityViewModel: ObservableObject {
             
             for i in sessions.indices {
                 let session = sessions[i]
-                
-                let imagePath = session.type == "episode" ? (session.parentThumb ?? session.grandparentThumb ?? session.thumb) : session.thumb
-                if let path = imagePath, var components = URLComponents(string: "\(serverURL)/photo/:/transcode") {
-                    components.queryItems = [
-                        URLQueryItem(name: "url", value: path),
-                        URLQueryItem(name: "width", value: "300"),
-                        URLQueryItem(name: "height", value: "450"),
-                        URLQueryItem(name: "minSize", value: "1"),
-                        URLQueryItem(name: "X-Plex-Token", value: resourceToken)
-                    ]
-                    sessions[i].posterURL = components.url
-                }
+
+                let posterRatingKey = session.type == "episode" ? session.grandparentRatingKey ?? session.ratingKey : session.ratingKey
+
+                let urlString = "\(serverURL)/library/metadata/\(posterRatingKey)/thumb?X-Plex-Token=\(resourceToken)"
+                sessions[i].posterURL = URL(string: urlString)
                 
                 if !session.player.local {
                     sessions[i].location = await geolocationService.fetchLocation(for: session.player.address)
