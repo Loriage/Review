@@ -7,12 +7,11 @@ struct MediaHistoryView: View {
     @State private var showingSettings = false
     @State private var dominantColor: Color = Color(.systemGray4)
 
-    init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+    init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
             session: session,
-            plexService: PlexAPIService(),
             serverViewModel: serverViewModel,
-            authManager: authManager
+            statsViewModel: statsViewModel
         ))
     }
 

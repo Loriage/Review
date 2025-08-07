@@ -65,7 +65,8 @@ struct ActivityRowView: View {
             NavigationLink(destination: MediaHistoryView(
                 session: session,
                 serverViewModel: serverViewModel,
-                authManager: authManager
+                authManager: authManager,
+                statsViewModel: statsViewModel
             )) {
                 HStack(spacing: 15) {
                     AsyncImageView(url: session.posterURL, contentMode: .fill) { color in
