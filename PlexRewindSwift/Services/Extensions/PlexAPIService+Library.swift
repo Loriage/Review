@@ -137,33 +137,26 @@ extension PlexAPIService {
         guard let url = URL(string: "\(serverURL)/library/sections?X-Plex-Token=\(token)") else {
             throw PlexError.invalidURL
         }
-        
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
-        }
-        
-        do {
-            let decodedResponse = try JSONDecoder().decode(PlexLibraryResponse.self, from: data)
-            return decodedResponse.mediaContainer.directories
-        } catch {
-            throw PlexError.decodingError(error)
-        }
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let decodedResponse = try JSONDecoder().decode(PlexLibraryResponse.self, from: data)
+        return decodedResponse.mediaContainer.directories
     }
 
-    private func fetchPaginatedContent<T: Decodable>(baseURL: String) async throws -> [T] {
-        let pageSize = 250
-        var currentIndex = 0
-        var allItems: [T] = []
-        var shouldContinueFetching = true
+    func fetchAllMediaInSection(serverURL: String, token: String, libraryKey: String, mediaType: Int) async throws -> [MediaMetadata] {
+        let baseURL = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Token=\(token)"
+        return try await fetchPaginatedContent(baseURL: baseURL)
+    }
 
+    private func fetchPaginatedContent(baseURL: String) async throws -> [MediaMetadata] {
+        let pageSize = 500
+        var currentIndex = 0
+        var allItems: [MediaMetadata] = []
+        var shouldContinueFetching = true
+        
         while shouldContinueFetching {
-            let separator = baseURL.contains("?") ? "&" : "?"
-            let urlString = "\(baseURL)\(separator)X-Plex-Container-Start=\(currentIndex)&X-Plex-Container-Size=\(pageSize)"
+            let urlString = "\(baseURL)&X-Plex-Container-Start=\(currentIndex)&X-Plex-Container-Size=\(pageSize)"
             
             guard let url = URL(string: urlString) else { throw PlexError.invalidURL }
             
@@ -176,34 +169,13 @@ extension PlexAPIService {
                 throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
             }
             
-            var newItemsCount = 0
+            let decodedResponse = try JSONDecoder().decode(PlexAllMediaResponse.self, from: data)
+            let newItems = decodedResponse.mediaContainer.metadata
+            allItems.append(contentsOf: newItems)
             
-            if T.self == MediaMetadata.self,
-               let decodedResponse = try? JSONDecoder().decode(PlexAllMediaResponse.self, from: data),
-               let newItems = decodedResponse.mediaContainer.metadata as? [T] {
-                allItems.append(contentsOf: newItems)
-                newItemsCount = newItems.count
-            } else if T.self == PlexLibraryContentItem.self,
-                      let decodedResponse = try? JSONDecoder().decode(PlexLibraryContentResponse.self, from: data),
-                      let newItems = decodedResponse.mediaContainer.metadata as? [T] {
-                allItems.append(contentsOf: newItems)
-                newItemsCount = newItems.count
-            }
-            
-            shouldContinueFetching = (newItemsCount == pageSize)
+            shouldContinueFetching = (newItems.count == pageSize)
             currentIndex += pageSize
         }
         return allItems
-    }
-
-    func fetchAllMediaInSection(serverURL: String, token: String, libraryKey: String) async throws -> [MediaMetadata] {
-        let baseURL = "\(serverURL)/library/sections/\(libraryKey)/all?X-Plex-Token=\(token)"
-        return try await fetchPaginatedContent(baseURL: baseURL)
-    }
-    
-    func fetchLibraryContent(serverURL: String, token: String, at path: String) async throws -> [PlexLibraryContentItem] {
-        let separator = path.contains("?") ? "&" : "?"
-        let baseURL = "\(serverURL)\(path)\(separator)X-Plex-Token=\(token)"
-        return try await fetchPaginatedContent(baseURL: baseURL)
     }
 }

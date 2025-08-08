@@ -41,7 +41,7 @@ struct LibraryView: View {
                     }
                 }
             }
-            .navigationTitle("Médiathèque")
+            .navigationTitle("Bibliothèques")
             .task {
                 await viewModel.loadLibraries()
             }
