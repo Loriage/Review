@@ -87,6 +87,7 @@ class UserHistoryViewModel: ObservableObject {
     }
 
     func refreshData() async {
+        await statsViewModel.syncFullHistory()
         await loadHistory()
     }
 }

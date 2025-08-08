@@ -46,6 +46,7 @@ class MediaHistoryViewModel: ObservableObject {
     }
 
     func refreshData() async {
+        await statsViewModel.syncFullHistory()
         await fetchData()
     }
     
