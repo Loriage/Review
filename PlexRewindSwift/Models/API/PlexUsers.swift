@@ -8,6 +8,10 @@ struct PlexUserResponse: Decodable {
     }
 }
 
+struct PlexHomeUserResponse: Decodable {
+    let users: [PlexUser]
+}
+
 struct UserMediaContainer: Decodable {
     let users: [PlexUser]
 
@@ -19,7 +23,7 @@ struct UserMediaContainer: Decodable {
 struct PlexUser: Decodable, Identifiable, Hashable {
     let id: Int
     let title: String
-    let thumb: String?
+    var thumb: String?
 
     enum CodingKeys: String, CodingKey {
         case id

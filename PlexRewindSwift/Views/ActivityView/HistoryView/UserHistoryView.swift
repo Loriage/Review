@@ -1,42 +1,102 @@
 import SwiftUI
 
 struct UserHistoryView: View {
-    let userName: String
-    let sessionsFetcher: () async -> [WatchSession]
-    
-    @State private var sessions: [WatchSession] = []
-    @State private var isLoading = true
+    @StateObject var viewModel: UserHistoryViewModel
+
+    init(userID: Int, userName: String, statsViewModel: StatsViewModel, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+        _viewModel = StateObject(wrappedValue: UserHistoryViewModel(
+            userID: userID,
+            userName: userName,
+            statsViewModel: statsViewModel,
+            serverViewModel: serverViewModel,
+            authManager: authManager
+        ))
+    }
 
     var body: some View {
         Group {
-            if isLoading {
+            if viewModel.isLoading {
                 VStack(spacing: 20) {
                     ProgressView().scaleEffect(1.5)
                     Text("Chargement de l'historique...")
                         .foregroundColor(.secondary)
                 }
-            } else if sessions.isEmpty {
-                VStack(spacing: 15) {
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 60))
-                        .foregroundColor(.secondary)
-                    Text("Aucun historique trouvé")
-                        .font(.title2.bold())
-                    Text("L'historique pour cet utilisateur est vide.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+            } else if viewModel.sessions.isEmpty {
+                List {
+                    userHeaderSection
+                    emptyStateSection
                 }
             } else {
-                List(sessions) { session in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(session.showTitle)
-                            .font(.headline)
+                List {
+                    userHeaderSection
+                    historySection
+                }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Historique des écoutes")
+        .task {
+            await viewModel.loadInitialData()
+        }
+    }
 
-                        if session.type == "episode" {
+    private var userHeaderSection: some View {
+        Section {
+            VStack(spacing: 15) {
+                AsyncImageView(url: viewModel.userProfileImageURL)
+                    .frame(width: 100, height: 100)
+                    .clipShape(Circle())
+                    .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
+                
+                Text(viewModel.userName)
+                    .font(.title.bold())
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 20)
+        }
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+    }
+
+    private var emptyStateSection: some View {
+        Section {
+            VStack(spacing: 15) {
+                Image(systemName: "person.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.secondary)
+                Text("Aucun historique trouvé")
+                    .font(.title2.bold())
+                Text("L'historique pour cet utilisateur est vide.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.vertical, 30)
+        }
+        .listRowBackground(Color.clear)
+    }
+
+    private var historySection: some View {
+        Section(header: Text("Historique des visionnages")) {
+            ForEach(viewModel.sessions) { session in
+                HStack(spacing: 15) {
+                    AsyncImageView(url: viewModel.posterURL(for: session), contentMode: .fill)
+                    .frame(width: 60, height: 90)
+                    .cornerRadius(8)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        if session.type == "movie" {
+                            Text(session.title ?? "Titre inconnu")
+                                .font(.headline)
+                        } else {
+                            Text(session.grandparentTitle ?? "Série inconnue")
+                                .font(.headline)
                             Text(session.title ?? "Épisode inconnu")
                                 .font(.subheadline)
+                                .foregroundColor(.secondary)
                         }
                         
                         if let viewedAt = session.viewedAt {
@@ -47,27 +107,7 @@ struct UserHistoryView: View {
                     }
                     .padding(.vertical, 4)
                 }
-                .refreshable {
-                    await refreshData()
-                }
             }
         }
-        .navigationTitle(userName)
-        .navigationBarTitleDisplayMode(.inline)
-        .task {
-            await loadInitialData()
-        }
-    }
-
-    private func loadInitialData() async {
-        if sessions.isEmpty {
-            isLoading = true
-            self.sessions = await sessionsFetcher()
-            isLoading = false
-        }
-    }
-    
-    private func refreshData() async {
-        self.sessions = await sessionsFetcher()
     }
 }

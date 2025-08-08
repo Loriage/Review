@@ -135,8 +135,11 @@ struct ActivityRowView: View {
                 )
             
             NavigationLink(destination: UserHistoryView(
+                userID: Int(session.user.id) ?? 0,
                 userName: session.user.title,
-                sessionsFetcher: { await statsViewModel.historyForUser(userID: Int(session.user.id) ?? 0) }
+                statsViewModel: statsViewModel,
+                serverViewModel: serverViewModel,
+                authManager: authManager
             )) {
                 HStack(spacing: 15) {
                     AsyncImageView(url: userThumbURL)
@@ -242,8 +245,8 @@ struct ActivityRowView: View {
         
         components.queryItems = [
             URLQueryItem(name: "url", value: thumbPath),
-            URLQueryItem(name: "width", value: "100"),
-            URLQueryItem(name: "height", value: "100"),
+            URLQueryItem(name: "width", value: "200"),
+            URLQueryItem(name: "height", value: "200"),
             URLQueryItem(name: "minSize", value: "1"),
             URLQueryItem(name: "X-Plex-Token", value: token)
         ]

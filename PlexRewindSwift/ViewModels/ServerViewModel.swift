@@ -23,6 +23,7 @@ class ServerViewModel: ObservableObject {
                 guard let self = self, let serverID = serverID else { return }
                 Task {
                     await self.loadUsers(for: serverID)
+                    await self.matchAndSetProfilePictures()
                 }
             }
             .store(in: &cancellables)
@@ -51,27 +52,43 @@ class ServerViewModel: ObservableObject {
     }
 
     func loadUsers(for serverID: String) async {
-        self.availableUsers = []
-        
-        guard
-            let server = availableServers.first(where: { $0.id == serverID }),
-            let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
-            let token = authManager.getPlexAuthToken()
+        guard let server = availableServers.first(where: { $0.id == serverID }),
+              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
+              let token = authManager.getPlexAuthToken()
         else {
             return
         }
-
-        isLoading = true
-
+        
         do {
             let serverURL = connection.uri
             let resourceToken = server.accessToken ?? token
-            let allUsers = try await plexService.fetchUsers(serverURL: serverURL, token: resourceToken)
-            self.availableUsers = allUsers.filter { !$0.title.isEmpty }
-        } catch {
-            errorMessage = "Impossible de récupérer les utilisateurs. \(error.localizedDescription)"
-        }
 
-        isLoading = false
+            let usersFromServer = try await plexService.fetchUsers(serverURL: serverURL, token: resourceToken)
+            self.availableUsers = usersFromServer.filter { !$0.title.isEmpty }
+        } catch {
+            errorMessage = "Impossible de récupérer les utilisateurs du serveur. \(error.localizedDescription)"
+        }
+    }
+
+    private func matchAndSetProfilePictures() async {
+        guard let token = authManager.getPlexAuthToken(), !self.availableUsers.isEmpty else { return }
+        
+        do {
+            let homeUsers = try await plexService.fetchHomeUsers(token: token)
+            let avatarDict = Dictionary(uniqueKeysWithValues: homeUsers.map { ($0.id, $0.thumb) })
+            
+            var updatedUsers: [PlexUser] = []
+            
+            for var user in self.availableUsers {
+                if let newThumb = avatarDict[user.id], let validThumb = newThumb, !validThumb.isEmpty {
+                    user.thumb = validThumb
+                }
+                updatedUsers.append(user)
+            }
+            
+            self.availableUsers = updatedUsers
+        } catch {
+            print("N'a pas pu récupérer les avatars du foyer Plex: \(error.localizedDescription)")
+        }
     }
 }

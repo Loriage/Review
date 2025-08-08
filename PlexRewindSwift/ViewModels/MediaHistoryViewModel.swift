@@ -1,11 +1,5 @@
 import Foundation
 
-struct MediaHistoryItem: Identifiable {
-    let id: String
-    let session: WatchSession
-    let userName: String?
-}
-
 @MainActor
 class MediaHistoryViewModel: ObservableObject {
     @Published var historyItems: [MediaHistoryItem] = []
