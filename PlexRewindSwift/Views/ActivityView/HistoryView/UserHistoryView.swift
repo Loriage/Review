@@ -35,6 +35,9 @@ struct UserHistoryView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Historique des écoutes")
+        .refreshable {
+            await viewModel.refreshData()
+        }
         .task {
             await viewModel.loadInitialData()
         }

@@ -23,9 +23,6 @@ struct ActivityView: View {
                         }
                         .padding()
                     }
-                    .refreshable {
-                        await activityViewModel.refreshActivity()
-                    }
                 case .forbidden:
                     PermissionDeniedView()
                 case .noServerSelected:
@@ -35,6 +32,9 @@ struct ActivityView: View {
                 }
             }
             .navigationTitle("Activité en cours")
+            .refreshable {
+                await activityViewModel.refreshActivity()
+            }
             .onAppear {
                 if serverViewModel.availableServers.isEmpty && !serverViewModel.isLoading {
                     Task {
