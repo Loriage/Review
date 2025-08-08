@@ -113,3 +113,43 @@ struct MediaPartContainer: Decodable {
 struct MediaPart: Decodable {
     let size: Int64
 }
+
+struct PlexLibraryContentResponse: Decodable {
+    let mediaContainer: LibraryContentMediaContainer
+    
+    enum CodingKeys: String, CodingKey {
+        case mediaContainer = "MediaContainer"
+    }
+}
+
+struct LibraryContentMediaContainer: Decodable {
+    let metadata: [PlexLibraryContentItem]
+
+    enum CodingKeys: String, CodingKey {
+        case metadata = "Metadata"
+        case directories = "Directory"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let metadata = try container.decodeIfPresent([PlexLibraryContentItem].self, forKey: .metadata) ?? []
+        let directories = try container.decodeIfPresent([PlexLibraryContentItem].self, forKey: .directories) ?? []
+        
+        self.metadata = metadata + directories
+    }
+}
+
+struct PlexLibraryContentItem: Decodable, Identifiable {
+    var id: String { key }
+    let key: String
+    let title: String
+    let type: String?
+
+    let media: [PlexMediaPartContainer]?
+    
+    enum CodingKeys: String, CodingKey {
+        case key, title, type
+        case media = "Media"
+    }
+}
