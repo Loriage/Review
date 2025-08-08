@@ -10,9 +10,11 @@ struct MediaHistoryView: View {
     @ScaledMetric var width: CGFloat = 50
 
     @State private var showingSettings = false
-    @State private var showFixMatchView = false
-
+    @State private var showMediaDetails = false
     @State private var showImageSelector = false
+    @State private var showFixMatchView = false
+    @State private var showingAnalysisAlert = false
+
     @State private var dominantColor: Color = Color(.systemGray4)
 
     init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
@@ -73,8 +75,19 @@ struct MediaHistoryView: View {
                         .padding(.top, 10)
                         .padding(.bottom, 30)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 24) {
+                    if viewModel.session.type == "movie" {
+                        Button {
+                            showingSettings = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                showMediaDetails = true
+                            }
+                        } label: {
+                            Label("Détails du média", systemImage: "info.circle")
+                        }
+                    }
+
                     Button {
                         showingSettings = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -93,7 +106,7 @@ struct MediaHistoryView: View {
                     
                     Button {
                         showingSettings = false
-                        Task { await actionsViewModel.analyzeMedia() }
+                        showingAnalysisAlert = true
                     } label: {
                         Label("Analyse", systemImage: "wand.and.rays")
                     }
@@ -115,8 +128,16 @@ struct MediaHistoryView: View {
             }
             .buttonStyle(.plain)
             .foregroundColor(.primary)
-            .presentationDetents([.height(220)])
+            .presentationDetents([.height(250)])
             .presentationBackground(.thinMaterial)
+        }
+        .alert("Êtes-vous sûr ?", isPresented: $showingAnalysisAlert) {
+            Button("Annuler", role: .cancel) {}
+            Button("Analyser", role: .destructive) {
+                Task { await actionsViewModel.analyzeMedia() }
+            }
+        } message: {
+            Text("Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur.")
         }
         .sheet(isPresented: $showImageSelector, onDismiss: {
             if let url = viewModel.displayPosterURL {
@@ -128,6 +149,13 @@ struct MediaHistoryView: View {
         }) {
             ImageSelectorView(
                 session: viewModel.session,
+                serverViewModel: actionsViewModel.serverViewModel,
+                authManager: actionsViewModel.authManager
+            )
+        }
+        .sheet(isPresented: $showMediaDetails) {
+            MediaDetailsView(
+                ratingKey: viewModel.session.ratingKey,
                 serverViewModel: actionsViewModel.serverViewModel,
                 authManager: actionsViewModel.authManager
             )
@@ -185,7 +213,7 @@ struct MediaHistoryView: View {
     
     private var headerSection: some View {
         Section {
-            VStack(spacing: 20) {
+            VStack(spacing: 0) {
                 HStack {
                     AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit) { color in
                         self.dominantColor = color
@@ -208,6 +236,7 @@ struct MediaHistoryView: View {
                     }
                 }
             }
+            .frame(maxWidth: .infinity)
             .padding(.bottom)
         }
         .listRowInsets(EdgeInsets())
