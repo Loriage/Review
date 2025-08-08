@@ -54,11 +54,17 @@ class LibraryViewModel: ObservableObject {
                         let mediaItems = try await self.plexService.fetchAllMediaInSection(serverURL: serverURL, token: token, libraryKey: library.key)
 
                         let totalSize = mediaItems.reduce(Int64(0)) { currentTotal, mediaItem in
-                            let itemSize = mediaItem.media.reduce(Int64(0)) { mediaTotal, mediaContainer in
-                                mediaTotal + mediaContainer.parts.reduce(0) { $0 + $1.size }
+                            guard let mediaContainers = mediaItem.media else {
+                                return currentTotal
+                            }
+                            
+                            let itemSize = mediaContainers.reduce(Int64(0)) { mediaTotal, mediaContainer in
+                                mediaTotal + mediaContainer.parts.reduce(Int64(0)) { $0 + $1.size }
                             }
                             return currentTotal + itemSize
                         }
+                        print(library.title)
+                        print(totalSize)
                         return (library.key, totalSize)
                     } catch {
                         print("Erreur de calcul de la taille pour la médiathèque \(library.key): \(error)")

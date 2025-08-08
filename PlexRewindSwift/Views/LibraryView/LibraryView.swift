@@ -2,8 +2,7 @@ import SwiftUI
 
 struct LibraryView: View {
     @StateObject private var viewModel: LibraryViewModel
-    
-    // On injecte les dépendances depuis la vue parente (MainTabView)
+
     init(serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: LibraryViewModel(
             serverViewModel: serverViewModel,
@@ -35,7 +34,7 @@ struct LibraryView: View {
                     ScrollView {
                         VStack(spacing: 15) {
                             ForEach(viewModel.libraries) { library in
-                                LibraryCardView(library: library)
+                                LibraryCardView(library: library, size: viewModel.librarySizes[library.key])
                             }
                         }
                         .padding()
@@ -53,9 +52,9 @@ struct LibraryView: View {
     }
 }
 
-// NOUVELLE VUE : La carte pour afficher une seule médiathèque
 struct LibraryCardView: View {
     let library: PlexLibrary
+    let size: Int64?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -72,6 +71,16 @@ struct LibraryCardView: View {
             }
             
             VStack(alignment: .leading, spacing: 5) {
+                if let size = size {
+                    Label {
+                        Text("Taille de la bibliothèque : \(formatBytes(size))")
+                    } icon: {
+                        Image(systemName: "externaldrive.fill")
+                    }
+                } else {
+                    ProgressView()
+                        .scaleEffect(0.7)
+                }
                 Label {
                     Text("Créée le: \(formatDate(library.createdAt))")
                 } icon: {
@@ -114,5 +123,14 @@ struct LibraryCardView: View {
         formatter.timeStyle = .none
 
         return formatter.string(from: date)
+    }
+
+    private func formatBytes(_ bytes: Int64) -> String {
+        let formatter = ByteCountFormatter()
+
+        formatter.allowedUnits = [.useGB, .useMB, .useTB]
+        formatter.countStyle = .binary
+
+        return formatter.string(fromByteCount: bytes)
     }
 }

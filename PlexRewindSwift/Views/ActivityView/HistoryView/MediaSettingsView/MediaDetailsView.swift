@@ -42,7 +42,7 @@ struct MediaDetailsView: View {
                                 VStack(alignment: .leading) {
                                     Text("CHEMIN").font(.caption).foregroundColor(.secondary)
                                     HStack {
-                                        Text(part.file)
+                                        Text(part.file ?? "Chemin non disponible")
                                             .lineLimit(1)
                                             .truncationMode(.middle)
                                     }
@@ -61,7 +61,7 @@ struct MediaDetailsView: View {
 
                             let columns = [GridItem(.adaptive(minimum: 120))]
                             LazyVGrid(columns: columns, spacing: 12) {
-                                InfoPill(title: "DURÉE", value: TimeFormatter.formatFullTime(info.duration / 1000))
+                                InfoPill(title: "DURÉE", value: TimeFormatter.formatFullTime((info.duration ?? 0) / 1000))
                                 InfoPill(title: "DÉBIT BINAIRE", value: "\((info.bitrate ?? 0) / 1000) Mbit/s")
                                 InfoPill(title: "LARGEUR", value: "\(info.width ?? 0)")
                                 InfoPill(title: "HAUTEUR", value: "\(info.height ?? 0)")

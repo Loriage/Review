@@ -1,4 +1,5 @@
 import Foundation
+
 struct PlexAllMediaResponse: Decodable {
     let mediaContainer: AllMediaContainer
     enum CodingKeys: String, CodingKey { case mediaContainer = "MediaContainer" }
@@ -10,6 +11,8 @@ struct AllMediaContainer: Decodable {
 }
 
 struct MediaMetadata: Decodable {
+    // La clé "Media" est optionnelle.
+    // Elle utilise PlexMediaPartContainer du fichier PlexMediaDetails.swift.
     let media: [PlexMediaPartContainer]?
     enum CodingKeys: String, CodingKey { case media = "Media" }
 }
@@ -154,19 +157,19 @@ extension PlexAPIService {
     }
 
     func fetchAllMediaInSection(serverURL: String, token: String, libraryKey: String) async throws -> [MediaMetadata] {
-        guard let url = URL(string: "\(serverURL)/library/sections/\(libraryKey)/all?type=1&X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/library/sections/\(libraryKey)/all?X-Plex-Token=\(token)") else {
             throw PlexError.invalidURL
         }
-
+        
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-
+        
         let (data, response) = try await URLSession.shared.data(for: request)
-
+        
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
         }
-
+        
         do {
             let decodedResponse = try JSONDecoder().decode(PlexAllMediaResponse.self, from: data)
             return decodedResponse.mediaContainer.metadata

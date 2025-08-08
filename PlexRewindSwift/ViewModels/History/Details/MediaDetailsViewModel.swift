@@ -3,7 +3,8 @@ import Foundation
 @MainActor
 class MediaDetailsViewModel: ObservableObject {
     @Published var mediaDetails: MediaDetails?
-    @Published var mediaInfo: MediaPartContainer?
+    // Le type est maintenant PlexMediaPartContainer, notre modèle mutualisé.
+    @Published var mediaInfo: PlexMediaPartContainer?
     @Published var videoStream: StreamDetails?
     @Published var audioStream: StreamDetails?
     @Published var isLoading = true
@@ -32,9 +33,12 @@ class MediaDetailsViewModel: ObservableObject {
 
             if let media = details?.media.first {
                 self.mediaDetails = details
+                // La première erreur est résolue ici en utilisant le bon type.
                 self.mediaInfo = media
-                self.videoStream = media.parts.first?.streams.first(where: { $0.streamType == 1 })
-                self.audioStream = media.parts.first?.streams.first(where: { $0.streamType == 2 })
+                
+                // CORRECTION : On utilise l'optional chaining `?` pour un accès sécurisé.
+                self.videoStream = media.parts.first?.streams?.first(where: { $0.streamType == 1 })
+                self.audioStream = media.parts.first?.streams?.first(where: { $0.streamType == 2 })
             }
         } catch {
             print("Erreur lors du chargement des détails du média: \(error)")
