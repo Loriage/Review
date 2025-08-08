@@ -4,6 +4,7 @@ struct MainTabView: View {
     @EnvironmentObject var activityViewModel: ActivityViewModel
     @EnvironmentObject var statsViewModel: StatsViewModel
     @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
 
     var body: some View {
         TabView {
@@ -13,6 +14,11 @@ struct MainTabView: View {
                 }
                 .environmentObject(activityViewModel)
                 .environmentObject(statsViewModel)
+
+            LibraryView(serverViewModel: serverViewModel, authManager: authManager)
+                .tabItem {
+                    Label("Médiathèque", systemImage: "books.vertical.fill")
+                }
 
             StatsView()
                 .tabItem {

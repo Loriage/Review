@@ -1,0 +1,272 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ - %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
+    "%lld lectures • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld lectures • %2$@"
+          }
+        }
+      }
+    },
+    "%lld." : {
+
+    },
+    "Accès non autorisé" : {
+
+    },
+    "Activité" : {
+
+    },
+    "Activité en cours" : {
+
+    },
+    "Actualiser les métadonnées" : {
+
+    },
+    "Allez dans l'onglet \"Réglages\" pour choisir un serveur Plex." : {
+
+    },
+    "Allez dans l'onglet \"Réglages\" pour sélectionner un serveur, une année, et générer votre Rewind." : {
+
+    },
+    "Analyse" : {
+
+    },
+    "Analyser" : {
+
+    },
+    "Annuler" : {
+
+    },
+    "Aucun historique trouvé" : {
+
+    },
+    "Aucun serveur sélectionné" : {
+
+    },
+    "Aucune activité" : {
+
+    },
+    "Aucune médiathèque" : {
+
+    },
+    "Aucune médiathèque n'a été trouvée sur ce serveur." : {
+
+    },
+    "Bienvenue sur Plex Rewind" : {
+
+    },
+    "Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur." : {
+
+    },
+    "Changer d'image" : {
+
+    },
+    "Chargement de l'historique..." : {
+
+    },
+    "Chargement..." : {
+
+    },
+    "CHEMIN" : {
+
+    },
+    "Choisissez un serveur..." : {
+
+    },
+    "Corriger l'association" : {
+
+    },
+    "Corriger l'association..." : {
+
+    },
+    "Création du Rewind" : {
+
+    },
+    "Créée le: %@" : {
+
+    },
+    "Détails du média" : {
+
+    },
+    "Distant" : {
+
+    },
+    "En attente de validation..." : {
+
+    },
+    "Êtes-vous sûr ?" : {
+
+    },
+    "Fermer" : {
+
+    },
+    "Films les plus regardés" : {
+
+    },
+    "Finalisez la connexion" : {
+
+    },
+    "Générer le Rewind" : {
+
+    },
+    "Générer mon Rewind" : {
+
+    },
+    "Historique des écoutes" : {
+
+    },
+    "Historique des visionnages" : {
+
+    },
+    "https://plex.tv/link" : {
+
+    },
+    "Impossible de charger les informations." : {
+
+    },
+    "Informations" : {
+
+    },
+    "L'historique pour ce média est vide." : {
+
+    },
+    "L'historique pour cet utilisateur est vide." : {
+
+    },
+    "La génération du Rewind peut prendre du temps car elle récupère la durée de chaque film et épisode individuellement." : {
+
+    },
+    "Local" : {
+
+    },
+    "Médiathèque" : {
+
+    },
+    "Mise à jour le: %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mise à jour le : %@"
+          }
+        }
+      }
+    },
+    "Modifier l'image" : {
+
+    },
+    "Paramètres Plex" : {
+
+    },
+    "Période" : {
+
+    },
+    "Plex Rewind" : {
+
+    },
+    "Prêt à commencer ?" : {
+
+    },
+    "Re-synchroniser l'historique" : {
+
+    },
+    "Recherche de correspondances..." : {
+
+    },
+    "Réglages" : {
+
+    },
+    "Rendez-vous sur le site web suivant et entrez le code ci-dessous :" : {
+
+    },
+    "Résumé" : {
+
+    },
+    "Revivez votre année de visionnage avec des statistiques personnalisées sur vos films et séries préférés." : {
+
+    },
+    "Rien n'est en cours de lecture sur le serveur sélectionné." : {
+
+    },
+    "S%lld - E%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "S%1$lld - E%2$lld"
+          }
+        }
+      }
+    },
+    "S%lld - E%lld - %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "S%1$lld - E%2$lld - %3$@"
+          }
+        }
+      }
+    },
+    "Se connecter avec Plex" : {
+
+    },
+    "Se déconnecter" : {
+
+    },
+    "Sélection du serveur" : {
+
+    },
+    "Séries les plus regardées" : {
+
+    },
+    "Serveur Plex" : {
+
+    },
+    "Stats" : {
+
+    },
+    "Synchroniser l'historique complet" : {
+
+    },
+    "Top Spectateurs" : {
+
+    },
+    "Tous les utilisateurs" : {
+
+    },
+    "Toutes" : {
+
+    },
+    "Trier par" : {
+
+    },
+    "Utilisateur" : {
+
+    },
+    "Votre année en chiffres" : {
+
+    },
+    "Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur." : {
+
+    },
+    "Vu le: %@" : {
+
+    }
+  },
+  "version" : "1.0"
+}

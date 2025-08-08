@@ -1,4 +1,18 @@
 import Foundation
+struct PlexAllMediaResponse: Decodable {
+    let mediaContainer: AllMediaContainer
+    enum CodingKeys: String, CodingKey { case mediaContainer = "MediaContainer" }
+}
+
+struct AllMediaContainer: Decodable {
+    let metadata: [MediaMetadata]
+    enum CodingKeys: String, CodingKey { case metadata = "Metadata" }
+}
+
+struct MediaMetadata: Decodable {
+    let media: [PlexMediaPartContainer]?
+    enum CodingKeys: String, CodingKey { case media = "Media" }
+}
 
 extension PlexAPIService {
     func fetchServers(token: String) async throws -> [PlexResource] {
@@ -115,5 +129,50 @@ extension PlexAPIService {
             currentIndex += pageSize
         }
         return allSessions
+    }
+
+    func fetchLibraries(serverURL: String, token: String) async throws -> [PlexLibrary] {
+        guard let url = URL(string: "\(serverURL)/library/sections?X-Plex-Token=\(token)") else {
+            throw PlexError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+        
+        do {
+            let decodedResponse = try JSONDecoder().decode(PlexLibraryResponse.self, from: data)
+            return decodedResponse.mediaContainer.directories
+        } catch {
+            throw PlexError.decodingError(error)
+        }
+    }
+
+    func fetchAllMediaInSection(serverURL: String, token: String, libraryKey: String) async throws -> [MediaMetadata] {
+        guard let url = URL(string: "\(serverURL)/library/sections/\(libraryKey)/all?type=1&X-Plex-Token=\(token)") else {
+            throw PlexError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+
+        do {
+            let decodedResponse = try JSONDecoder().decode(PlexAllMediaResponse.self, from: data)
+            return decodedResponse.mediaContainer.metadata
+        } catch {
+            print("⚠️ Erreur de décodage pour la section \(libraryKey): \(error)")
+            throw PlexError.decodingError(error)
+        }
     }
 }

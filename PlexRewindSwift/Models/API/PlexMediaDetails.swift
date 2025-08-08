@@ -11,7 +11,7 @@ struct MediaDetailsContainer: Decodable {
 }
 
 struct MediaDetails: Decodable {
-    let media: [MediaPartContainer]
+    let media: [PlexMediaPartContainer]
     let addedAt: Int
     let updatedAt: Int?
     enum CodingKeys: String, CodingKey {
@@ -20,8 +20,8 @@ struct MediaDetails: Decodable {
     }
 }
 
-struct MediaPartContainer: Decodable {
-    let duration: Int
+struct PlexMediaPartContainer: Decodable {
+    let duration: Int?
     let bitrate: Int?
     let width: Int?
     let height: Int?
@@ -32,19 +32,21 @@ struct MediaPartContainer: Decodable {
     let container: String?
     let videoFrameRate: String?
     let videoResolution: String?
-    
-    let parts: [MediaPart]
+
+    let parts: [PlexMediaPart]
     enum CodingKeys: String, CodingKey {
         case duration, bitrate, width, height, aspectRatio, videoProfile, audioProfile, audioCodec, container, videoFrameRate, videoResolution
         case parts = "Part"
     }
 }
 
-struct MediaPart: Decodable {
-    let file: String
-    let streams: [StreamDetails]
+struct PlexMediaPart: Decodable {
+    let file: String?
+    let size: Int64
+    let streams: [StreamDetails]?
+    
     enum CodingKeys: String, CodingKey {
-        case file
+        case file, size
         case streams = "Stream"
     }
 }
