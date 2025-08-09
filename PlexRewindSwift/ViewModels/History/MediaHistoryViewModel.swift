@@ -1,5 +1,3 @@
-// loriage/plexrewindswift/Loriage-PlexRewindSwift-54e4ea3394f2635ef3907df65bc688e219e7f2ce/PlexRewindSwift/ViewModels/History/MediaHistoryViewModel.swift
-
 import Foundation
 import SwiftUI
 
@@ -13,7 +11,7 @@ class MediaHistoryViewModel: ObservableObject {
 
     let ratingKey: String
     let mediaType: String
-    let grandparentRatingKey: String? // AJOUTÉ
+    let grandparentRatingKey: String?
     
     private let serverViewModel: ServerViewModel
     private let statsViewModel: StatsViewModel
@@ -34,7 +32,6 @@ class MediaHistoryViewModel: ObservableObject {
     }
 
     var ratingKeyForActions: String {
-        print("ratingKeyForActions")
         if mediaType == "episode" || mediaType == "show" {
             return representativeSession?.grandparentRatingKey ?? grandparentRatingKey ?? ratingKey
         }
@@ -60,9 +57,7 @@ class MediaHistoryViewModel: ObservableObject {
 
     func loadData() async {
         guard isLoading else { return }
-        
-        
-        print(self.ratingKey, self.grandparentRatingKey)
+
         let result = await statsViewModel.historyForMedia(ratingKey: self.ratingKey, mediaType: self.mediaType, grandparentRatingKey: self.grandparentRatingKey)
         let sessions = result.sessions
         self.summary = result.summary

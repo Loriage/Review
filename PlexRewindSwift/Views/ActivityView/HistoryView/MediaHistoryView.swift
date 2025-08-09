@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MediaHistoryView: View {
     @StateObject var viewModel: MediaHistoryViewModel
+    @StateObject private var actionsViewModel: MediaActionsViewModel
     
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
@@ -22,6 +23,13 @@ struct MediaHistoryView: View {
             statsViewModel: statsViewModel,
             authManager: authManager
         ))
+
+        _actionsViewModel = StateObject(wrappedValue: MediaActionsViewModel(
+            ratingKey: grandparentRatingKey ?? ratingKey,
+            plexService: PlexAPIService(),
+            serverViewModel: serverViewModel,
+            authManager: authManager
+        ))
     }
 
     var body: some View {
@@ -34,6 +42,10 @@ struct MediaHistoryView: View {
                 } else {
                     contentView
                 }
+            }
+            if let hudMessage = actionsViewModel.hudMessage {
+                HUDView(hudMessage: hudMessage)
+                    .transition(.scale.combined(with: .opacity))
             }
         }
         .navigationTitle(viewModel.displayTitle)
@@ -51,8 +63,7 @@ struct MediaHistoryView: View {
         .alert("Êtes-vous sûr ?", isPresented: $showingAnalysisAlert) {
             Button("Annuler", role: .cancel) {}
             Button("Analyser", role: .destructive) {
-                let actionsVM = MediaActionsViewModel(ratingKey: viewModel.ratingKeyForActions, plexService: PlexAPIService(), serverViewModel: serverViewModel, authManager: authManager)
-                Task { await actionsVM.analyzeMedia() }
+                Task { await actionsViewModel.analyzeMedia() }
             }
         } message: {
             Text("Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur.")
@@ -65,7 +76,6 @@ struct MediaHistoryView: View {
              )
         }
         .sheet(isPresented: $showMediaDetails) {
-            // Pour les détails, on utilise le ratingKey de l'épisode si c'en est un
             MediaDetailsView(
                 ratingKey: viewModel.ratingKey,
                 serverViewModel: serverViewModel,
@@ -82,6 +92,7 @@ struct MediaHistoryView: View {
         .task {
             if viewModel.representativeSession == nil {
                 await viewModel.loadData()
+                actionsViewModel.update(ratingKey: viewModel.ratingKeyForActions)
             }
         }
     }
@@ -214,7 +225,7 @@ struct MediaHistoryView: View {
                 
                 Button {
                     showingSettings = false
-                    Task { await actionsVM.refreshMetadata() }
+                    Task { await actionsViewModel.refreshMetadata() }
                 } label: {
                     Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
                 }

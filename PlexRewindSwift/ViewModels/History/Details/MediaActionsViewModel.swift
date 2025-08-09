@@ -8,7 +8,7 @@ class MediaActionsViewModel: ObservableObject {
     private let plexService: PlexAPIService
     let serverViewModel: ServerViewModel
     let authManager: PlexAuthManager
-    let mediaRatingKey: String
+    private var mediaRatingKey: String
 
     private var hudDismissTask: Task<Void, Never>?
 
@@ -16,6 +16,10 @@ class MediaActionsViewModel: ObservableObject {
         self.plexService = plexService
         self.serverViewModel = serverViewModel
         self.authManager = authManager
+        self.mediaRatingKey = ratingKey
+    }
+
+    func update(ratingKey: String) {
         self.mediaRatingKey = ratingKey
     }
 
