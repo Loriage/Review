@@ -89,19 +89,17 @@ class LibraryViewModel: ObservableObject {
 
         async let sizeAndCountTask = calculateSizeAndCount(forLibrary: library)
         async let recentsTask = getRecentItems(forLibrary: library)
-        
-        let (sizeAndCount, recents) = await (sizeAndCountTask, recentsTask)
-        
-        if let result = sizeAndCount {
-            displayLibraries[index].size = result.size
-            displayLibraries[index].fileCount = result.count
-        }
-        
-        if let recents = recents {
+
+        if let recents = await recentsTask {
             displayLibraries[index].recentItemURLs = recents.compactMap { item in
                 guard let thumbPath = item.thumb else { return nil }
                 return URL(string: "\(details.url)\(thumbPath)?X-Plex-Token=\(details.token)")
             }
+        }
+
+        if let result = await sizeAndCountTask {
+            displayLibraries[index].size = result.size
+            displayLibraries[index].fileCount = result.count
         }
     }
 

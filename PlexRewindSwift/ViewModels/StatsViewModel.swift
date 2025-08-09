@@ -167,6 +167,7 @@ class StatsViewModel: ObservableObject {
     }
     
     func historyForMedia(ratingKey: String, mediaType: String, grandparentRatingKey: String?) async -> (sessions: [WatchSession], summary: String?) {
+
         if !isHistorySynced {
             await syncFullHistory()
         }
@@ -189,28 +190,25 @@ class StatsViewModel: ObservableObject {
         ratingKeyForSummary = ratingKey
         
         if mediaType == "movie" {
-            let representativeSession = fullHistory.first { session in
-                return session.ratingKey == ratingKey
-            }
-            if let showTitle = representativeSession?.title, !showTitle.isEmpty {
-                filteredSessions = fullHistory.filter { $0.title == showTitle }
+            let representativeSession = fullHistory.first { $0.ratingKey == ratingKey }
+            if let movieTitle = representativeSession?.title, !movieTitle.isEmpty {
+                filteredSessions = fullHistory.filter { $0.title == movieTitle && $0.type == "movie" }
             }
         } else if mediaType == "episode" {
-            let representativeSession = fullHistory.first { session in
-                return session.ratingKey == ratingKey || session.grandparentRatingKey == grandparentRatingKey
+            if let gprk = grandparentRatingKey {
+                filteredSessions = fullHistory.filter { $0.computedGrandparentRatingKey == gprk }
             }
-
-            if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
-                filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
-                ratingKeyForSummary = filteredSessions.first?.grandparentRatingKey
+            if filteredSessions.isEmpty {
+                let representativeSession = fullHistory.first { $0.ratingKey == ratingKey }
+                if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
+                    filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
+                }
             }
+            ratingKeyForSummary = grandparentRatingKey
+            
         } else if mediaType == "show" {
-            let representativeSession = fullHistory.first { session in
-                return session.grandparentKey == "/library/metadata/\(ratingKey)"
-            }
-            if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
-                filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
-            }
+            filteredSessions = fullHistory.filter { $0.computedGrandparentRatingKey == ratingKey }
+            ratingKeyForSummary = ratingKey
         }
         
         if let finalRatingKey = grandparentRatingKey ?? ratingKeyForSummary {

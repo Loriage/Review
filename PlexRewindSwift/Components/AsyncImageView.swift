@@ -25,7 +25,7 @@ struct AsyncImageView: View {
                 ZStack {
                     Color(.secondarySystemBackground)
                     Image(systemName: "photo.fill")
-                        .font(.largeTitle)
+                        .font(.title)
                         .foregroundColor(.secondary)
                 }
             }

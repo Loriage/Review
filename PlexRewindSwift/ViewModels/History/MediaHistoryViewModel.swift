@@ -1,5 +1,3 @@
-// loriage/plexrewindswift/Loriage-PlexRewindSwift-8891bb3125db26cb921021eb4b87c84bddf3831f/PlexRewindSwift/ViewModels/History/MediaHistoryViewModel.swift
-
 import Foundation
 import SwiftUI
 
@@ -7,7 +5,7 @@ import SwiftUI
 class MediaHistoryViewModel: ObservableObject {
     @Published var historyItems: [MediaHistoryItem] = []
     @Published var isLoading = true
-    @Published var mediaDetails: MetadataItem? // Propriété pour stocker les détails du média
+    @Published var mediaDetails: MetadataItem?
     @Published var imageRefreshId = UUID()
 
     let ratingKey: String
@@ -17,7 +15,7 @@ class MediaHistoryViewModel: ObservableObject {
     private let serverViewModel: ServerViewModel
     private let statsViewModel: StatsViewModel
     private let authManager: PlexAuthManager
-    private let plexService: PlexAPIService // Service API ajouté
+    private let plexService: PlexAPIService
     
     init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, statsViewModel: StatsViewModel, authManager: PlexAuthManager) {
         self.ratingKey = ratingKey
@@ -26,7 +24,7 @@ class MediaHistoryViewModel: ObservableObject {
         self.serverViewModel = serverViewModel
         self.statsViewModel = statsViewModel
         self.authManager = authManager
-        self.plexService = PlexAPIService() // Initialisation du service
+        self.plexService = PlexAPIService()
     }
 
     var displayTitle: String {
@@ -60,8 +58,7 @@ class MediaHistoryViewModel: ObservableObject {
 
     func loadData() async {
         guard isLoading else { return }
-        
-        // On lance les deux tâches en parallèle pour plus d'efficacité
+
         await withTaskGroup(of: Void.self) { group in
             group.addTask { await self.fetchMediaDetails() }
             group.addTask { await self.fetchHistory() }
@@ -112,6 +109,3 @@ class MediaHistoryViewModel: ObservableObject {
         await fetchMediaDetails()
     }
 }
-
-// NOTE : Il faudra aussi enrichir le modèle MetadataItem pour inclure les informations manquantes
-// comme title, grandparentTitle, grandparentRatingKey, thumb, et grandparentThumb.

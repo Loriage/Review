@@ -65,8 +65,23 @@ struct LibraryCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            if !displayLibrary.recentItemURLs.isEmpty {
-                HStack(spacing: -35) {
+            HStack(spacing: -35){
+                if displayLibrary.recentItemURLs.isEmpty {
+                    ForEach(0..<5, id: \.self) { index in
+                        ZStack {
+                            Color(.secondarySystemBackground)
+                            ProgressView()
+                        }
+                        .frame(width: 60, height: 90)
+                        .cornerRadius(8)
+                        .shadow(radius: 3)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.black.opacity(0.1), lineWidth: 1)
+                        )
+                        .zIndex(Double(-index))
+                    }
+                } else {
                     ForEach(Array(displayLibrary.recentItemURLs.prefix(5).enumerated()), id: \.element) { index, url in
                         AsyncImageView(url: url, onColorExtracted: { color in
                             if index == 0 {

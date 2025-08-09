@@ -38,6 +38,16 @@ struct WatchSession: Decodable, Identifiable {
     let index: Int?
     let parentIndex: Int?
 
+    var computedGrandparentRatingKey: String? {
+        if let gprk = self.grandparentRatingKey, !gprk.isEmpty {
+            return gprk
+        }
+        if let gpk = self.grandparentKey {
+            return gpk.components(separatedBy: "/").last
+        }
+        return nil
+    }
+
     var showTitle: String {
         return grandparentTitle ?? parentTitle ?? "N/A"
     }
