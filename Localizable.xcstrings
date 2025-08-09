@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@" : {
+
+    },
     "%@ - %@" : {
       "localizations" : {
         "en" : {
@@ -275,9 +278,6 @@
 
     },
     "Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur." : {
-
-    },
-    "Vu le: %@" : {
 
     }
   },

@@ -94,17 +94,20 @@ struct UserHistoryView: View {
                         if session.type == "movie" {
                             Text(session.title ?? "Titre inconnu")
                                 .font(.headline)
-                        } else {
+                        } else if session.type == "episode" {
                             Text(session.grandparentTitle ?? "Série inconnue")
                                 .font(.headline)
                             Text(session.title ?? "Épisode inconnu")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
+                            Text("S\(session.parentIndex ?? 0) - E\(session.index ?? 0)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                         }
                         
                         if let viewedAt = session.viewedAt {
-                            Text("Vu le: \(Date(timeIntervalSince1970: viewedAt).formatted(date: .long, time: .shortened))")
-                                .font(.caption)
+                            Text("\(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
+                                .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
                     }

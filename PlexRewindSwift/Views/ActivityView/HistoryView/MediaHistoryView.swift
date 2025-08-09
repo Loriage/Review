@@ -265,7 +265,7 @@ struct MediaHistoryView: View {
                     if let viewedAt = item.session.viewedAt {
                         Text("\(item.userName ?? "Utilisateur inconnu") - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
                             .font(.subheadline)
-                            .foregroundColor(.secondary.opacity(0.8))
+                            .foregroundColor(.secondary)
                     }
                 }
                 .padding(.vertical, 8)
