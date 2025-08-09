@@ -33,6 +33,7 @@ class LibraryViewModel: ObservableObject {
     }
 
     func refreshData() async {
+        self.displayLibraries = []
         await fetchData()
     }
     
