@@ -121,13 +121,25 @@ struct LibraryCardView: View {
                         }
 
                         Label {
-                            Text("Dernière mise à jour :")
+                            Text("Créée le :")
                                 .fontWeight(.semibold)
                             Spacer()
-                            Text(formatDate(displayLibrary.library.updatedAt))
+                            Text(formatDate(displayLibrary.library.createdAt))
                                 .fontWeight(.semibold)
                         } icon: {
-                            Image(systemName: "calendar.badge.clock")
+                            Image(systemName: "calendar.badge.plus")
+                                .frame(width: 20)
+                        }
+
+                        Label {
+                            Text("Dernier scan :")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(formatDate(displayLibrary.library.scannedAt))
+                                .fontWeight(.semibold)
+                        } icon: {
+                            Image(systemName: "arrow.clockwise")
+                                .fontWeight(.semibold)
                                 .frame(width: 20)
                         }
                     }
@@ -154,7 +166,7 @@ struct LibraryCardView: View {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "fr_FR")
-        formatter.dateStyle = .short
+        formatter.dateStyle = .medium
         formatter.timeStyle = .none
         return formatter.string(from: date)
     }
