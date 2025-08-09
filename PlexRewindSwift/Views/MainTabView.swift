@@ -17,7 +17,7 @@ struct MainTabView: View {
 
             LibraryView(serverViewModel: serverViewModel, authManager: authManager)
                 .tabItem {
-                    Label("Médiathèque", systemImage: "books.vertical.fill")
+                    Label("Bibliothèques", systemImage: "books.vertical.fill")
                 }
 
             StatsView()

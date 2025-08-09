@@ -120,7 +120,7 @@ class LibraryViewModel: ObservableObject {
                 ($0.addedAt ?? 0) > ($1.addedAt ?? 0)
             }
 
-            return Array(sortedItems.prefix(5))
+            return Array(sortedItems)
             
         } catch {
             print("Erreur de récupération des ajouts récents pour la médiathèque \(library.key): \(error)")
