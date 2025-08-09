@@ -32,11 +32,11 @@ class MediaHistoryViewModel: ObservableObject {
     }
 
     var ratingKeyForActions: String {
-        if mediaType == "episode" || mediaType == "show" {
-            return representativeSession?.grandparentRatingKey ?? grandparentRatingKey ?? ratingKey
-        }
-        return representativeSession?.ratingKey ?? ratingKey
-    }
+           if mediaType == "show" {
+               return ratingKey
+           }
+           return representativeSession?.grandparentRatingKey ?? grandparentRatingKey ?? ratingKey
+       }
 
     var displayPosterURL: URL? {
         guard let session = representativeSession,

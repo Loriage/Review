@@ -189,14 +189,13 @@ class StatsViewModel: ObservableObject {
         if mediaType == "movie" {
             filteredSessions = fullHistory.filter { $0.ratingKey == ratingKey }
             ratingKeyForSummary = ratingKey
-        } else { // Gère "episode" et "show"
-            // On doit d'abord trouver une session dans l'historique pour obtenir le titre de la série.
-            // C'est la seule source fiable pour regrouper les épisodes.
+        } else {
             let representativeSession = fullHistory.first { session in
                 if mediaType == "show" {
                     return session.grandparentRatingKey == ratingKey
-                } else { // episode
-                    return session.ratingKey == ratingKey
+                } else {
+                    ratingKeyForSummary = filteredSessions.first?.grandparentRatingKey
+                    return session.ratingKey == ratingKey || session.grandparentRatingKey == grandparentRatingKey
                 }
             }
             
@@ -206,7 +205,7 @@ class StatsViewModel: ObservableObject {
             }
         }
         
-        if let finalRatingKey = ratingKeyForSummary {
+        if let finalRatingKey = grandparentRatingKey ?? ratingKeyForSummary {
             let details = try? await plexService.fetchMediaDetails(
                 for: finalRatingKey,
                 serverURL: serverURL,

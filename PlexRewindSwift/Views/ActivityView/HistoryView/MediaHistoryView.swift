@@ -195,8 +195,6 @@ struct MediaHistoryView: View {
 
     @ViewBuilder
     private var mediaSettingsSheet: some View {
-        let actionsVM = MediaActionsViewModel(ratingKey: viewModel.ratingKeyForActions, plexService: PlexAPIService(), serverViewModel: serverViewModel, authManager: authManager)
-
         VStack(spacing: 0) {
             HStack(alignment: .center) {
                 Capsule()

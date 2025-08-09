@@ -93,7 +93,7 @@ struct LibraryDetailView: View {
                         NavigationLink(destination: MediaHistoryView(
                             ratingKey: media.ratingKey,
                             mediaType: media.type,
-                            grandparentRatingKey: media.grandparentRatingKey,
+                            grandparentRatingKey: media.type == "show" ? media.ratingKey : media.grandparentRatingKey,
                             serverViewModel: serverViewModel,
                             authManager: authManager,
                             statsViewModel: statsViewModel
