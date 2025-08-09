@@ -13,10 +13,11 @@ struct MediaHistoryView: View {
     @State private var showFixMatchView = false
     @State private var showingAnalysisAlert = false
 
-    init(ratingKey: String, mediaType: String, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
+    init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
             ratingKey: ratingKey,
             mediaType: mediaType,
+            grandparentRatingKey: grandparentRatingKey,
             serverViewModel: serverViewModel,
             statsViewModel: statsViewModel,
             authManager: authManager

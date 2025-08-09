@@ -1,3 +1,5 @@
+// loriage/plexrewindswift/Loriage-PlexRewindSwift-54e4ea3394f2635ef3907df65bc688e219e7f2ce/PlexRewindSwift/ViewModels/History/MediaHistoryViewModel.swift
+
 import Foundation
 import SwiftUI
 
@@ -11,14 +13,16 @@ class MediaHistoryViewModel: ObservableObject {
 
     let ratingKey: String
     let mediaType: String
+    let grandparentRatingKey: String? // AJOUTÉ
     
     private let serverViewModel: ServerViewModel
     private let statsViewModel: StatsViewModel
     private let authManager: PlexAuthManager
     
-    init(ratingKey: String, mediaType: String, serverViewModel: ServerViewModel, statsViewModel: StatsViewModel, authManager: PlexAuthManager) {
+    init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, statsViewModel: StatsViewModel, authManager: PlexAuthManager) {
         self.ratingKey = ratingKey
         self.mediaType = mediaType
+        self.grandparentRatingKey = grandparentRatingKey
         self.serverViewModel = serverViewModel
         self.statsViewModel = statsViewModel
         self.authManager = authManager
@@ -26,16 +30,15 @@ class MediaHistoryViewModel: ObservableObject {
 
     var displayTitle: String {
         guard let session = representativeSession else { return "Chargement..." }
-        return mediaType == "movie" ? (session.title ?? "Film inconnu") : (session.grandparentTitle ?? "Série inconnue")
+        return (mediaType == "movie") ? (session.title ?? "Film inconnu") : (session.grandparentTitle ?? "Série inconnue")
     }
 
     var ratingKeyForActions: String {
-        guard let session = representativeSession else { return ratingKey }
+        print("ratingKeyForActions")
         if mediaType == "episode" || mediaType == "show" {
-            print("if")
-            return session.grandparentRatingKey ?? ratingKey
+            return representativeSession?.grandparentRatingKey ?? grandparentRatingKey ?? ratingKey
         }
-        return session.ratingKey ?? ratingKey
+        return representativeSession?.ratingKey ?? ratingKey
     }
 
     var displayPosterURL: URL? {
@@ -47,7 +50,7 @@ class MediaHistoryViewModel: ObservableObject {
         else {
             return nil
         }
-
+        
         let thumbPath = (mediaType == "episode" || mediaType == "show") ? session.grandparentThumb : session.thumb
         guard let path = thumbPath else { return nil }
         
@@ -58,7 +61,9 @@ class MediaHistoryViewModel: ObservableObject {
     func loadData() async {
         guard isLoading else { return }
         
-        let result = await statsViewModel.historyForMedia(ratingKey: self.ratingKey, mediaType: self.mediaType)
+        
+        print(self.ratingKey, self.grandparentRatingKey)
+        let result = await statsViewModel.historyForMedia(ratingKey: self.ratingKey, mediaType: self.mediaType, grandparentRatingKey: self.grandparentRatingKey)
         let sessions = result.sessions
         self.summary = result.summary
         

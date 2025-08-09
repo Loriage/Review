@@ -1,5 +1,3 @@
-// loriage/plexrewindswift/Loriage-PlexRewindSwift-e3fb6ea4b9bd006f031ef076484d9d255da739bd/PlexRewindSwift/ViewModels/StatsViewModel.swift
-
 import Foundation
 
 @MainActor
@@ -168,11 +166,11 @@ class StatsViewModel: ObservableObject {
         loadingStatusMessage = ""
     }
     
-    func historyForMedia(ratingKey: String, mediaType: String) async -> (sessions: [WatchSession], summary: String?) {
+    func historyForMedia(ratingKey: String, mediaType: String, grandparentRatingKey: String?) async -> (sessions: [WatchSession], summary: String?) {
         if !isHistorySynced {
             await syncFullHistory()
         }
-
+        
         guard let serverID = serverViewModel.selectedServerID,
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
@@ -180,39 +178,42 @@ class StatsViewModel: ObservableObject {
         else {
             return ([], nil)
         }
-
+        
         let serverURL = connection.uri
         let resourceToken = server.accessToken ?? token
-
+        
         var filteredSessions: [WatchSession] = []
         var summary: String? = nil
-        var ratingKeyForSummary: String = ratingKey
-
-        switch mediaType {
-        case "movie":
+        var ratingKeyForSummary: String?
+        
+        if mediaType == "movie" {
             filteredSessions = fullHistory.filter { $0.ratingKey == ratingKey }
-            
-        case "episode":
-            // Find the representative session to get the grandparent key
-            if let representativeSession = fullHistory.first(where: { $0.ratingKey == ratingKey }),
-               let gprk = representativeSession.grandparentRatingKey {
-                filteredSessions = fullHistory.filter { $0.grandparentRatingKey == gprk }
-                ratingKeyForSummary = gprk
+            ratingKeyForSummary = ratingKey
+        } else { // Gère "episode" et "show"
+            // On doit d'abord trouver une session dans l'historique pour obtenir le titre de la série.
+            // C'est la seule source fiable pour regrouper les épisodes.
+            let representativeSession = fullHistory.first { session in
+                if mediaType == "show" {
+                    return session.grandparentRatingKey == ratingKey
+                } else { // episode
+                    return session.ratingKey == ratingKey
+                }
             }
             
-        case "show":
-            filteredSessions = fullHistory.filter { $0.grandparentRatingKey == ratingKey }
-
-        default:
-            break
+            if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
+                filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
+                ratingKeyForSummary = filteredSessions.first?.grandparentRatingKey
+            }
         }
-
-        let details = try? await plexService.fetchMediaDetails(
-            for: ratingKeyForSummary,
-            serverURL: serverURL,
-            token: resourceToken
-        )
-        summary = details?.summary
+        
+        if let finalRatingKey = ratingKeyForSummary {
+            let details = try? await plexService.fetchMediaDetails(
+                for: finalRatingKey,
+                serverURL: serverURL,
+                token: resourceToken
+            )
+            summary = details?.summary
+        }
         
         return (filteredSessions.sorted(by: { ($0.viewedAt ?? 0) > ($1.viewedAt ?? 0) }), summary)
     }

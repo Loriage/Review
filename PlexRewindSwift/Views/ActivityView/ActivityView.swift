@@ -65,6 +65,7 @@ struct ActivityRowView: View {
             NavigationLink(destination: MediaHistoryView(
                 ratingKey: session.ratingKey,
                 mediaType: session.type,
+                grandparentRatingKey: session.grandparentRatingKey,
                 serverViewModel: serverViewModel,
                 authManager: authManager,
                 statsViewModel: statsViewModel

@@ -18,9 +18,10 @@ struct MediaMetadata: Decodable, Identifiable {
     let addedAt: Int?
     let updatedAt: Int?
     let media: [PlexMediaPartContainer]?
+    let grandparentRatingKey: String?
     
     enum CodingKeys: String, CodingKey {
-        case ratingKey, type, thumb, addedAt, updatedAt
+        case ratingKey, type, thumb, addedAt, updatedAt, grandparentRatingKey
         case media = "Media"
     }
 }
