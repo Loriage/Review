@@ -2,6 +2,8 @@ import SwiftUI
 
 struct LibraryView: View {
     @StateObject private var viewModel: LibraryViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
+    @EnvironmentObject var serverViewModel: ServerViewModel
     
     init(serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: LibraryViewModel(
@@ -34,7 +36,10 @@ struct LibraryView: View {
                     ScrollView {
                         VStack(spacing: 15) {
                             ForEach(viewModel.displayLibraries) { displayLibrary in
-                                LibraryCardView(displayLibrary: displayLibrary)
+                                NavigationLink(destination: LibraryDetailView(library: displayLibrary, serverViewModel: serverViewModel, authManager: authManager)) {
+                                    LibraryCardView(displayLibrary: displayLibrary)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                         .padding()

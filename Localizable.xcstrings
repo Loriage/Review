@@ -96,6 +96,9 @@
     "Choisissez un serveur..." : {
 
     },
+    "Contenu" : {
+
+    },
     "Corriger l'association" : {
 
     },
@@ -182,6 +185,15 @@
     "Modifier l'image" : {
 
     },
+    "Nombre d'épisodes: %lld" : {
+
+    },
+    "Nombre de films: %lld" : {
+
+    },
+    "Nombre de séries: %lld" : {
+
+    },
     "Paramètres Plex" : {
 
     },
@@ -250,6 +262,12 @@
     "Serveur Plex" : {
 
     },
+    "Settings" : {
+
+    },
+    "Statistiques" : {
+
+    },
     "Stats" : {
 
     },
@@ -269,6 +287,9 @@
 
     },
     "Trier par" : {
+
+    },
+    "Type de bibliothèque : %@" : {
 
     },
     "Utilisateur" : {
