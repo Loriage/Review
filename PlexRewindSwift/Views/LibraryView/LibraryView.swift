@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LibraryView: View {
     @StateObject private var viewModel: LibraryViewModel
-
+    
     init(serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: LibraryViewModel(
             serverViewModel: serverViewModel,
@@ -19,7 +19,7 @@ struct LibraryView: View {
                     Text(errorMessage)
                         .foregroundColor(.red)
                         .padding()
-                } else if viewModel.libraries.isEmpty {
+                } else if viewModel.displayLibraries.isEmpty {
                     VStack(spacing: 15) {
                         Image(systemName: "books.vertical.fill")
                             .font(.system(size: 60))
@@ -33,8 +33,8 @@ struct LibraryView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 15) {
-                            ForEach(viewModel.libraries) { library in
-                                LibraryCardView(library: library, size: viewModel.librarySizes[library.key])
+                            ForEach(viewModel.displayLibraries) { displayLibrary in
+                                LibraryCardView(displayLibrary: displayLibrary)
                             }
                         }
                         .padding()
@@ -43,7 +43,9 @@ struct LibraryView: View {
             }
             .navigationTitle("Bibliothèques")
             .task {
-                await viewModel.loadLibrariesIfNeeded()
+                if !viewModel.isLoading {
+                    await viewModel.loadLibrariesIfNeeded()
+                }
             }
             .refreshable {
                 await viewModel.refreshData()
@@ -53,84 +55,114 @@ struct LibraryView: View {
 }
 
 struct LibraryCardView: View {
-    let library: PlexLibrary
-    let size: Int64?
+    let displayLibrary: DisplayLibrary
+    @State private var dominantColor: Color = .clear
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: icon(for: library.type))
-                    .font(.title)
-                    .frame(width: 40, alignment: .center)
-                    .foregroundColor(.accentColor)
-                
-                Text(library.title)
-                    .font(.title2.bold())
-                
-                Spacer()
-            }
-            
-            VStack(alignment: .leading, spacing: 5) {
-                if let size = size {
-                    Label {
-                        Text("Taille de la bibliothèque : \(formatBytes(size))")
-                    } icon: {
-                        Image(systemName: "externaldrive.fill")
+            if !displayLibrary.recentItemURLs.isEmpty {
+                HStack(spacing: -35) {
+                    ForEach(Array(displayLibrary.recentItemURLs.prefix(5).enumerated()), id: \.element) { index, url in
+                        AsyncImageView(url: url, onColorExtracted: { color in
+                            if index == 0 {
+                                self.dominantColor = color
+                            }
+                        })
+                        .frame(width: 60, height: 90)
+                        .cornerRadius(8)
+                        .shadow(radius: 3)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.black.opacity(0.2), lineWidth: 1)
+                        )
+                        .zIndex(Double(-index))
                     }
-                } else {
-                    ProgressView()
-                        .scaleEffect(0.7)
-                }
-                Label {
-                    Text("Créée le: \(formatDate(library.createdAt))")
-                } icon: {
-                    Image(systemName: "calendar.badge.plus")
-                }
-                
-                Label {
-                    Text("Mise à jour le: \(formatDate(library.updatedAt))")
-                } icon: {
-                    Image(systemName: "calendar.badge.clock")
                 }
             }
-            .font(.subheadline)
-            .foregroundColor(.secondary)
-            .padding(.leading, 4)
+            HStack(alignment: .top, spacing: 15) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(displayLibrary.library.title)
+                        .font(.title2.bold())
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        Label {
+                            HStack {
+                                Text("Fichiers :")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                if let count = displayLibrary.fileCount {
+                                    Text("\(count)")
+                                        .fontWeight(.semibold)
+                                } else {
+                                    ProgressView().scaleEffect(0.7)
+                                }
+                            }
+                        } icon: {
+                            Image(systemName: "number")
+                                .fontWeight(.semibold)
+                                .frame(width: 20)
+                        }
+                        
+                        Label {
+                            HStack {
+                                Text("Taille :")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                if let size = displayLibrary.size {
+                                    Text(formatBytes(size))
+                                        .fontWeight(.semibold)
+                                } else {
+                                    ProgressView().scaleEffect(0.7)
+                                }
+                            }
+                        } icon: {
+                            Image(systemName: "externaldrive.fill")
+                                .frame(width: 20)
+                        }
+
+                        Label {
+                            Text("Dernière mise à jour :")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(formatDate(displayLibrary.library.updatedAt))
+                                .fontWeight(.semibold)
+                        } icon: {
+                            Image(systemName: "calendar.badge.clock")
+                                .frame(width: 20)
+                        }
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                }
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20))
-    }
-
-    private func icon(for type: String) -> String {
-        switch type {
-        case "movie":
-            return "film.stack.fill"
-        case "show":
-            return "tv.and.mediabox.fill"
-        case "artist", "album":
-            return "music.mic"
-        default:
-            return "folder.fill"
-        }
+        .background(
+            MeshGradient(
+                width: 3, height: 3,
+                points: [ [0, 0], [0.5, 0], [1, 0], [0, 0.5], [0.5, 0.5], [1, 0.5], [0, 1], [0.5, 1], [1, 1] ],
+                colors: [ .clear, dominantColor.opacity(0.3), .clear, Color.accentColor.opacity(0.2), dominantColor.opacity(0.3), Color.accentColor.opacity(0.2), .clear, .clear, dominantColor.opacity(0.2) ]
+            )
+        )
+        .cornerRadius(20)
+        .animation(.spring(), value: dominantColor)
     }
 
     private func formatDate(_ timestamp: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let formatter = DateFormatter()
-
-        formatter.dateStyle = .long
+        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.dateStyle = .short
         formatter.timeStyle = .none
-
         return formatter.string(from: date)
     }
-
+    
     private func formatBytes(_ bytes: Int64) -> String {
         let formatter = ByteCountFormatter()
-
         formatter.allowedUnits = [.useGB, .useMB, .useTB]
         formatter.countStyle = .binary
-
         return formatter.string(fromByteCount: bytes)
     }
 }

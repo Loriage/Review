@@ -1,11 +1,10 @@
 import Foundation
+import SwiftUI
 import Combine
 
 @MainActor
 class LibraryViewModel: ObservableObject {
-    @Published var libraries: [PlexLibrary] = []
-    @Published var librarySizes: [String: Int64] = [:]
-    @Published var libraryFileCounts: [String: Int] = [:]
+    @Published var displayLibraries: [DisplayLibrary] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     
@@ -23,15 +22,13 @@ class LibraryViewModel: ObservableObject {
         
         serverViewModel.$selectedServerID
             .sink { [weak self] _ in
-                self?.libraries = []
-                self?.librarySizes = [:]
-                self?.libraryFileCounts = [:]
+                self?.displayLibraries = []
             }
             .store(in: &cancellables)
     }
     
     func loadLibrariesIfNeeded() async {
-        guard libraries.isEmpty else { return }
+        guard displayLibraries.isEmpty else { return }
         await fetchData()
     }
 
@@ -45,11 +42,13 @@ class LibraryViewModel: ObservableObject {
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = authManager.getPlexAuthToken()
         else {
-            errorMessage = "Serveur non sélectionné ou informations manquantes."
+            if displayLibraries.isEmpty { errorMessage = "Serveur non sélectionné ou informations manquantes." }
             return
         }
         
-        isLoading = true
+        if self.displayLibraries.isEmpty {
+            isLoading = true
+        }
         errorMessage = nil
         
         let serverURL = connection.uri
@@ -58,59 +57,99 @@ class LibraryViewModel: ObservableObject {
         
         do {
             let fetchedLibraries = try await plexService.fetchLibraries(serverURL: serverURL, token: resourceToken)
-            self.libraries = fetchedLibraries
+            self.displayLibraries = fetchedLibraries.map { DisplayLibrary(id: $0.id, library: $0) }
             self.isLoading = false
             
-            await fetchAllLibrarySizesAndCounts(libraries: fetchedLibraries)
+            await fetchAllLibraryDetails()
             
         } catch {
-            self.errorMessage = "Impossible de charger les médiathèques : \(error.localizedDescription)"
-            self.isLoading = false
+            let nsError = error as NSError
+            if !(nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled) {
+                self.errorMessage = "Impossible de charger les médiathèques : \(error.localizedDescription)"
+            }
         }
+        
+        isLoading = false
     }
     
-    private func fetchAllLibrarySizesAndCounts(libraries: [PlexLibrary]) async {
-        self.librarySizes = [:]
-        self.libraryFileCounts = [:]
-        
-        await withTaskGroup(of: (String, (size: Int64, count: Int)?).self) { group in
-            for library in libraries {
+    private func fetchAllLibraryDetails() async {
+        await withTaskGroup(of: Void.self) { group in
+            for i in displayLibraries.indices {
                 group.addTask {
-                    let mediaType: Int
-                    if library.type == "show" {
-                        mediaType = 4
-                    } else if library.type == "movie" {
-                        mediaType = 1
-                    } else {
-                        return (library.key, (0, 0))
-                    }
-                    
-                    guard let details = await self.currentServerDetails else { return (library.key, nil) }
+                    await self.fetchDetailsForLibrary(at: i)
+                }
+            }
+        }
+    }
 
-                    do {
-                        let mediaItems = try await self.plexService.fetchAllMediaInSection(
-                            serverURL: details.url,
-                            token: details.token,
-                            libraryKey: library.key,
-                            mediaType: mediaType
-                        )
-                        
-                        let totalSize = mediaItems.reduce(Int64(0)) { $0 + ($1.media?.first?.parts.first?.size ?? 0) }
-                        let totalCount = mediaItems.count
-                        
-                        return (library.key, (totalSize, totalCount))
-                    } catch {
-                        return (library.key, nil)
-                    }
-                }
+    private func fetchDetailsForLibrary(at index: Int) async {
+        guard let details = currentServerDetails, index < displayLibraries.count else { return }
+        let library = displayLibraries[index].library
+
+        async let sizeAndCountTask = calculateSizeAndCount(forLibrary: library)
+        async let recentsTask = getRecentItems(forLibrary: library)
+        
+        let (sizeAndCount, recents) = await (sizeAndCountTask, recentsTask)
+        
+        if let result = sizeAndCount {
+            displayLibraries[index].size = result.size
+            displayLibraries[index].fileCount = result.count
+        }
+        
+        if let recents = recents {
+            displayLibraries[index].recentItemURLs = recents.compactMap { item in
+                guard let thumbPath = item.thumb else { return nil }
+                return URL(string: "\(details.url)\(thumbPath)?X-Plex-Token=\(details.token)")
             }
+        }
+    }
+
+    private func getRecentItems(forLibrary library: PlexLibrary) async -> [MediaMetadata]? {
+        let mediaType = library.type == "show" ? 2 : 1
+        guard let details = self.currentServerDetails else { return nil }
+
+        do {
+            let mediaItems = try await self.plexService.fetchAllMediaInSection(
+                serverURL: details.url,
+                token: details.token,
+                libraryKey: library.key,
+                mediaType: mediaType
+            )
+
+            let sortedItems = mediaItems.sorted {
+                ($0.addedAt ?? 0) > ($1.addedAt ?? 0)
+            }
+
+            return Array(sortedItems.prefix(5))
             
-            for await (key, result) in group {
-                if let result = result {
-                    librarySizes[key] = result.size
-                    libraryFileCounts[key] = result.count
-                }
+        } catch {
+            print("Erreur de récupération des ajouts récents pour la médiathèque \(library.key): \(error)")
+            return nil
+        }
+    }
+
+    private func calculateSizeAndCount(forLibrary library: PlexLibrary) async -> (size: Int64, count: Int)? {
+        let mediaType = library.type == "show" ? 4 : 1
+        guard let details = self.currentServerDetails else { return nil }
+
+        do {
+            let mediaItems = try await self.plexService.fetchAllMediaInSection(
+                serverURL: details.url,
+                token: details.token,
+                libraryKey: library.key,
+                mediaType: mediaType
+            )
+            
+            let totalSize = mediaItems.reduce(Int64(0)) { $0 + ($1.media?.first?.parts.first?.size ?? 0) }
+            let totalCount = mediaItems.count
+            
+            return (totalSize, totalCount)
+        } catch {
+            let nsError = error as NSError
+            if !(nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled) {
+                print("Erreur de calcul de la taille pour la médiathèque \(library.key): \(error)")
             }
+            return nil
         }
     }
 }

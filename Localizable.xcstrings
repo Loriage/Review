@@ -11,6 +11,9 @@
         }
       }
     },
+    "%lld" : {
+
+    },
     "%lld lectures • %@" : {
       "localizations" : {
         "en" : {
@@ -99,7 +102,7 @@
     "Création du Rewind" : {
 
     },
-    "Créée le: %@" : {
+    "Dernière mise à jour :" : {
 
     },
     "Détails du média" : {
@@ -115,6 +118,9 @@
 
     },
     "Fermer" : {
+
+    },
+    "Fichiers :" : {
 
     },
     "Films les plus regardés" : {
@@ -160,6 +166,7 @@
 
     },
     "Mise à jour le: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -246,7 +253,7 @@
     "Synchroniser l'historique complet" : {
 
     },
-    "Taille de la bibliothèque : %@" : {
+    "Taille :" : {
 
     },
     "Top Spectateurs" : {

@@ -10,9 +10,19 @@ struct AllMediaContainer: Decodable {
     enum CodingKeys: String, CodingKey { case metadata = "Metadata" }
 }
 
-struct MediaMetadata: Decodable {
+struct MediaMetadata: Decodable, Identifiable {
+    var id: String { ratingKey }
+    let ratingKey: String
+    let type: String
+    let thumb: String?
+    let addedAt: Int?
+    let updatedAt: Int?
     let media: [PlexMediaPartContainer]?
-    enum CodingKeys: String, CodingKey { case media = "Media" }
+    
+    enum CodingKeys: String, CodingKey {
+        case ratingKey, type, thumb, addedAt, updatedAt
+        case media = "Media"
+    }
 }
 
 extension PlexAPIService {
@@ -146,6 +156,7 @@ extension PlexAPIService {
 
     func fetchAllMediaInSection(serverURL: String, token: String, libraryKey: String, mediaType: Int) async throws -> [MediaMetadata] {
         let baseURL = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Token=\(token)"
+
         return try await fetchPaginatedContent(baseURL: baseURL)
     }
 
@@ -177,5 +188,21 @@ extension PlexAPIService {
             currentIndex += pageSize
         }
         return allItems
+    }
+
+    func fetchRecentlyAdded(serverURL: String, token: String, libraryKey: String, mediaType: Int) async throws -> [PlexRecentItem] {
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Container-Start=0&X-Plex-Container-Size=5&X-Plex-Token=\(token)"
+
+        guard let url = URL(string: urlString) else { throw PlexError.invalidURL }
+
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0) }
+
+        let decodedResponse = try JSONDecoder().decode(PlexRecentlyAddedResponse.self, from: data)
+        return decodedResponse.mediaContainer.metadata
     }
 }

@@ -55,3 +55,11 @@ struct MediaHistoryItem: Identifiable {
     let session: WatchSession
     let userName: String?
 }
+
+struct DisplayLibrary: Identifiable {
+    let id: String
+    let library: PlexLibrary
+    var size: Int64?
+    var fileCount: Int?
+    var recentItemURLs: [URL] = []
+}
