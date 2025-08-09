@@ -1,10 +1,5 @@
 import Foundation
 
-struct ActionAlert: Identifiable {
-    let id = UUID()
-    let message: String
-}
-
 @MainActor
 class MediaActionsViewModel: ObservableObject {
     @Published var hudMessage: HUDMessage?
@@ -13,23 +8,15 @@ class MediaActionsViewModel: ObservableObject {
     private let plexService: PlexAPIService
     let serverViewModel: ServerViewModel
     let authManager: PlexAuthManager
-    private let mediaRatingKey: String
-    private let mediaTitle: String
+    let mediaRatingKey: String
 
     private var hudDismissTask: Task<Void, Never>?
 
-    init(session: PlexActivitySession, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+    init(ratingKey: String, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         self.plexService = plexService
         self.serverViewModel = serverViewModel
         self.authManager = authManager
-
-        if session.type == "episode", let seriesRatingKey = session.grandparentRatingKey, let seriesTitle = session.grandparentTitle {
-            self.mediaRatingKey = seriesRatingKey
-            self.mediaTitle = seriesTitle
-        } else {
-            self.mediaRatingKey = session.ratingKey
-            self.mediaTitle = session.title
-        }
+        self.mediaRatingKey = ratingKey
     }
 
     private func showHUD(message: HUDMessage, duration: TimeInterval = 2) {
@@ -62,9 +49,9 @@ class MediaActionsViewModel: ObservableObject {
         isWorking = true
         do {
             try await plexService.refreshMetadata(for: mediaRatingKey, serverURL: details.url, token: details.token)
-            hudMessage = HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180)
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180))
         } catch {
-            hudMessage = HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180)
+            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180))
         }
         isWorking = false
     }
@@ -74,9 +61,9 @@ class MediaActionsViewModel: ObservableObject {
         isWorking = true
         do {
             try await plexService.analyzeMedia(for: mediaRatingKey, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "Analyse démarrée.", maxWidth: 180))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'analyse.", maxWidth: 180))
         }
         isWorking = false
     }

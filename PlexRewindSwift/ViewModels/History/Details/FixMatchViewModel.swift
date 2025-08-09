@@ -6,23 +6,16 @@ class FixMatchViewModel: ObservableObject {
     @Published var isLoading = true
     @Published var hudMessage: HUDMessage?
 
-    private let session: PlexActivitySession
     private let plexService: PlexAPIService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
     private let mediaRatingKey: String
 
-    init(session: PlexActivitySession, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
-        self.session = session
+    init(ratingKey: String, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+        self.mediaRatingKey = ratingKey
         self.plexService = plexService
         self.serverViewModel = serverViewModel
         self.authManager = authManager
-
-        if session.type == "episode", let seriesRatingKey = session.grandparentRatingKey {
-            self.mediaRatingKey = seriesRatingKey
-        } else {
-            self.mediaRatingKey = session.ratingKey
-        }
     }
 
     func loadMatches() async {

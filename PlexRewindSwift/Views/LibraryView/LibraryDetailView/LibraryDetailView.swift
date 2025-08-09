@@ -91,7 +91,8 @@ struct LibraryDetailView: View {
                 HStack(spacing: 15) {
                     ForEach(viewModel.allMedia) { media in
                         NavigationLink(destination: MediaHistoryView(
-                            session: createSession(for: media),
+                            ratingKey: media.ratingKey,
+                            mediaType: media.type,
                             serverViewModel: serverViewModel,
                             authManager: authManager,
                             statsViewModel: statsViewModel
@@ -106,36 +107,5 @@ struct LibraryDetailView: View {
                 }
             }
         }
-    }
-
-    private func createSession(for media: MediaMetadata) -> PlexActivitySession {
-        // Create a minimal session object needed for MediaHistoryView
-        return PlexActivitySession(
-            ratingKey: media.ratingKey,
-            sessionKey: nil,
-            title: "", // Not strictly needed by MediaHistoryView's initial fetch logic
-            type: media.type,
-            duration: 0,
-            viewOffset: 0,
-            art: nil,
-            contentRating: nil,
-            grandparentArt: nil,
-            grandparentTitle: nil, // This will be fetched later in MediaHistoryViewModel
-            grandparentRatingKey: media.type == "episode" ? media.ratingKey : nil,
-            parentThumb: nil,
-            grandparentThumb: nil,
-            thumb: media.thumb,
-            summary: nil,
-            parentIndex: nil,
-            index: nil,
-            year: nil,
-            posterURL: viewModel.posterURL(for: media),
-            location: nil,
-            media: nil,
-            user: .init(id: "", title: "", thumb: nil),
-            player: .init(address: "", device: nil, machineIdentifier: "", model: nil, platform: "", platformVersion: nil, product: "", profile: nil, remotePublicAddress: nil, state: "", title: nil, version: nil, local: false, relayed: false, secure: false, userID: 0),
-            session: .init(id: "", bandwidth: nil, location: ""),
-            transcodeSession: nil
-        )
     }
 }

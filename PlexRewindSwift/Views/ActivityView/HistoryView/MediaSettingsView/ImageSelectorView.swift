@@ -4,9 +4,9 @@ struct ImageSelectorView: View {
     @StateObject var viewModel: ImageSelectorViewModel
     @Environment(\.dismiss) var dismiss
 
-    init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+    init(ratingKey: String, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: ImageSelectorViewModel(
-            session: session,
+            ratingKey: ratingKey,
             plexService: PlexAPIService(),
             serverViewModel: serverViewModel,
             authManager: authManager

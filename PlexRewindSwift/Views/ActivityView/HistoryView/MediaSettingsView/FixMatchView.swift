@@ -4,9 +4,9 @@ struct FixMatchView: View {
     @StateObject var viewModel: FixMatchViewModel
     @Environment(\.dismiss) var dismiss
 
-    init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+    init(ratingKey: String, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: FixMatchViewModel(
-            session: session,
+            ratingKey: ratingKey,
             plexService: PlexAPIService(),
             serverViewModel: serverViewModel,
             authManager: authManager

@@ -1,13 +1,11 @@
-
 import SwiftUI
 
 struct MediaHistoryView: View {
     @StateObject var viewModel: MediaHistoryViewModel
-    @StateObject private var actionsViewModel: MediaActionsViewModel
-    @EnvironmentObject var activityViewModel: ActivityViewModel
+    
+    @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
-
-    @ScaledMetric var width: CGFloat = 50
+    @EnvironmentObject var statsViewModel: StatsViewModel
 
     @State private var showingSettings = false
     @State private var showMediaDetails = false
@@ -15,19 +13,12 @@ struct MediaHistoryView: View {
     @State private var showFixMatchView = false
     @State private var showingAnalysisAlert = false
 
-    @State private var dominantColor: Color = Color(.systemGray4)
-
-    init(session: PlexActivitySession, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
+    init(ratingKey: String, mediaType: String, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
-            session: session,
+            ratingKey: ratingKey,
+            mediaType: mediaType,
             serverViewModel: serverViewModel,
             statsViewModel: statsViewModel,
-            authManager: authManager
-        ))
-        _actionsViewModel = StateObject(wrappedValue: MediaActionsViewModel(
-            session: session,
-            plexService: PlexAPIService(),
-            serverViewModel: serverViewModel,
             authManager: authManager
         ))
     }
@@ -37,144 +28,60 @@ struct MediaHistoryView: View {
             Group {
                 if viewModel.isLoading {
                     loadingView
-                } else if viewModel.historyItems.isEmpty {
+                } else if viewModel.representativeSession == nil {
                     emptyView
                 } else {
                     contentView
                 }
             }
-            if let hudMessage = actionsViewModel.hudMessage {
-                HUDView(hudMessage: hudMessage)
-                    .transition(.scale.combined(with: .opacity))
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            if hudMessage == actionsViewModel.hudMessage {
-                                actionsViewModel.hudMessage = nil
-                            }
-                        }
-                    }
-            }
         }
-        .navigationTitle(viewModel.session.showTitle)
+        .navigationTitle(viewModel.displayTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    showingSettings = true
-                }) {
-                    Image(systemName: "gearshape.fill")
+                if !viewModel.isLoading && viewModel.representativeSession != nil {
+                    Button(action: { showingSettings = true }) {
+                        Image(systemName: "gearshape.fill")
+                    }
                 }
             }
         }
-        .sheet(isPresented: $showingSettings) {
-            VStack(spacing: 0) {
-                HStack(alignment: .center) {
-                    Capsule()
-                        .fill(Color.secondary)
-                        .frame(width: 40, height: 5)
-                        .padding(.top, 10)
-                        .padding(.bottom, 30)
-                }
-
-                VStack(alignment: .leading, spacing: 24) {
-                    if viewModel.session.type == "movie" {
-                        Button {
-                            showingSettings = false
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                showMediaDetails = true
-                            }
-                        } label: {
-                            Label("Détails du média", systemImage: "info.circle")
-                        }
-                    }
-
-                    Button {
-                        showingSettings = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            showImageSelector = true
-                        }
-                    } label: {
-                        Label("Modifier l'image", systemImage: "photo")
-                    }
-                    
-                    Button {
-                        showingSettings = false
-                        Task { await actionsViewModel.refreshMetadata() }
-                    } label: {
-                        Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
-                    }
-                    
-                    Button {
-                        showingSettings = false
-                        showingAnalysisAlert = true
-                    } label: {
-                        Label("Analyse", systemImage: "wand.and.rays")
-                    }
-                    
-                    Button {
-                        showingSettings = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            showFixMatchView = true
-                        }
-                    } label: {
-                        Label("Corriger l'association...", systemImage: "pencil")
-                    }
-                }
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-                
-                Spacer()
-            }
-            .buttonStyle(.plain)
-            .foregroundColor(.primary)
-            .presentationDetents([.height(250)])
-            .presentationBackground(.thinMaterial)
-        }
+        .sheet(isPresented: $showingSettings) { mediaSettingsSheet }
         .alert("Êtes-vous sûr ?", isPresented: $showingAnalysisAlert) {
             Button("Annuler", role: .cancel) {}
             Button("Analyser", role: .destructive) {
-                Task { await actionsViewModel.analyzeMedia() }
+                let actionsVM = MediaActionsViewModel(ratingKey: viewModel.ratingKeyForActions, plexService: PlexAPIService(), serverViewModel: serverViewModel, authManager: authManager)
+                Task { await actionsVM.analyzeMedia() }
             }
         } message: {
             Text("Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur.")
         }
-        .sheet(isPresented: $showImageSelector, onDismiss: {
-            if let url = viewModel.displayPosterURL {
-                ImageCache.shared.invalidate(url: url)
-            }
-            Task {
-                await viewModel.refreshSession()
-            }
-        }) {
-            ImageSelectorView(
-                session: viewModel.session,
-                serverViewModel: actionsViewModel.serverViewModel,
-                authManager: actionsViewModel.authManager
-            )
+        .sheet(isPresented: $showImageSelector, onDismiss: { Task { await viewModel.refreshSessionDetails() } }) {
+             ImageSelectorView(
+                 ratingKey: viewModel.ratingKeyForActions,
+                 serverViewModel: serverViewModel,
+                 authManager: authManager
+             )
         }
         .sheet(isPresented: $showMediaDetails) {
+            // Pour les détails, on utilise le ratingKey de l'épisode si c'en est un
             MediaDetailsView(
-                ratingKey: viewModel.session.ratingKey,
-                serverViewModel: actionsViewModel.serverViewModel,
-                authManager: actionsViewModel.authManager
+                ratingKey: viewModel.ratingKey,
+                serverViewModel: serverViewModel,
+                authManager: authManager
             )
         }
-        .sheet(isPresented: $showFixMatchView, onDismiss: {
-            Task {
-                await viewModel.refreshSession()
-            }
-        }) {
+        .sheet(isPresented: $showFixMatchView, onDismiss: { Task { await viewModel.refreshSessionDetails() } }) {
             FixMatchView(
-                session: viewModel.session,
-                serverViewModel: actionsViewModel.serverViewModel,
-                authManager: actionsViewModel.authManager
+                ratingKey: viewModel.ratingKeyForActions,
+                serverViewModel: serverViewModel,
+                authManager: authManager
             )
         }
-        .animation(.spring(), value: actionsViewModel.hudMessage)
         .task {
-            viewModel.activityViewModel = self.activityViewModel
-            await viewModel.loadData()
+            if viewModel.representativeSession == nil {
+                await viewModel.loadData()
+            }
         }
     }
 
@@ -211,42 +118,43 @@ struct MediaHistoryView: View {
         }
     }
     
+    @ViewBuilder
     private var headerSection: some View {
-        Section {
-            VStack(spacing: 0) {
-                HStack {
-                    AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit) { color in
-                        self.dominantColor = color
+        if viewModel.representativeSession != nil {
+            Section {
+                VStack(spacing: 0) {
+                    HStack {
+                        AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit)
+                        .aspectRatio(2/3, contentMode: .fit)
+                        .frame(height: 250)
+                        .cornerRadius(16)
+                        .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
                     }
-                    .aspectRatio(2/3, contentMode: .fit)
-                    .frame(height: 250)
-                    .cornerRadius(16)
-                    .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
-                }
-                .padding(.top, 5)
-                .padding(.bottom, 20)
+                    .padding(.top, 5)
+                    .padding(.bottom, 20)
 
-                if let summary = viewModel.session.summary, !summary.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Résumé")
-                            .font(.title2.bold())
-                        Text(summary)
-                            .font(.body)
-                            .foregroundColor(.secondary)
+                    if let summary = viewModel.summary, !summary.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Résumé")
+                                .font(.title2.bold())
+                            Text(summary)
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.bottom)
+            .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
         }
-        .listRowInsets(EdgeInsets())
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
     }
     
     private var historySection: some View {
         Section(header: Text("Historique des visionnages")) {
-            ForEach(viewModel.historyItems, id: \MediaHistoryItem.id) { item in
+            ForEach(viewModel.historyItems, id: \.id) { item in
                 VStack(alignment: .leading, spacing: 5) {
                     if item.session.type == "episode" {
                         Text(item.session.showTitle)
@@ -271,5 +179,68 @@ struct MediaHistoryView: View {
                 .padding(.vertical, 8)
             }
         }
+    }
+
+    @ViewBuilder
+    private var mediaSettingsSheet: some View {
+        let actionsVM = MediaActionsViewModel(ratingKey: viewModel.ratingKeyForActions, plexService: PlexAPIService(), serverViewModel: serverViewModel, authManager: authManager)
+
+        VStack(spacing: 0) {
+            HStack(alignment: .center) {
+                Capsule()
+                    .fill(Color.secondary)
+                    .frame(width: 40, height: 5)
+                    .padding(.top, 10)
+                    .padding(.bottom, 30)
+            }
+
+            VStack(alignment: .leading, spacing: 24) {
+                if viewModel.mediaType == "movie" {
+                    Button {
+                        showingSettings = false
+                        showMediaDetails = true
+                    } label: {
+                        Label("Détails du média", systemImage: "info.circle")
+                    }
+                }
+
+                Button {
+                    showingSettings = false
+                    showImageSelector = true
+                } label: {
+                    Label("Modifier l'image", systemImage: "photo")
+                }
+                
+                Button {
+                    showingSettings = false
+                    Task { await actionsVM.refreshMetadata() }
+                } label: {
+                    Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
+                }
+                
+                Button {
+                    showingSettings = false
+                    showingAnalysisAlert = true
+                } label: {
+                    Label("Analyser", systemImage: "wand.and.rays")
+                }
+                
+                Button {
+                    showingSettings = false
+                    showFixMatchView = true
+                } label: {
+                    Label("Corriger l'association...", systemImage: "pencil")
+                }
+            }
+            .font(.headline)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+            
+            Spacer()
+        }
+        .buttonStyle(.plain)
+        .foregroundColor(.primary)
+        .presentationDetents([.height(300)])
+        .presentationBackground(.thinMaterial)
     }
 }

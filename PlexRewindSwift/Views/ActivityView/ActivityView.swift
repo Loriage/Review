@@ -63,7 +63,8 @@ struct ActivityRowView: View {
         VStack(alignment: .leading, spacing: 0) {
             
             NavigationLink(destination: MediaHistoryView(
-                session: session,
+                ratingKey: session.ratingKey,
+                mediaType: session.type,
                 serverViewModel: serverViewModel,
                 authManager: authManager,
                 statsViewModel: statsViewModel
