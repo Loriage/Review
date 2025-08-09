@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 @MainActor
 class LibraryViewModel: ObservableObject {
@@ -13,14 +14,32 @@ class LibraryViewModel: ObservableObject {
     private let authManager: PlexAuthManager
     
     private var currentServerDetails: (url: String, token: String)?
+    private var cancellables = Set<AnyCancellable>()
 
     init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
         self.serverViewModel = serverViewModel
         self.authManager = authManager
         self.plexService = plexService
+        
+        serverViewModel.$selectedServerID
+            .sink { [weak self] _ in
+                self?.libraries = []
+                self?.librarySizes = [:]
+                self?.libraryFileCounts = [:]
+            }
+            .store(in: &cancellables)
     }
     
-    func loadLibraries() async {
+    func loadLibrariesIfNeeded() async {
+        guard libraries.isEmpty else { return }
+        await fetchData()
+    }
+
+    func refreshData() async {
+        await fetchData()
+    }
+    
+    private func fetchData() async {
         guard let serverID = serverViewModel.selectedServerID,
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
@@ -30,9 +49,7 @@ class LibraryViewModel: ObservableObject {
             return
         }
         
-        if self.libraries.isEmpty {
-            isLoading = true
-        }
+        isLoading = true
         errorMessage = nil
         
         let serverURL = connection.uri
@@ -42,19 +59,16 @@ class LibraryViewModel: ObservableObject {
         do {
             let fetchedLibraries = try await plexService.fetchLibraries(serverURL: serverURL, token: resourceToken)
             self.libraries = fetchedLibraries
-            
             self.isLoading = false
             
             await fetchAllLibrarySizesAndCounts(libraries: fetchedLibraries)
             
         } catch {
             self.errorMessage = "Impossible de charger les médiathèques : \(error.localizedDescription)"
+            self.isLoading = false
         }
-        
-        isLoading = false
     }
     
-    // CORRECTION : La logique est maintenant beaucoup plus simple et directe.
     private func fetchAllLibrarySizesAndCounts(libraries: [PlexLibrary]) async {
         self.librarySizes = [:]
         self.libraryFileCounts = [:]
@@ -62,14 +76,12 @@ class LibraryViewModel: ObservableObject {
         await withTaskGroup(of: (String, (size: Int64, count: Int)?).self) { group in
             for library in libraries {
                 group.addTask {
-                    // On choisit le type de média à chercher en fonction du type de la bibliothèque
                     let mediaType: Int
                     if library.type == "show" {
-                        mediaType = 4 // Episodes
+                        mediaType = 4
                     } else if library.type == "movie" {
-                        mediaType = 1 // Films
+                        mediaType = 1
                     } else {
-                        // On ignore les autres types pour l'instant (musique, etc.)
                         return (library.key, (0, 0))
                     }
                     
@@ -88,7 +100,6 @@ class LibraryViewModel: ObservableObject {
                         
                         return (library.key, (totalSize, totalCount))
                     } catch {
-                        print("Erreur de calcul de la taille pour la médiathèque \(library.key): \(error)")
                         return (library.key, nil)
                     }
                 }
@@ -102,6 +113,4 @@ class LibraryViewModel: ObservableObject {
             }
         }
     }
-    
-    // La fonction récursive est maintenant inutile et a été supprimée.
 }

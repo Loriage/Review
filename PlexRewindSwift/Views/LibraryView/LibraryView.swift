@@ -43,10 +43,10 @@ struct LibraryView: View {
             }
             .navigationTitle("Bibliothèques")
             .task {
-                await viewModel.loadLibraries()
+                await viewModel.loadLibrariesIfNeeded()
             }
             .refreshable {
-                await viewModel.loadLibraries()
+                await viewModel.refreshData()
             }
         }
     }
