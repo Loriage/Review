@@ -28,6 +28,7 @@ struct WatchSession: Decodable, Identifiable {
     let parentTitle: String?
     let grandparentTitle: String?
     let grandparentRatingKey: String?
+    let grandparentKey: String?
     let historyKey: String?
     let accountID: Int?
 
@@ -43,7 +44,7 @@ struct WatchSession: Decodable, Identifiable {
 
     enum CodingKeys: String, CodingKey {
         case title, type, viewedAt, duration, ratingKey, parentTitle,
-            grandparentTitle, grandparentRatingKey, historyKey, thumb,
+            grandparentTitle, grandparentRatingKey, historyKey, grandparentKey, thumb,
             grandparentThumb, index, parentIndex
         case accountID = "accountID"
     }

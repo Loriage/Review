@@ -37,8 +37,6 @@ struct MediaHistoryView: View {
             Group {
                 if viewModel.isLoading {
                     loadingView
-                } else if viewModel.representativeSession == nil {
-                    emptyView
                 } else {
                     contentView
                 }
@@ -106,24 +104,34 @@ struct MediaHistoryView: View {
     }
 
     private var emptyView: some View {
-        VStack(spacing: 15) {
-            Image(systemName: "film.stack")
-                .font(.system(size: 60))
-                .foregroundColor(.secondary)
-            Text("Aucun historique trouvé")
-                .font(.title2.bold())
-            Text("L'historique pour ce média est vide.")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
+        Section{
+            VStack(spacing: 10) {
+                Image(systemName: "film.stack")
+                    .font(.system(size: 20))
+                    .foregroundColor(.secondary)
+                Text("Aucun historique trouvé")
+                    .font(.title3.bold())
+                Text("L'historique pour ce média est vide.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+            .frame(maxWidth: .infinity)
         }
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
 
     private var contentView: some View {
         List {
             headerSection
-            historySection
+            if viewModel.representativeSession != nil {
+                historySection
+            } else {
+                emptyView
+            }
         }
         .refreshable {
             await viewModel.refreshData()
@@ -132,36 +140,34 @@ struct MediaHistoryView: View {
     
     @ViewBuilder
     private var headerSection: some View {
-        if viewModel.representativeSession != nil {
-            Section {
-                VStack(spacing: 0) {
-                    HStack {
-                        AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit)
+        Section {
+            VStack(spacing: 0) {
+                HStack {
+                    AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit)
                         .aspectRatio(2/3, contentMode: .fit)
                         .frame(height: 250)
                         .cornerRadius(16)
                         .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
-                    }
-                    .padding(.top, 5)
-                    .padding(.bottom, 20)
-
-                    if let summary = viewModel.summary, !summary.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Résumé")
-                                .font(.title2.bold())
-                            Text(summary)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                        }
+                }
+                .padding(.top, 5)
+                .padding(.bottom, 20)
+                
+                if let summary = viewModel.summary, !summary.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Résumé")
+                            .font(.title2.bold())
+                        Text(summary)
+                            .font(.body)
+                            .foregroundColor(.secondary)
                     }
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.bottom)
             }
-            .listRowInsets(EdgeInsets())
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
+            .frame(maxWidth: .infinity)
+            .padding(.bottom)
         }
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
     
     private var historySection: some View {

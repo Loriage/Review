@@ -185,23 +185,31 @@ class StatsViewModel: ObservableObject {
         var filteredSessions: [WatchSession] = []
         var summary: String? = nil
         var ratingKeyForSummary: String?
+
+        ratingKeyForSummary = ratingKey
         
         if mediaType == "movie" {
-            filteredSessions = fullHistory.filter { $0.ratingKey == ratingKey }
-            ratingKeyForSummary = ratingKey
-        } else {
             let representativeSession = fullHistory.first { session in
-                if mediaType == "show" {
-                    return session.grandparentRatingKey == ratingKey
-                } else {
-                    ratingKeyForSummary = filteredSessions.first?.grandparentRatingKey
-                    return session.ratingKey == ratingKey || session.grandparentRatingKey == grandparentRatingKey
-                }
+                return session.ratingKey == ratingKey
             }
-            
+            if let showTitle = representativeSession?.title, !showTitle.isEmpty {
+                filteredSessions = fullHistory.filter { $0.title == showTitle }
+            }
+        } else if mediaType == "episode" {
+            let representativeSession = fullHistory.first { session in
+                return session.ratingKey == ratingKey || session.grandparentRatingKey == grandparentRatingKey
+            }
+
             if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
                 filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
                 ratingKeyForSummary = filteredSessions.first?.grandparentRatingKey
+            }
+        } else if mediaType == "show" {
+            let representativeSession = fullHistory.first { session in
+                return session.grandparentKey == "/library/metadata/\(ratingKey)"
+            }
+            if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
+                filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
             }
         }
         
