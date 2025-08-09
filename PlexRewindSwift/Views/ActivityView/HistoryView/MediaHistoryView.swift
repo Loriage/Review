@@ -50,10 +50,8 @@ struct MediaHistoryView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                if !viewModel.isLoading && viewModel.representativeSession != nil {
-                    Button(action: { showingSettings = true }) {
-                        Image(systemName: "gearshape.fill")
-                    }
+                Button(action: { showingSettings = true }) {
+                    Image(systemName: "gearshape.fill")
                 }
             }
         }
@@ -88,10 +86,8 @@ struct MediaHistoryView: View {
             )
         }
         .task {
-            if viewModel.representativeSession == nil {
-                await viewModel.loadData()
-                actionsViewModel.update(ratingKey: viewModel.ratingKeyForActions)
-            }
+            await viewModel.loadData()
+            actionsViewModel.update(ratingKey: viewModel.ratingKeyForActions)
         }
     }
 
@@ -127,10 +123,11 @@ struct MediaHistoryView: View {
     private var contentView: some View {
         List {
             headerSection
-            if viewModel.representativeSession != nil {
-                historySection
-            } else {
+
+            if viewModel.historyItems.isEmpty {
                 emptyView
+            } else {
+                historySection
             }
         }
         .refreshable {
@@ -140,34 +137,36 @@ struct MediaHistoryView: View {
     
     @ViewBuilder
     private var headerSection: some View {
-        Section {
-            VStack(spacing: 0) {
-                HStack {
-                    AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit)
-                        .aspectRatio(2/3, contentMode: .fit)
-                        .frame(height: 250)
-                        .cornerRadius(16)
-                        .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
-                }
-                .padding(.top, 5)
-                .padding(.bottom, 20)
-                
-                if let summary = viewModel.summary, !summary.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Résumé")
-                            .font(.title2.bold())
-                        Text(summary)
-                            .font(.body)
-                            .foregroundColor(.secondary)
+        if viewModel.mediaDetails != nil {
+            Section {
+                VStack(spacing: 0) {
+                    HStack {
+                        AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit)
+                            .aspectRatio(2/3, contentMode: .fit)
+                            .frame(height: 250)
+                            .cornerRadius(16)
+                            .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
+                    }
+                    .padding(.top, 5)
+                    .padding(.bottom, 20)
+                    
+                    if let summary = viewModel.summary, !summary.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Résumé")
+                                .font(.title2.bold())
+                            Text(summary)
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.bottom)
+            .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
         }
-        .listRowInsets(EdgeInsets())
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
     }
     
     private var historySection: some View {
