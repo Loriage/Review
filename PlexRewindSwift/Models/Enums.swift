@@ -65,12 +65,12 @@ enum LoadingState: Equatable {
 
 class DisplayLibrary: Identifiable, ObservableObject {
     let id: String
-    let library: PlexLibrary
+    @Published var library: PlexLibrary
+    
     @Published var size: Int64?
     @Published var fileCount: Int?
     @Published var episodesCount: Int?
     @Published var recentItemURLs: [URL] = []
-
     @Published var loadingState: LoadingState = .idle
 
     init(id: String, library: PlexLibrary) {
@@ -96,4 +96,8 @@ enum LibraryVisibility: Int, CaseIterable, Identifiable {
             return "Exclure partout"
         }
     }
+}
+
+extension Notification.Name {
+    static let didUpdateLibraryPreferences = Notification.Name("didUpdateLibraryPreferences")
 }

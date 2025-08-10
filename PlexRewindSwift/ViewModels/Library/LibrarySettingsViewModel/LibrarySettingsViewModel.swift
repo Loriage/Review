@@ -1,40 +1,60 @@
 import Foundation
 
+struct LibraryPreferences: Equatable {
+    var visibility: LibraryVisibility
+    var enableTrailers: Bool
+}
+
 @MainActor
 class LibrarySettingsViewModel: ObservableObject {
     let library: DisplayLibrary
 
-    @Published var visibility: LibraryVisibility = .includeInHomeAndSearch
-    @Published var enableTrailers: Bool = false
+    @Published var preferences: LibraryPreferences
     @Published var hudMessage: HUDMessage?
-
+    
+    private var initialPreferences: LibraryPreferences
+    
     private let plexService: PlexAPIService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
 
-    private var initialVisibility: LibraryVisibility = .includeInHomeAndSearch
-    private var initialEnableTrailers: Bool = false
     private var hudDismissTask: Task<Void, Never>?
 
     var hasChanges: Bool {
-        return visibility != initialVisibility || enableTrailers != initialEnableTrailers
+        return preferences != initialPreferences
     }
-
+    
     init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
         self.library = library
         self.serverViewModel = serverViewModel
         self.authManager = authManager
         self.plexService = plexService
 
-        self.visibility = LibraryVisibility(rawValue: library.library.hidden) ?? .includeInHomeAndSearch
+        let visibility = LibraryVisibility(rawValue: library.library.hidden) ?? .includeInHomeAndSearch
+        let enableTrailers: Bool
         if let trailersSetting = library.library.preferences?.settings.first(where: { $0.id == "enableCinemaTrailers" }) {
-            self.enableTrailers = (trailersSetting.value == "true")
+            enableTrailers = (trailersSetting.value == "true")
         } else {
-            self.enableTrailers = false
+            enableTrailers = false
         }
         
-        self.initialVisibility = self.visibility
-        self.initialEnableTrailers = self.enableTrailers
+        let prefs = LibraryPreferences(visibility: visibility, enableTrailers: enableTrailers)
+        self.preferences = prefs
+        self.initialPreferences = prefs
+    }
+
+    func refreshState() {
+        let visibility = LibraryVisibility(rawValue: library.library.hidden) ?? .includeInHomeAndSearch
+        let enableTrailers: Bool
+        if let trailersSetting = library.library.preferences?.settings.first(where: { $0.id == "enableCinemaTrailers" }) {
+            enableTrailers = (trailersSetting.value == "true")
+        } else {
+            enableTrailers = false
+        }
+        
+        let prefs = LibraryPreferences(visibility: visibility, enableTrailers: enableTrailers)
+        self.preferences = prefs
+        self.initialPreferences = prefs
     }
 
     func saveChanges() async {
@@ -42,28 +62,32 @@ class LibrarySettingsViewModel: ObservableObject {
             showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles."))
             return
         }
-
+        
         var preferencesToUpdate: [String: String] = [:]
-
-        if visibility != initialVisibility {
-            preferencesToUpdate["prefs[hidden]"] = "\(visibility.rawValue)"
+        
+        if preferences.visibility != initialPreferences.visibility {
+            preferencesToUpdate["prefs[hidden]"] = "\(preferences.visibility.rawValue)"
         }
-
-        if enableTrailers != initialEnableTrailers {
-            preferencesToUpdate["prefs[enableCinemaTrailers]"] = enableTrailers ? "1" : "0"
+        
+        if preferences.enableTrailers != initialPreferences.enableTrailers {
+            preferencesToUpdate["prefs[enableCinemaTrailers]"] = preferences.enableTrailers ? "1" : "0"
         }
-
+        
+        guard !preferencesToUpdate.isEmpty else { return }
+        
         do {
             try await plexService.updateLibraryPreferences(for: library.library.key, preferences: preferencesToUpdate, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Paramètres mis à jour !"))
+
+            self.initialPreferences = preferences
+
+            NotificationCenter.default.post(name: .didUpdateLibraryPreferences, object: nil)
             
-            self.initialVisibility = visibility
-            self.initialEnableTrailers = enableTrailers
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de la mise à jour."))
         }
     }
-
+    
     private func getServerDetails() -> (url: String, token: String)? {
         guard let serverID = serverViewModel.selectedServerID,
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),

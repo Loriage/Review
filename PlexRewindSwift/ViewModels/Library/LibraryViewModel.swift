@@ -25,6 +25,8 @@ class LibraryViewModel: ObservableObject {
                 self?.displayLibraries = []
             }
             .store(in: &cancellables)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLibraryUpdate), name: .didUpdateLibraryPreferences, object: nil)
     }
 
     func startFetchingDetailsFor(libraryID: String) {
@@ -43,8 +45,13 @@ class LibraryViewModel: ObservableObject {
         await fetchData()
     }
 
+    @objc private func handleLibraryUpdate() {
+        Task {
+            await refreshData()
+        }
+    }
+
     func refreshData() async {
-        self.displayLibraries = []
         await fetchData()
     }
     
@@ -68,8 +75,18 @@ class LibraryViewModel: ObservableObject {
         self.currentServerDetails = (url: serverURL, token: resourceToken)
         
         do {
-            let fetchedLibraries = try await plexService.fetchLibraries(serverURL: serverURL, token: resourceToken)
-            self.displayLibraries = fetchedLibraries.map { DisplayLibrary(id: $0.id, library: $0) }
+            let fetchedPlexLibs = try await plexService.fetchLibraries(serverURL: serverURL, token: resourceToken)
+            let fetchedLibsDict = Dictionary(uniqueKeysWithValues: fetchedPlexLibs.map { ($0.uuid, $0) })
+
+            self.displayLibraries.removeAll { fetchedLibsDict[$0.id] == nil }
+
+            for plexLib in fetchedPlexLibs {
+                if let existingDisplayLib = self.displayLibraries.first(where: { $0.id == plexLib.uuid }) {
+                    existingDisplayLib.library = plexLib
+                } else {
+                    self.displayLibraries.append(DisplayLibrary(id: plexLib.uuid, library: plexLib))
+                }
+            }
             self.isLoading = false
         } catch {
             let nsError = error as NSError

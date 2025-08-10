@@ -27,7 +27,7 @@ struct LibrarySettingsView: View {
                         header: Text("Visibilité"),
                         footer: Text("Restreindre où le contenu de cette bibliothèque doit apparaître.")
                     ) {
-                        Picker("Visibilité", selection: $viewModel.visibility) {
+                        Picker("Visibilité", selection: $viewModel.preferences.visibility) {
                             ForEach(LibraryVisibility.allCases) { visibility in
                                 Text(visibility.description).tag(visibility)
                             }
@@ -37,7 +37,7 @@ struct LibrarySettingsView: View {
                         header: Text("Options de lecture"),
                         footer: Text("Autoriser les bandes annonces à être jouées avant les objets de cette bibliothèque.").textCase(nil)
                     ) {
-                        Toggle("Activer les bandes annonces", isOn: $viewModel.enableTrailers)
+                        Toggle("Activer les bandes annonces", isOn: $viewModel.preferences.enableTrailers)
                     }
                 }
                 if let hudMessage = viewModel.hudMessage {
@@ -59,6 +59,9 @@ struct LibrarySettingsView: View {
                         }
                     }
                 }
+            }
+            .onAppear {
+                viewModel.refreshState()
             }
         }
     }
