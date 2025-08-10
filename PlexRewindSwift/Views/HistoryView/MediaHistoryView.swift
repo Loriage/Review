@@ -246,10 +246,11 @@ struct MediaHistoryView: View {
         .font(.headline)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
+        .padding(.top, 20)
         .foregroundColor(.primary)
         .presentationBackground(.regularMaterial)
         .onAppear {
-            sheetHeight = viewModel.mediaType == "movie" ? 240 : 200
+            sheetHeight = viewModel.mediaType == "movie" ? 260 : 220
         }
     }
 }

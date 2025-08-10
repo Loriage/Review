@@ -203,7 +203,13 @@ struct LibraryDetailView: View {
             Button {
 
             } label: {
-                Label("Scanner la bibliothèque", systemImage: "photo")
+                Label("Paramètres de la bibliothèque", systemImage: "gearshape.fill")
+            }
+
+            Button {
+
+            } label: {
+                Label("Scanner la bibliothèque", systemImage: "waveform.path.ecg")
             }
             
             Button {
@@ -221,16 +227,17 @@ struct LibraryDetailView: View {
             Button {
 
             } label: {
-                Label("Corriger l'association...", systemImage: "pencil")
+                Label("Vider la corbeille", systemImage: "trash")
             }
         }
         .font(.headline)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
+        .padding(.top, 20)
         .foregroundColor(.primary)
         .presentationBackground(.regularMaterial)
         .onAppear {
-            sheetHeight = 240
+            sheetHeight = 260
         }
     }
 }
