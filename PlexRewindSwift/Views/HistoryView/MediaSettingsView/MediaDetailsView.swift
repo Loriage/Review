@@ -96,22 +96,3 @@ struct MediaDetailsView: View {
         }
     }
 }
-
-struct InfoPill: View {
-    let title: String
-    let value: String
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            Text(value)
-                .font(.headline.weight(.semibold))
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial)
-        .cornerRadius(12)
-    }
-}

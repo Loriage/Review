@@ -7,7 +7,7 @@ struct LibraryDetailView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
 
-    private let columns = [GridItem(.adaptive(minimum: 150), spacing: 15)]
+    private let columns = [GridItem(.adaptive(minimum: 110), spacing: 10)]
 
     init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: LibraryDetailViewModel(
@@ -42,7 +42,7 @@ struct LibraryDetailView: View {
     }
 
     private var mediaGridView: some View {
-        LazyVGrid(columns: columns, spacing: 20) {
+        LazyVGrid(columns: columns, spacing: 10) {
             ForEach(viewModel.mediaItems) { media in
                 mediaCell(for: media)
             }
@@ -63,7 +63,7 @@ struct LibraryDetailView: View {
             AsyncImageView(url: viewModel.posterURL(for: media))
                 .aspectRatio(2/3, contentMode: .fill)
                 .cornerRadius(8)
-                .shadow(radius: 5)
+                .shadow(color: .black.opacity(0.25), radius: 2, y: 2)
         }
         .buttonStyle(.plain)
         .task(id: media.id) {
@@ -72,33 +72,43 @@ struct LibraryDetailView: View {
     }
 
     private var statsSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Statistiques")
                 .font(.title2.bold())
                 .padding(.top)
 
-            if viewModel.library.library.type == "movie" {
-                if let count = library.fileCount {
-                    Text("Nombre de films: \(count)")
-                } else {
-                    ProgressView().scaleEffect(0.7)
-                }
-            } else if viewModel.library.library.type == "show" {
-                if let showCount = library.fileCount {
-                    Text("Nombre de séries: \(showCount)")
-                } else {
-                    ProgressView().scaleEffect(0.7)
-                }
-
-                HStack {
-                    Text("Nombre d'épisodes:")
-                    if let count = library.episodesCount {
-                        Text("\(count)")
-                    } else {
-                        ProgressView().scaleEffect(0.7)
-                    }
+            HStack(spacing: 10) {
+                if viewModel.library.library.type == "movie" {
+                    InfoPill(
+                        title: "Films",
+                        value: library.fileCount != nil ? "\(library.fileCount!)" : "...",
+                    )
+                    InfoPill(
+                        title: "Taille",
+                        value: library.size != nil ? "\(formatBytes(library.size!))" : "...",
+                    )
+                } else if viewModel.library.library.type == "show" {
+                    InfoPill(
+                        title: "Séries",
+                        value: library.fileCount != nil ? "\(library.fileCount!)" : "...",
+                    )
+                    InfoPill(
+                        title: "Épisodes",
+                        value: library.episodesCount != nil ? "\(library.episodesCount!)" : "...",
+                    )
+                    InfoPill(
+                        title: "Taille",
+                        value: library.size != nil ? "\(formatBytes(library.size!))" : "...",
+                    )
                 }
             }
         }
+    }
+
+    private func formatBytes(_ bytes: Int64) -> String {
+        let formatter = ByteCountFormatter()
+        formatter.allowedUnits = [.useGB, .useMB, .useTB]
+        formatter.countStyle = .binary
+        return formatter.string(fromByteCount: bytes)
     }
 }
