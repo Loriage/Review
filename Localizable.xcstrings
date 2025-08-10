@@ -84,6 +84,9 @@
     "Chargement de l'historique..." : {
 
     },
+    "Chargement des détails..." : {
+
+    },
     "Chargement..." : {
 
     },
@@ -91,9 +94,6 @@
 
     },
     "Choisissez un serveur..." : {
-
-    },
-    "Contenu" : {
 
     },
     "Corriger l'association" : {
@@ -147,6 +147,9 @@
     "https://plex.tv/link" : {
 
     },
+    "Impossible de charger les détails de la bibliothèque." : {
+
+    },
     "Impossible de charger les informations." : {
 
     },
@@ -179,7 +182,7 @@
     "Modifier l'image" : {
 
     },
-    "Nombre d'épisodes: %lld" : {
+    "Nombre d'épisodes:" : {
 
     },
     "Nombre de %@ :" : {
@@ -259,9 +262,6 @@
     "Serveur Plex" : {
 
     },
-    "Settings" : {
-
-    },
     "Statistiques" : {
 
     },
@@ -284,9 +284,6 @@
 
     },
     "Trier par" : {
-
-    },
-    "Type de bibliothèque : %@" : {
 
     },
     "Utilisateur" : {

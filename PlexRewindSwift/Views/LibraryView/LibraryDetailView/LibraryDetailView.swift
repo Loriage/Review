@@ -2,11 +2,12 @@ import SwiftUI
 
 struct LibraryDetailView: View {
     @StateObject private var viewModel: LibraryDetailViewModel
-    @State private var showingSettings = false
-
+    @ObservedObject private var library: DisplayLibrary
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
+
+    private let columns = [GridItem(.adaptive(minimum: 150), spacing: 15)]
 
     init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: LibraryDetailViewModel(
@@ -14,53 +15,80 @@ struct LibraryDetailView: View {
             serverViewModel: serverViewModel,
             authManager: authManager
         ))
+        self.library = library
     }
 
     var body: some View {
         Group {
-            if viewModel.isLoading {
-                ProgressView("Chargement...")
-            } else if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
+            if library.loadingState == .loaded {
+                contentView
+            } else if library.loadingState == .error {
+                Text("Impossible de charger les détails de la bibliothèque.")
                     .foregroundColor(.red)
-                    .padding()
             } else {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        libraryHeader
-                        statsSection
-                        carouselSection
-                    }
-                    .padding()
-                }
+                ProgressView("Chargement des détails...")
             }
         }
         .navigationTitle(viewModel.library.library.title)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    showingSettings = true
-                }) {
-                    Image(systemName: "gearshape.fill")
+        .onChange(of: library.loadingState) { oldState, newState in
+            if newState == .loaded {
+                Task {
+                    await viewModel.loadInitialContent()
                 }
             }
         }
-        .sheet(isPresented: $showingSettings) {
-            Text("Settings")
-        }
         .task {
-            await viewModel.loadLibraryContent()
+            await viewModel.loadInitialContent()
         }
     }
 
-    private var libraryHeader: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text("Type de bibliothèque : \(viewModel.library.library.type == "movie" ? "Films" : "Séries")")
-                    .font(.headline)
-                    .foregroundColor(.secondary)
+    @ViewBuilder
+    private var contentView: some View {
+        switch viewModel.state {
+        case .loading:
+            // Affiche les stats (qui sont prêtes) et un spinner pour la grille
+            VStack {
+                statsSection.padding(.horizontal)
+                ProgressView()
+                Spacer()
             }
-            Spacer()
+        case .content:
+            ScrollView {
+                statsSection.padding(.horizontal)
+                mediaGridView
+            }
+        case .error(let message):
+            Text(message).foregroundColor(.red)
+        }
+    }
+
+    private var mediaGridView: some View {
+        LazyVGrid(columns: columns, spacing: 20) {
+            ForEach(viewModel.mediaItems) { media in
+                mediaCell(for: media)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.top)
+    }
+
+    private func mediaCell(for media: MediaMetadata) -> some View {
+        NavigationLink(destination: MediaHistoryView(
+            ratingKey: media.ratingKey,
+            mediaType: media.type,
+            grandparentRatingKey: media.type == "show" ? media.ratingKey : media.grandparentRatingKey,
+            serverViewModel: serverViewModel,
+            authManager: authManager,
+            statsViewModel: statsViewModel
+        )) {
+            AsyncImageView(url: viewModel.posterURL(for: media))
+                .aspectRatio(2/3, contentMode: .fill)
+                .cornerRadius(8)
+                .shadow(radius: 5)
+        }
+        .buttonStyle(.plain)
+        .task(id: media.id) {
+            await viewModel.loadMoreContentIfNeeded(currentItem: media)
         }
     }
 
@@ -68,42 +96,27 @@ struct LibraryDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Statistiques")
                 .font(.title2.bold())
+                .padding(.top)
 
             if viewModel.library.library.type == "movie" {
-                if let count = viewModel.library.fileCount {
+                if let count = library.fileCount {
                     Text("Nombre de films: \(count)")
+                } else {
+                    ProgressView().scaleEffect(0.7)
                 }
             } else if viewModel.library.library.type == "show" {
-                if let showCount = viewModel.library.fileCount {
+                if let showCount = library.fileCount {
                     Text("Nombre de séries: \(showCount)")
+                } else {
+                    ProgressView().scaleEffect(0.7)
                 }
-                Text("Nombre d'épisodes: \(viewModel.episodesCount)")
-            }
-        }
-    }
 
-    private var carouselSection: some View {
-        VStack(alignment: .leading) {
-            Text("Contenu")
-                .font(.title2.bold())
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 15) {
-                    ForEach(viewModel.allMedia) { media in
-                        NavigationLink(destination: MediaHistoryView(
-                            ratingKey: media.ratingKey,
-                            mediaType: media.type,
-                            grandparentRatingKey: media.type == "show" ? media.ratingKey : media.grandparentRatingKey,
-                            serverViewModel: serverViewModel,
-                            authManager: authManager,
-                            statsViewModel: statsViewModel
-                        )) {
-                            AsyncImageView(url: viewModel.posterURL(for: media))
-                                .frame(width: 150, height: 225)
-                                .cornerRadius(8)
-                                .shadow(radius: 5)
-                        }
-                        .buttonStyle(.plain)
+                HStack {
+                    Text("Nombre d'épisodes:")
+                    if let count = library.episodesCount {
+                        Text("\(count)")
+                    } else {
+                        ProgressView().scaleEffect(0.7)
                     }
                 }
             }

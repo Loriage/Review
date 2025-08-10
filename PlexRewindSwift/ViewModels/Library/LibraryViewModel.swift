@@ -26,6 +26,17 @@ class LibraryViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+
+    func startFetchingDetailsFor(libraryID: String) {
+        guard let libraryToUpdate = displayLibraries.first(where: { $0.id == libraryID }) else { return }
+        guard libraryToUpdate.loadingState == .idle else { return }
+        
+        libraryToUpdate.loadingState = .loading
+
+        Task {
+            await self.fetchDetails(for: libraryToUpdate)
+        }
+    }
     
     func loadLibrariesIfNeeded() async {
         guard displayLibraries.isEmpty else { return }
@@ -60,9 +71,6 @@ class LibraryViewModel: ObservableObject {
             let fetchedLibraries = try await plexService.fetchLibraries(serverURL: serverURL, token: resourceToken)
             self.displayLibraries = fetchedLibraries.map { DisplayLibrary(id: $0.id, library: $0) }
             self.isLoading = false
-            
-            await fetchAllLibraryDetails()
-            
         } catch {
             let nsError = error as NSError
             if !(nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled) {
@@ -72,37 +80,34 @@ class LibraryViewModel: ObservableObject {
         
         isLoading = false
     }
-    
-    private func fetchAllLibraryDetails() async {
-        await withTaskGroup(of: Void.self) { group in
-            for i in displayLibraries.indices {
-                group.addTask {
-                    await self.fetchDetailsForLibrary(at: i)
-                }
-            }
-        }
-    }
 
-    private func fetchDetailsForLibrary(at index: Int) async {
-        guard let details = currentServerDetails, index < displayLibraries.count else { return }
-        let library = displayLibraries[index].library
+    private func fetchDetails(for libraryToUpdate: DisplayLibrary) async {
+        guard let details = currentServerDetails else {
+            libraryToUpdate.loadingState = .error
+            return
+        }
+        
+        let library = libraryToUpdate.library
         
         async let recentsTask = getRecentItems(forLibrary: library)
         async let countsTask = calculateCounts(forLibrary: library)
         
         if let recents = await recentsTask {
-            displayLibraries[index].recentItemURLs = recents.compactMap { item in
+            libraryToUpdate.recentItemURLs = recents.compactMap { item in
                 guard let thumbPath = item.thumb else { return nil }
                 return URL(string: "\(details.url)\(thumbPath)?X-Plex-Token=\(details.token)")
             }
         }
 
         if let result = await countsTask {
-            displayLibraries[index].size = result.size
-            displayLibraries[index].fileCount = result.shows
+            libraryToUpdate.size = result.size
+            libraryToUpdate.fileCount = result.shows
             if let episodes = result.episodes {
-                displayLibraries[index].episodesCount = episodes
+                libraryToUpdate.episodesCount = episodes
             }
+            libraryToUpdate.loadingState = .loaded
+        } else {
+            libraryToUpdate.loadingState = .error
         }
     }
 

@@ -36,8 +36,15 @@ struct LibraryView: View {
                     ScrollView {
                         VStack(spacing: 15) {
                             ForEach(viewModel.displayLibraries) { displayLibrary in
-                                NavigationLink(destination: LibraryDetailView(library: displayLibrary, serverViewModel: serverViewModel, authManager: authManager)) {
+                                NavigationLink(destination: LibraryDetailView(
+                                    library: displayLibrary,
+                                    serverViewModel: serverViewModel,
+                                    authManager: authManager
+                                )){
                                     LibraryCardView(displayLibrary: displayLibrary)
+                                        .task {
+                                            viewModel.startFetchingDetailsFor(libraryID: displayLibrary.id)
+                                        }
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -61,7 +68,7 @@ struct LibraryView: View {
 }
 
 struct LibraryCardView: View {
-    let displayLibrary: DisplayLibrary
+    @ObservedObject var displayLibrary: DisplayLibrary
     @State private var dominantColor: Color = .clear
 
     var body: some View {

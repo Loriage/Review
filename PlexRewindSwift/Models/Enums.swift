@@ -56,11 +56,25 @@ struct MediaHistoryItem: Identifiable {
     let userName: String?
 }
 
-struct DisplayLibrary: Identifiable {
+enum LoadingState: Equatable {
+    case idle
+    case loading
+    case loaded
+    case error
+}
+
+class DisplayLibrary: Identifiable, ObservableObject {
     let id: String
     let library: PlexLibrary
-    var size: Int64?
-    var fileCount: Int?
-    var episodesCount: Int?
-    var recentItemURLs: [URL] = []
+    @Published var size: Int64?
+    @Published var fileCount: Int?
+    @Published var episodesCount: Int?
+    @Published var recentItemURLs: [URL] = []
+
+    @Published var loadingState: LoadingState = .idle
+
+    init(id: String, library: PlexLibrary) {
+        self.id = id
+        self.library = library
+    }
 }
