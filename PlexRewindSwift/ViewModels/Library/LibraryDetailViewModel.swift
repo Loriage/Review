@@ -33,7 +33,7 @@ class LibraryDetailViewModel: ObservableObject {
     }
 
     func loadInitialContent() async {
-        guard library.loadingState == .loaded, case .loading = state else { return }
+        guard case .loading = state else { return }
 
         await fetchMediaPage()
     }

@@ -19,46 +19,25 @@ struct LibraryDetailView: View {
     }
 
     var body: some View {
-        Group {
-            if library.loadingState == .loaded {
-                contentView
-            } else if library.loadingState == .error {
-                Text("Impossible de charger les détails de la bibliothèque.")
+        ScrollView {
+            statsSection
+                .padding(.horizontal)
+
+            switch viewModel.state {
+            case .loading:
+                ProgressView()
+                    .padding(.top, 40)
+            case .content:
+                mediaGridView
+            case .error(let message):
+                Text(message)
                     .foregroundColor(.red)
-            } else {
-                ProgressView("Chargement des détails...")
+                    .padding()
             }
         }
         .navigationTitle(viewModel.library.library.title)
-        .onChange(of: library.loadingState) { oldState, newState in
-            if newState == .loaded {
-                Task {
-                    await viewModel.loadInitialContent()
-                }
-            }
-        }
         .task {
             await viewModel.loadInitialContent()
-        }
-    }
-
-    @ViewBuilder
-    private var contentView: some View {
-        switch viewModel.state {
-        case .loading:
-            // Affiche les stats (qui sont prêtes) et un spinner pour la grille
-            VStack {
-                statsSection.padding(.horizontal)
-                ProgressView()
-                Spacer()
-            }
-        case .content:
-            ScrollView {
-                statsSection.padding(.horizontal)
-                mediaGridView
-            }
-        case .error(let message):
-            Text(message).foregroundColor(.red)
         }
     }
 
