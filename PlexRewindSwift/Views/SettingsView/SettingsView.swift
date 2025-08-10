@@ -91,6 +91,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Réglages")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 if serverViewModel.availableServers.isEmpty && !serverViewModel.isLoading {
                     Task {

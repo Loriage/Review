@@ -47,6 +47,7 @@ struct LibraryView: View {
                 }
             }
             .navigationTitle("Bibliothèques")
+            .navigationBarTitleDisplayMode(.inline)
             .task {
                 if !viewModel.isLoading {
                     await viewModel.loadLibrariesIfNeeded()

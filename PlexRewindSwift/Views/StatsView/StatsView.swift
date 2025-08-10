@@ -34,6 +34,7 @@ struct StatsView: View {
                 }
             }
             .navigationTitle("Plex Rewind")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

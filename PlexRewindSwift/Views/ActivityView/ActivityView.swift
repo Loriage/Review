@@ -9,32 +9,42 @@ struct ActivityView: View {
 
     var body: some View {
         NavigationStack {
-            Group {
-                switch activityViewModel.state {
-                case .loading:
-                    ProgressView()
-                case .content(let sessions):
-                    ScrollView {
-                        VStack(spacing: 15) {
-                            ForEach(sessions) { session in
-                                ActivityRowView(session: session)
-                                    .environmentObject(serverViewModel)
+            GeometryReader { geometry in
+                ScrollView {
+                    VStack {
+                        switch activityViewModel.state {
+                        case .content(let sessions):
+                            VStack(spacing: 15) {
+                                ForEach(sessions) { session in
+                                    ActivityRowView(session: session)
+                                        .environmentObject(serverViewModel)
+                                }
                             }
+                            .padding()
+                            Spacer()
+                        case .loading:
+                            ProgressView()
+                            
+                        case .forbidden:
+                            PermissionDeniedView()
+                            
+                        case .noServerSelected:
+                            NoServerView()
+                            
+                        case .empty:
+                            EmptyStateView()
                         }
-                        .padding()
                     }
-                case .forbidden:
-                    PermissionDeniedView()
-                case .noServerSelected:
-                    NoServerView()
-                case .empty:
-                    EmptyStateView()
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: geometry.size.height)
+                }
+                .scrollIndicators(.hidden)
+                .refreshable {
+                    await activityViewModel.refreshActivity()
                 }
             }
             .navigationTitle("Activité en cours")
-            .refreshable {
-                await activityViewModel.refreshActivity()
-            }
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 if serverViewModel.availableServers.isEmpty && !serverViewModel.isLoading {
                     Task {
