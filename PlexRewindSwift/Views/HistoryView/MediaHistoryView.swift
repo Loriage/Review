@@ -247,7 +247,7 @@ struct MediaHistoryView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .foregroundColor(.primary)
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(.regularMaterial)
         .onAppear {
             sheetHeight = viewModel.mediaType == "movie" ? 240 : 200
         }

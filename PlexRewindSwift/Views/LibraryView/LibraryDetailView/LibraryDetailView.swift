@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 struct LibraryDetailView: View {
     @StateObject private var viewModel: LibraryDetailViewModel
@@ -6,6 +7,9 @@ struct LibraryDetailView: View {
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
+
+    @State private var showingSettings = false
+    @State private var sheetHeight: CGFloat = 250
 
     private let columns = [GridItem(.adaptive(minimum: 110), spacing: 10)]
 
@@ -20,35 +24,53 @@ struct LibraryDetailView: View {
 
     var body: some View {
         ScrollView {
-            statsSection
-                .padding(.horizontal)
+            VStack(spacing: 12) {
+                statsSection
 
-            switch viewModel.state {
-            case .loading:
-                ProgressView()
-                    .padding(.top, 40)
-            case .content:
-                mediaGridView
-            case .error(let message):
-                Text(message)
-                    .foregroundColor(.red)
-                    .padding()
+                if !viewModel.chartData.isEmpty {
+                    MediaGrowthChartView(data: viewModel.chartData)
+                }
+
+                switch viewModel.state {
+                case .loading:
+                    ProgressView()
+                        .padding(.top, 40)
+                case .content:
+                    mediaGridView
+                case .error(let message):
+                    Text(message)
+                        .foregroundColor(.red)
+                        .padding()
+                }
             }
+            .padding(.horizontal)
         }
         .navigationTitle(viewModel.library.library.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { showingSettings = true }) {
+                    Image(systemName: "gearshape.fill")
+                }
+            }
+        }
+        .sheet(isPresented: $showingSettings) {
+            librarySettingsSheet
+                .presentationDetents([.height(sheetHeight)])
+                .presentationDragIndicator(.visible)
+        }
         .task {
             await viewModel.loadInitialContent()
         }
     }
 
     private var mediaGridView: some View {
-        LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(viewModel.mediaItems) { media in
-                mediaCell(for: media)
+        VStack(alignment: .leading, spacing: 10) {
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(viewModel.mediaItems) { media in
+                    mediaCell(for: media)
+                }
             }
         }
-        .padding(.horizontal)
-        .padding(.top)
     }
 
     private func mediaCell(for media: MediaMetadata) -> some View {
@@ -73,10 +95,6 @@ struct LibraryDetailView: View {
 
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Statistiques")
-                .font(.title2.bold())
-                .padding(.top)
-
             HStack(spacing: 10) {
                 if viewModel.library.library.type == "movie" {
                     InfoPill(
@@ -105,10 +123,114 @@ struct LibraryDetailView: View {
         }
     }
 
+    struct MediaGrowthChartView: View {
+        let data: [(Date, Int)]
+        
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text("Croissance de la bibliothèque")
+                    .font(.headline.bold())
+                    .padding(.bottom, 10)
+                
+                Chart {
+                    ForEach(data, id: \.0) { date, count in
+                        LineMark(
+                            x: .value("Date", date),
+                            y: .value("Nombre de médias", count)
+                        )
+                        .interpolationMethod(.linear)
+                        .foregroundStyle(Color.accentColor)
+
+                        AreaMark(
+                            x: .value("Date", date),
+                            y: .value("Nombre de médias", count)
+                        )
+                        .interpolationMethod(.linear)
+                        .foregroundStyle(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color.accentColor.opacity(0.4),
+                                    Color.accentColor.opacity(0.01)
+                                ]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                    }
+                }
+                .chartXAxis {
+                    AxisMarks(values: .automatic(desiredCount: 5)) { value in
+                        AxisGridLine()
+                        AxisValueLabel(format: .dateTime.month(.twoDigits).year(.twoDigits))
+                    }
+                }
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
+                .frame(height: 180)
+            }
+            .padding()
+            .background(.thinMaterial)
+            .cornerRadius(16)
+        }
+    }
+
+    private func formattedLibraryTypeName(for type: String) -> String {
+        switch type {
+        case "movie":
+            return "films"
+        case "show":
+            return "séries"
+        case "artist":
+            return "musiques"
+        case "photo":
+            return "photos"
+        default:
+            return "éléments"
+        }
+    }
+
     private func formatBytes(_ bytes: Int64) -> String {
         let formatter = ByteCountFormatter()
         formatter.allowedUnits = [.useGB, .useMB, .useTB]
         formatter.countStyle = .binary
         return formatter.string(fromByteCount: bytes)
+    }
+
+    @ViewBuilder
+    private var librarySettingsSheet: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            Button {
+
+            } label: {
+                Label("Modifier l'image", systemImage: "photo")
+            }
+            
+            Button {
+
+            } label: {
+                Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
+            }
+            
+            Button {
+
+            } label: {
+                Label("Analyser", systemImage: "wand.and.rays")
+            }
+            
+            Button {
+
+            } label: {
+                Label("Corriger l'association...", systemImage: "pencil")
+            }
+        }
+        .font(.headline)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
+        .foregroundColor(.primary)
+        .presentationBackground(.regularMaterial)
+        .onAppear {
+            sheetHeight = 240
+        }
     }
 }

@@ -6,12 +6,13 @@ import Combine
 class LibraryDetailViewModel: ObservableObject {
     let library: DisplayLibrary
     @Published var mediaItems: [MediaMetadata] = []
-    
+
+    @Published var chartData: [(Date, Int)] = []
     @Published var state: ViewState = .loading
 
+    @Published var canLoadMoreMedia = true
     private var currentPage = 0
     private var totalMediaCount: Int? = nil
-    @Published var canLoadMoreMedia = true
     private let pageSize = 30
 
     private let plexService: PlexAPIService
@@ -35,7 +36,10 @@ class LibraryDetailViewModel: ObservableObject {
     func loadInitialContent() async {
         guard case .loading = state else { return }
 
-        await fetchMediaPage()
+        async let fetchMediaTask: () = fetchMediaPage()
+        async let generateChartDataTask: () = generateChartData()
+        
+        _ = await (fetchMediaTask, generateChartDataTask)
     }
 
     func loadMoreContentIfNeeded(currentItem item: MediaMetadata?) async {
@@ -46,6 +50,39 @@ class LibraryDetailViewModel: ObservableObject {
         let thresholdIndex = mediaItems.index(mediaItems.endIndex, offsetBy: -5)
         if mediaItems.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
             await fetchMediaPage()
+        }
+    }
+
+    private func generateChartData() async {
+        guard let serverDetails = getServerDetails() else { return }
+        
+        do {
+            let mediaType = library.library.type == "movie" ? 1 : (library.library.type == "show" ? 2 : 4)
+
+            let allMedia = try await plexService.fetchAllMediaInSection(
+                serverURL: serverDetails.url,
+                token: serverDetails.token,
+                libraryKey: library.library.key,
+                mediaType: mediaType
+            )
+
+            let sortedMedia = allMedia
+                .compactMap { item -> Date? in
+                    guard let addedAtTimestamp = item.addedAt else { return nil }
+                    return Date(timeIntervalSince1970: TimeInterval(addedAtTimestamp))
+                }
+                .sorted()
+            
+            var cumulativeCount = 0
+            let dataPoints = sortedMedia.map { date -> (Date, Int) in
+                cumulativeCount += 1
+                return (date, cumulativeCount)
+            }
+            
+            self.chartData = dataPoints
+            
+        } catch {
+            print("Erreur lors de la génération des données du graphique: \(error.localizedDescription)")
         }
     }
 

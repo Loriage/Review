@@ -105,6 +105,12 @@
     "Créée le :" : {
 
     },
+    "Croissance de la bibliothèque" : {
+
+    },
+    "Date" : {
+
+    },
     "Dernier scan :" : {
 
     },
@@ -179,6 +185,9 @@
     "Nombre de %@ :" : {
 
     },
+    "Nombre de médias" : {
+
+    },
     "Paramètres Plex" : {
 
     },
@@ -245,9 +254,6 @@
 
     },
     "Serveur Plex" : {
-
-    },
-    "Statistiques" : {
 
     },
     "Stats" : {
