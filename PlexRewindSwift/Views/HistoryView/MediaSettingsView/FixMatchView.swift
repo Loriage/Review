@@ -31,6 +31,7 @@ struct FixMatchView: View {
                                 AsyncImageView(url: URL(string: match.thumb ?? ""))
                                     .frame(width: 50, height: 75)
                                     .cornerRadius(4)
+                                    .clipped()
                                 
                                 VStack(alignment: .leading) {
                                     Text(match.name)

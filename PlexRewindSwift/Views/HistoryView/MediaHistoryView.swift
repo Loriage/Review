@@ -13,6 +13,7 @@ struct MediaHistoryView: View {
     @State private var showImageSelector = false
     @State private var showFixMatchView = false
     @State private var showingAnalysisAlert = false
+    @State private var sheetHeight: CGFloat = 250
 
     init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
@@ -55,7 +56,11 @@ struct MediaHistoryView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingSettings) { mediaSettingsSheet }
+        .sheet(isPresented: $showingSettings) {
+            mediaSettingsSheet
+                .presentationDetents([.height(sheetHeight)])
+                .presentationDragIndicator(.visible)
+        }
         .alert("Êtes-vous sûr ?", isPresented: $showingAnalysisAlert) {
             Button("Annuler", role: .cancel) {}
             Button("Analyser", role: .destructive) {
@@ -200,62 +205,52 @@ struct MediaHistoryView: View {
 
     @ViewBuilder
     private var mediaSettingsSheet: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center) {
-                Capsule()
-                    .fill(Color.secondary)
-                    .frame(width: 40, height: 5)
-                    .padding(.top, 10)
-                    .padding(.bottom, 30)
-            }
-
-            VStack(alignment: .leading, spacing: 24) {
-                if viewModel.mediaType == "movie" {
-                    Button {
-                        showingSettings = false
-                        showMediaDetails = true
-                    } label: {
-                        Label("Détails du média", systemImage: "info.circle")
-                    }
-                }
-
+        VStack(alignment: .leading, spacing: 24) {
+            if viewModel.mediaType == "movie" {
                 Button {
                     showingSettings = false
-                    showImageSelector = true
+                    showMediaDetails = true
                 } label: {
-                    Label("Modifier l'image", systemImage: "photo")
-                }
-                
-                Button {
-                    showingSettings = false
-                    Task { await actionsViewModel.refreshMetadata() }
-                } label: {
-                    Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
-                }
-                
-                Button {
-                    showingSettings = false
-                    showingAnalysisAlert = true
-                } label: {
-                    Label("Analyser", systemImage: "wand.and.rays")
-                }
-                
-                Button {
-                    showingSettings = false
-                    showFixMatchView = true
-                } label: {
-                    Label("Corriger l'association...", systemImage: "pencil")
+                    Label("Détails du média", systemImage: "info.circle")
                 }
             }
-            .font(.headline)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal)
             
-            Spacer()
+            Button {
+                showingSettings = false
+                showImageSelector = true
+            } label: {
+                Label("Modifier l'image", systemImage: "photo")
+            }
+            
+            Button {
+                showingSettings = false
+                Task { await actionsViewModel.refreshMetadata() }
+            } label: {
+                Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
+            }
+            
+            Button {
+                showingSettings = false
+                showingAnalysisAlert = true
+            } label: {
+                Label("Analyser", systemImage: "wand.and.rays")
+            }
+            
+            Button {
+                showingSettings = false
+                showFixMatchView = true
+            } label: {
+                Label("Corriger l'association...", systemImage: "pencil")
+            }
         }
+        .font(.headline)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
         .buttonStyle(.plain)
         .foregroundColor(.primary)
-        .presentationDetents([.height(300)])
-        .presentationBackground(.thinMaterial)
+        .presentationBackground(.ultraThinMaterial)
+        .onAppear {
+            sheetHeight = viewModel.mediaType == "movie" ? 240 : 200
+        }
     }
 }

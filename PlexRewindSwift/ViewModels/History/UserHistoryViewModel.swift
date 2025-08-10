@@ -11,9 +11,9 @@ class UserHistoryViewModel: ObservableObject {
     let userID: Int
     let userName: String
     
-    private let statsViewModel: StatsViewModel
-    private let serverViewModel: ServerViewModel
-    private let authManager: PlexAuthManager
+    let statsViewModel: StatsViewModel
+    let serverViewModel: ServerViewModel
+    let authManager: PlexAuthManager
     private let plexService: PlexAPIService
 
     init(userID: Int, userName: String, statsViewModel: StatsViewModel, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {

@@ -55,22 +55,20 @@ struct ImageSelectorView: View {
                 
                 LazyVGrid(columns: columns, spacing: 15) {
                     ForEach(artworks) { artwork in
-                        Button(action: {
-                            Task { await viewModel.selectImage(artwork) }
-                        }) {
-                            AsyncImageView(url: viewModel.artworkURL(for: artwork))
-                                .aspectRatio(2/3, contentMode: .fill)
-                                .overlay(
-                                    artwork.selected == true ?
-                                    ZStack {
-                                        Color.black.opacity(0.5)
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .font(.largeTitle)
-                                            .foregroundColor(.white)
-                                    } : nil
-                                )
-                                .cornerRadius(8)
-                        }
+                        AsyncImageView(url: viewModel.artworkURL(for: artwork), contentMode: .fit)
+                            .overlay(
+                                artwork.selected == true ?
+                                ZStack {
+                                    Color.black.opacity(0.5)
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.largeTitle)
+                                        .foregroundColor(.white)
+                                } : nil
+                            )
+                            .cornerRadius(8)
+                            .onTapGesture {
+                                Task { await viewModel.selectImage(artwork) }
+                            }
                     }
                 }
                 .padding(.horizontal)
