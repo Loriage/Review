@@ -206,4 +206,23 @@ extension PlexAPIService {
         let decodedResponse = try JSONDecoder().decode(PlexRecentlyAddedResponse.self, from: data)
         return decodedResponse.mediaContainer.metadata
     }
+
+    func fetchMediaFromSection(serverURL: String, token: String, libraryKey: String, mediaType: Int, page: Int, pageSize: Int = 20) async throws -> [MediaMetadata] {
+        let startIndex = page * pageSize
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Container-Start=\(startIndex)&X-Plex-Container-Size=\(pageSize)&X-Plex-Token=\(token)"
+        
+        guard let url = URL(string: urlString) else { throw PlexError.invalidURL }
+        
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+        
+        let decodedResponse = try JSONDecoder().decode(PlexAllMediaResponse.self, from: data)
+        return decodedResponse.mediaContainer.metadata
+    }
 }

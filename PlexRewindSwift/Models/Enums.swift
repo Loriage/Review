@@ -61,5 +61,6 @@ struct DisplayLibrary: Identifiable {
     let library: PlexLibrary
     var size: Int64?
     var fileCount: Int?
+    var episodesCount: Int?
     var recentItemURLs: [URL] = []
 }

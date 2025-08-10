@@ -108,7 +108,7 @@ struct LibraryCardView: View {
                     VStack(alignment: .leading, spacing: 5) {
                         Label {
                             HStack {
-                                Text("Fichiers :")
+                                Text("Nombre de \(formattedLibraryTypeName(for: displayLibrary.library.type)) :")
                                     .fontWeight(.semibold)
                                 Spacer()
                                 if let count = displayLibrary.fileCount {
@@ -119,7 +119,8 @@ struct LibraryCardView: View {
                                 }
                             }
                         } icon: {
-                            Image(systemName: "number")
+                            Image(systemName: libraryIconName(for: displayLibrary.library.type))
+                                .symbolRenderingMode(.monochrome)
                                 .fontWeight(.semibold)
                                 .frame(width: 20)
                         }
@@ -197,5 +198,35 @@ struct LibraryCardView: View {
         formatter.allowedUnits = [.useGB, .useMB, .useTB]
         formatter.countStyle = .binary
         return formatter.string(fromByteCount: bytes)
+    }
+
+    private func formattedLibraryTypeName(for type: String) -> String {
+        switch type {
+        case "movie":
+            return "films"
+        case "show":
+            return "séries"
+        case "artist":
+            return "musiques"
+        case "photo":
+            return "photos"
+        default:
+            return "éléments"
+        }
+    }
+
+    private func libraryIconName(for type: String) -> String {
+        switch type {
+        case "movie":
+            return "film.stack.fill"
+        case "show":
+            return "tv.and.hifispeaker.fill"
+        case "artist":
+            return "music.mic"
+        case "photo":
+            return "photo.on.rectangle.angled"
+        default:
+            return "questionmark.diamond.fill"
+        }
     }
 }

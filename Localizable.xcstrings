@@ -126,9 +126,6 @@
     "Fermer" : {
 
     },
-    "Fichiers :" : {
-
-    },
     "Films les plus regardés" : {
 
     },
@@ -183,6 +180,9 @@
 
     },
     "Nombre d'épisodes: %lld" : {
+
+    },
+    "Nombre de %@ :" : {
 
     },
     "Nombre de films: %lld" : {

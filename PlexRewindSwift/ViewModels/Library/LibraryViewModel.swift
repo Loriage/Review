@@ -86,10 +86,10 @@ class LibraryViewModel: ObservableObject {
     private func fetchDetailsForLibrary(at index: Int) async {
         guard let details = currentServerDetails, index < displayLibraries.count else { return }
         let library = displayLibraries[index].library
-
-        async let sizeAndCountTask = calculateSizeAndCount(forLibrary: library)
+        
         async let recentsTask = getRecentItems(forLibrary: library)
-
+        async let countsTask = calculateCounts(forLibrary: library)
+        
         if let recents = await recentsTask {
             displayLibraries[index].recentItemURLs = recents.compactMap { item in
                 guard let thumbPath = item.thumb else { return nil }
@@ -97,9 +97,12 @@ class LibraryViewModel: ObservableObject {
             }
         }
 
-        if let result = await sizeAndCountTask {
+        if let result = await countsTask {
             displayLibraries[index].size = result.size
-            displayLibraries[index].fileCount = result.count
+            displayLibraries[index].fileCount = result.shows
+            if let episodes = result.episodes {
+                displayLibraries[index].episodesCount = episodes
+            }
         }
     }
 
@@ -127,22 +130,40 @@ class LibraryViewModel: ObservableObject {
         }
     }
 
-    private func calculateSizeAndCount(forLibrary library: PlexLibrary) async -> (size: Int64, count: Int)? {
-        let mediaType = library.type == "show" ? 4 : 1
+    private func calculateCounts(forLibrary library: PlexLibrary) async -> (size: Int64, shows: Int, episodes: Int?)? {
         guard let details = self.currentServerDetails else { return nil }
-
+        
         do {
-            let mediaItems = try await self.plexService.fetchAllMediaInSection(
-                serverURL: details.url,
-                token: details.token,
-                libraryKey: library.key,
-                mediaType: mediaType
-            )
+            if library.type == "show" {
+                let shows = try await self.plexService.fetchAllMediaInSection(
+                    serverURL: details.url,
+                    token: details.token,
+                    libraryKey: library.key,
+                    mediaType: 2
+                )
+                
+                let episodes = try await self.plexService.fetchAllMediaInSection(
+                    serverURL: details.url,
+                    token: details.token,
+                    libraryKey: library.key,
+                    mediaType: 4
+                )
+
+                let totalSize = episodes.reduce(Int64(0)) { $0 + ($1.media?.first?.parts.first?.size ?? 0) }
+                
+                return (totalSize, shows.count, episodes.count)
+            } else {
+                let movies = try await self.plexService.fetchAllMediaInSection(
+                    serverURL: details.url,
+                    token: details.token,
+                    libraryKey: library.key,
+                    mediaType: 1
+                )
+                
+                let totalSize = movies.reduce(Int64(0)) { $0 + ($1.media?.first?.parts.first?.size ?? 0) }
+                return (totalSize, movies.count, nil)
+            }
             
-            let totalSize = mediaItems.reduce(Int64(0)) { $0 + ($1.media?.first?.parts.first?.size ?? 0) }
-            let totalCount = mediaItems.count
-            
-            return (totalSize, totalCount)
         } catch {
             let nsError = error as NSError
             if !(nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled) {
