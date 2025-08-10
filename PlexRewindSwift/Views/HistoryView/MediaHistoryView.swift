@@ -246,7 +246,6 @@ struct MediaHistoryView: View {
         .font(.headline)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
-        .buttonStyle(.plain)
         .foregroundColor(.primary)
         .presentationBackground(.ultraThinMaterial)
         .onAppear {
