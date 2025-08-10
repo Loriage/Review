@@ -29,11 +29,14 @@ struct PlexLibrary: Decodable, Identifiable {
     let createdAt: Int
     let scannedAt: Int
     let hidden: Int
+    let enableCinemaTrailers: Bool?
     let locations: [PlexLibraryLocation]
+    let preferences: PlexPreferences?
     
     enum CodingKeys: String, CodingKey {
-        case key, type, title, agent, scanner, language, uuid, updatedAt, createdAt, scannedAt, hidden
+        case key, type, title, agent, scanner, language, uuid, updatedAt, createdAt, scannedAt, hidden, enableCinemaTrailers
         case locations = "Location"
+        case preferences = "Preferences"
     }
 }
 
@@ -151,5 +154,19 @@ struct PlexLibraryContentItem: Decodable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case key, title, type
         case media = "Media"
+    }
+}
+
+struct PlexSetting: Decodable {
+    let id: String
+    let type: String
+    let value: String
+}
+
+struct PlexPreferences: Decodable {
+    let settings: [PlexSetting]
+    
+    enum CodingKeys: String, CodingKey {
+        case settings = "Setting"
     }
 }

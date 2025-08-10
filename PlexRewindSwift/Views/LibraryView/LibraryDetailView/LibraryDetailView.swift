@@ -64,7 +64,7 @@ struct LibraryDetailView: View {
                     .presentationDragIndicator(.visible)
             }
             .navigationDestination(isPresented: $navigateToLibrarySettings) {
-                LibrarySettingsView(libraryID: library.library.key)
+                LibrarySettingsView(library: library, serverViewModel: serverViewModel, authManager: authManager)
             }
             .alert("Êtes-vous sûr ?", isPresented: $showingRefreshAlert) {
                 Button("Annuler", role: .cancel) {}

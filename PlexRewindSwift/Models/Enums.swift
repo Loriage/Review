@@ -78,3 +78,22 @@ class DisplayLibrary: Identifiable, ObservableObject {
         self.library = library
     }
 }
+
+enum LibraryVisibility: Int, CaseIterable, Identifiable {
+    case includeInHomeAndSearch = 0
+    case excludeFromHome = 1
+    case excludeFromHomeAndSearch = 2
+
+    var id: Int { self.rawValue }
+
+    var description: String {
+        switch self {
+        case .includeInHomeAndSearch:
+            return "Inclure partout"
+        case .excludeFromHome:
+            return "Exclure de l'accueil"
+        case .excludeFromHomeAndSearch:
+            return "Exclure partout"
+        }
+    }
+}

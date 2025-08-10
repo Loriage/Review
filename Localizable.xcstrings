@@ -33,6 +33,9 @@
     "Accès non autorisé" : {
 
     },
+    "Activer les bandes annonces" : {
+
+    },
     "Activité" : {
 
     },
@@ -73,6 +76,9 @@
 
     },
     "Aucune médiathèque n'a été trouvée sur ce serveur." : {
+
+    },
+    "Autoriser les bandes annonces à être jouées avant les objets de cette bibliothèque." : {
 
     },
     "Bibliothèques" : {
@@ -159,7 +165,7 @@
     "https://plex.tv/link" : {
 
     },
-    "ID de la bibliothèque :" : {
+    "ID :" : {
 
     },
     "Impossible de charger les informations." : {
@@ -206,6 +212,9 @@
     "Nombre de médias" : {
 
     },
+    "Options de lecture" : {
+
+    },
     "Par défaut, le serveur de médias ne détruit pas immédiatement les informations concernant les médias.\n\nCela est utile quand un lecteur est temporairement déconnecté.\n\nLorsque vous videz la corbeille pour une section, toutes les informations sur les médias manquants sont supprimées." : {
 
     },
@@ -239,6 +248,9 @@
     "Rendez-vous sur le site web suivant et entrez le code ci-dessous :" : {
 
     },
+    "Restreindre où le contenu de cette bibliothèque doit apparaître." : {
+
+    },
     "Résumé" : {
 
     },
@@ -267,6 +279,9 @@
           }
         }
       }
+    },
+    "Sauvegarder" : {
+
     },
     "Scanner la bibliothèque" : {
 
@@ -317,6 +332,9 @@
 
     },
     "Vider la corbeille ?" : {
+
+    },
+    "Visibilité" : {
 
     },
     "Votre année en chiffres" : {
