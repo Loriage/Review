@@ -235,4 +235,26 @@ extension PlexAPIService {
         
         return (media, totalCount)
     }
+
+    func scanLibrary(serverURL: String, token: String, libraryKey: String, force: Bool = false) async throws {
+        var urlString = "\(serverURL)/library/sections/\(libraryKey)/refresh?X-Plex-Token=\(token)"
+        if force {
+            urlString += "&force=1"
+        }
+        
+        guard let url = URL(string: urlString) else {
+            throw PlexError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+    }
 }

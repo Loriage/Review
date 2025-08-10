@@ -9,6 +9,7 @@ class LibraryDetailViewModel: ObservableObject {
 
     @Published var chartData: [(Date, Int)] = []
     @Published var state: ViewState = .loading
+    @Published var hudMessage: HUDMessage?
 
     @Published var canLoadMoreMedia = true
     private var currentPage = 0
@@ -19,6 +20,7 @@ class LibraryDetailViewModel: ObservableObject {
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
     private var cancellables = Set<AnyCancellable>()
+    private var hudDismissTask: Task<Void, Never>?
 
     enum ViewState {
         case loading
@@ -142,5 +144,85 @@ class LibraryDetailViewModel: ObservableObject {
         }
         let urlString = "\(serverDetails.url)\(thumbPath)?X-Plex-Token=\(serverDetails.token)"
         return URL(string: urlString)
+    }
+
+    func scanLibrary() async {
+        guard let details = getServerDetails() else {
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            return
+        }
+        
+        showHUD(message: HUDMessage(iconName: "waveform.path.ecg", text: "Lancement du scan...", maxWidth: 180))
+        
+        do {
+            try await plexService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key)
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "Scan de la bibliothèque démarré.", maxWidth: 180))
+        } catch {
+            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du lancement du scan.", maxWidth: 180))
+            print("Erreur lors du scan de la bibliothèque: \(error.localizedDescription)")
+        }
+    }
+
+    func refreshMetadata() async {
+        guard let details = getServerDetails() else {
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            return
+        }
+        
+        showHUD(message: HUDMessage(iconName: "arrow.trianglehead.counterclockwise", text: "Lancement de l'actualisation...", maxWidth: 180))
+        
+        do {
+            try await plexService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key, force: true)
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180))
+        } catch {
+            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180))
+            print("Erreur lors de l'actualisation des métadonnées : \(error.localizedDescription)")
+        }
+    }
+
+    func analyzeLibrary() async {
+        guard let details = getServerDetails() else {
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            return
+        }
+        
+        showHUD(message: HUDMessage(iconName: "wand.and.rays", text: "Lancement de l'analyse...", maxWidth: 180))
+        
+        do {
+            try await plexService.analyzeLibrarySection(libraryKey: library.library.key, serverURL: details.url, token: details.token)
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "Analyse de la bibliothèque démarrée.", maxWidth: 180))
+        } catch {
+            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du lancement de l'analyse.", maxWidth: 180))
+            print("Erreur lors de l'analyse de la bibliothèque : \(error.localizedDescription)")
+        }
+    }
+
+    func emptyTrash() async {
+        guard let details = getServerDetails() else {
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            return
+        }
+        
+        showHUD(message: HUDMessage(iconName: "trash", text: "Lancement du nettoyage...", maxWidth: 180))
+        
+        do {
+            try await plexService.emptyLibraryTrash(libraryKey: library.library.key, serverURL: details.url, token: details.token)
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "Corbeille de la bibliothèque vidée."))
+        } catch {
+            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du nettoyage de la corbeille."))
+            print("Erreur lors du vidage de la corbeille : \(error.localizedDescription)")
+        }
+    }
+
+    private func showHUD(message: HUDMessage, duration: TimeInterval = 2.5) {
+        hudDismissTask?.cancel()
+        self.hudMessage = message
+        hudDismissTask = Task {
+            try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            if self.hudMessage == message {
+                self.hudMessage = nil
+            }
+        }
     }
 }

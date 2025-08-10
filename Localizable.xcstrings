@@ -39,6 +39,9 @@
     "Activité en cours" : {
 
     },
+    "Actualiser" : {
+
+    },
     "Actualiser les métadonnées" : {
 
     },
@@ -46,6 +49,9 @@
 
     },
     "Allez dans l'onglet \"Réglages\" pour sélectionner un serveur, une année, et générer votre Rewind." : {
+
+    },
+    "Analyse tous les médias de la bibliothèque.\n\nL'analyse permet à Plex de collecter des informations pour optimiser la lecture de chaque média." : {
 
     },
     "Analyser" : {
@@ -73,6 +79,9 @@
 
     },
     "Bienvenue sur Plex Rewind" : {
+
+    },
+    "Cette opération peut prendre du temps et consommer des ressources sur votre serveur Plex." : {
 
     },
     "Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur." : {
@@ -150,10 +159,16 @@
     "https://plex.tv/link" : {
 
     },
+    "ID de la bibliothèque :" : {
+
+    },
     "Impossible de charger les informations." : {
 
     },
     "Informations" : {
+
+    },
+    "Informations de la bibliothèque" : {
 
     },
     "L'historique pour ce média est vide." : {
@@ -163,6 +178,9 @@
 
     },
     "La génération du Rewind peut prendre du temps car elle récupère la durée de chaque film et épisode individuellement." : {
+
+    },
+    "Lancer une analyse complète ?" : {
 
     },
     "Local" : {
@@ -188,6 +206,9 @@
     "Nombre de médias" : {
 
     },
+    "Par défaut, le serveur de médias ne détruit pas immédiatement les informations concernant les médias.\n\nCela est utile quand un lecteur est temporairement déconnecté.\n\nLorsque vous videz la corbeille pour une section, toutes les informations sur les médias manquants sont supprimées." : {
+
+    },
     "Paramètres de la bibliothèque" : {
 
     },
@@ -210,6 +231,9 @@
 
     },
     "Réglages" : {
+
+    },
+    "Réglages de la bibliothèque" : {
 
     },
     "Rendez-vous sur le site web suivant et entrez le code ci-dessous :" : {
@@ -286,7 +310,13 @@
     "Utilisateur" : {
 
     },
+    "Vider" : {
+
+    },
     "Vider la corbeille" : {
+
+    },
+    "Vider la corbeille ?" : {
 
     },
     "Votre année en chiffres" : {

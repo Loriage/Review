@@ -32,4 +32,14 @@ extension PlexAPIService {
         urlString += "&X-Plex-Token=\(token)"
         try await performPutRequest(for: urlString)
     }
+
+    func analyzeLibrarySection(libraryKey: String, serverURL: String, token: String) async throws {
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/analyze?X-Plex-Token=\(token)"
+        try await performPutRequest(for: urlString)
+    }
+
+    func emptyLibraryTrash(libraryKey: String, serverURL: String, token: String) async throws {
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/emptyTrash?X-Plex-Token=\(token)"
+        try await performPutRequest(for: urlString)
+    }
 }
