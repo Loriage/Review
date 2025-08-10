@@ -167,7 +167,7 @@ struct LibraryCardView: View {
                             Text(formatDate(displayLibrary.library.scannedAt))
                                 .fontWeight(.semibold)
                         } icon: {
-                            Image(systemName: "arrow.clockwise")
+                            Image(systemName: "arrow.trianglehead.counterclockwise")
                                 .fontWeight(.semibold)
                                 .frame(width: 20)
                         }

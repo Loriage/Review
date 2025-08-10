@@ -226,7 +226,7 @@ struct MediaHistoryView: View {
                 showingSettings = false
                 Task { await actionsViewModel.refreshMetadata() }
             } label: {
-                Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
+                Label("Actualiser les métadonnées", systemImage: "arrow.trianglehead.counterclockwise")
             }
             
             Button {

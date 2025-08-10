@@ -203,13 +203,13 @@ struct LibraryDetailView: View {
             Button {
 
             } label: {
-                Label("Modifier l'image", systemImage: "photo")
+                Label("Scanner la bibliothèque", systemImage: "photo")
             }
             
             Button {
 
             } label: {
-                Label("Actualiser les métadonnées", systemImage: "arrow.clockwise")
+                Label("Actualiser les métadonnées", systemImage: "arrow.trianglehead.counterclockwise")
             }
             
             Button {
