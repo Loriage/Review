@@ -3,7 +3,8 @@ import SwiftUI
 struct InfoPill: View {
     let title: String
     let value: String
-    
+    var customBackgroundColor: Color? = nil
+
     var body: some View {
         VStack {
             HStack {
@@ -20,7 +21,13 @@ struct InfoPill: View {
         }
         .padding()
         .frame(maxHeight: .infinity)
-        .background(.thinMaterial)
+        .background{
+            if let color = customBackgroundColor {
+                Rectangle().fill(color)
+            } else {
+                Rectangle().fill(Material.thin)
+            }
+        }
         .cornerRadius(12)
     }
 }

@@ -101,3 +101,19 @@ enum LibraryVisibility: Int, CaseIterable, Identifiable {
 extension Notification.Name {
     static let didUpdateLibraryPreferences = Notification.Name("didUpdateLibraryPreferences")
 }
+
+enum CollectionMode: Int, CaseIterable, Identifiable {
+    case hide = 0
+    case hideItems = 1
+    case showAll = 2
+
+    var id: Int { self.rawValue }
+
+    var description: String {
+        switch self {
+        case .hide: return "Cacher les collections"
+        case .hideItems: return "Cacher les objets des collections"
+        case .showAll: return "Afficher les collections et leurs objets"
+        }
+    }
+}

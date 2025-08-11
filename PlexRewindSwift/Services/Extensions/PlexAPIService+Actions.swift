@@ -48,16 +48,24 @@ extension PlexAPIService {
         
         var queryItems: [URLQueryItem] = []
 
+        let orderedKeys = [
+            "prefs[hidden]", "prefs[country]", "prefs[enableCinemaTrailers]",
+            "prefs[originalTitles]", "prefs[localizedArtwork]", "prefs[useLocalAssets]",
+            "prefs[respectTags]", "prefs[useExternalExtras]", "prefs[collectionMode]",
+            "prefs[skipNonTrailerExtras]", "prefs[useRedbandTrailers]",
+            "prefs[includeExtrasWithLocalizedSubtitles]", "prefs[includeAdultContent]",
+            "prefs[autoCollectionThreshold]", "prefs[ratingsSource]", "prefs[enableBIFGeneration]",
+            "prefs[enableCreditsMarkerGeneration]", "prefs[enableVoiceActivityGeneration]",
+            "prefs[enableAdMarkerGeneration]"
+        ]
+
+        for key in orderedKeys {
+            if let value = preferences[key] {
+                queryItems.append(URLQueryItem(name: key, value: value))
+            }
+        }
+
         queryItems.append(URLQueryItem(name: "agent", value: "tv.plex.agents.movie"))
-
-        if let hidden = preferences["prefs[hidden]"] {
-            queryItems.append(URLQueryItem(name: "prefs[hidden]", value: hidden))
-        }
-
-        if let enableTrailers = preferences["prefs[enableCinemaTrailers]"] {
-            queryItems.append(URLQueryItem(name: "prefs[enableCinemaTrailers]", value: enableTrailers))
-        }
-
         queryItems.append(URLQueryItem(name: "X-Plex-Token", value: token))
         
         urlComponents.queryItems = queryItems
@@ -68,7 +76,6 @@ extension PlexAPIService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
-
         try await performPutRequest(for: request)
     }
 }

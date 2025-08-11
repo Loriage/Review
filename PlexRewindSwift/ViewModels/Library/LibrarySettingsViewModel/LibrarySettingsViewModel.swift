@@ -1,60 +1,107 @@
 import Foundation
+import SwiftUI
+import Combine
 
 struct LibraryPreferences: Equatable {
     var visibility: LibraryVisibility
     var enableTrailers: Bool
+    var countryCode: String
+    var useOriginalTitles: Bool
+    var localizedArtwork: Bool
+    var useLocalAssets: Bool
+    var preferLocalMetadata: Bool
+    var findExtras: Bool
+    var collectionMode: CollectionMode
+    var skipNonTrailerExtras: Bool
+    var useRedbandTrailers: Bool
+    var includeExtrasWithLocalizedSubtitles: Bool
+    var includeAdultContent: Bool
+    var autoCollectionThreshold: String
+    var ratingsSource: String
+    var enableBIFGeneration: Bool
+    var enableCreditsMarkerGeneration: Bool
+    var enableVoiceActivityGeneration: Bool
+    var adDetection: String
+}
+
+@MainActor
+class PreferenceItemViewModel: ObservableObject, Identifiable {
+    let id: String
+    let label: String
+    let summary: String
+    let type: String
+    let enumValues: [EnumValue]
+
+    @Published var value: String
+    private var initialValue: String
+
+    var hasChanged: Bool {
+        return value != initialValue
+    }
+
+    func reset() {
+        self.initialValue = self.value
+    }
+
+    var boolValue: Binding<Bool> {
+        Binding<Bool>(
+            get: { self.value == "1" || self.value == "true" },
+            set: { self.value = $0 ? "1" : "0" }
+        )
+    }
+
+    init(setting: PlexSetting) {
+        self.id = setting.id
+        self.label = setting.label
+        self.summary = setting.summary
+        self.type = setting.type
+        self.value = setting.value
+        self.initialValue = setting.value
+        
+        if let enums = setting.enumValues {
+            self.enumValues = enums.split(separator: "|").compactMap {
+                let components = $0.split(separator: ":", maxSplits: 1)
+                guard components.count == 2 else { return nil }
+                return EnumValue(id: String(components[0]), name: String(components[1]))
+            }
+        } else {
+            self.enumValues = []
+        }
+    }
 }
 
 @MainActor
 class LibrarySettingsViewModel: ObservableObject {
     let library: DisplayLibrary
-
-    @Published var preferences: LibraryPreferences
-    @Published var hudMessage: HUDMessage?
     
-    private var initialPreferences: LibraryPreferences
+    @Published var preferenceItems: [PreferenceItemViewModel] = []
+    @Published var hudMessage: HUDMessage?
     
     private let plexService: PlexAPIService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
-
     private var hudDismissTask: Task<Void, Never>?
+    private var cancellables = Set<AnyCancellable>()
 
     var hasChanges: Bool {
-        return preferences != initialPreferences
+        return preferenceItems.contains { $0.hasChanged }
     }
-    
+
     init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
         self.library = library
         self.serverViewModel = serverViewModel
         self.authManager = authManager
         self.plexService = plexService
-
-        let visibility = LibraryVisibility(rawValue: library.library.hidden) ?? .includeInHomeAndSearch
-        let enableTrailers: Bool
-        if let trailersSetting = library.library.preferences?.settings.first(where: { $0.id == "enableCinemaTrailers" }) {
-            enableTrailers = (trailersSetting.value == "true")
-        } else {
-            enableTrailers = false
-        }
         
-        let prefs = LibraryPreferences(visibility: visibility, enableTrailers: enableTrailers)
-        self.preferences = prefs
-        self.initialPreferences = prefs
-    }
+        self.preferenceItems = (library.library.preferences?.settings ?? [])
+            .map { PreferenceItemViewModel(setting: $0) }
 
-    func refreshState() {
-        let visibility = LibraryVisibility(rawValue: library.library.hidden) ?? .includeInHomeAndSearch
-        let enableTrailers: Bool
-        if let trailersSetting = library.library.preferences?.settings.first(where: { $0.id == "enableCinemaTrailers" }) {
-            enableTrailers = (trailersSetting.value == "true")
-        } else {
-            enableTrailers = false
+        self.preferenceItems.forEach { item in
+            item.objectWillChange.sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
         }
-        
-        let prefs = LibraryPreferences(visibility: visibility, enableTrailers: enableTrailers)
-        self.preferences = prefs
-        self.initialPreferences = prefs
     }
 
     func saveChanges() async {
@@ -62,27 +109,23 @@ class LibrarySettingsViewModel: ObservableObject {
             showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles."))
             return
         }
-        
-        var preferencesToUpdate: [String: String] = [:]
-        
-        if preferences.visibility != initialPreferences.visibility {
-            preferencesToUpdate["prefs[hidden]"] = "\(preferences.visibility.rawValue)"
-        }
-        
-        if preferences.enableTrailers != initialPreferences.enableTrailers {
-            preferencesToUpdate["prefs[enableCinemaTrailers]"] = preferences.enableTrailers ? "1" : "0"
-        }
-        
+
+        let preferencesToUpdate = Dictionary(
+            uniqueKeysWithValues: preferenceItems
+                .filter { $0.hasChanged }
+                .map { ("prefs[\($0.id)]", $0.value) }
+        )
+
         guard !preferencesToUpdate.isEmpty else { return }
-        
+
         do {
             try await plexService.updateLibraryPreferences(for: library.library.key, preferences: preferencesToUpdate, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Paramètres mis à jour !"))
 
-            self.initialPreferences = preferences
+            self.preferenceItems.forEach { $0.reset() }
+            self.objectWillChange.send()
 
             NotificationCenter.default.post(name: .didUpdateLibraryPreferences, object: nil)
-            
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de la mise à jour."))
         }
@@ -93,22 +136,17 @@ class LibrarySettingsViewModel: ObservableObject {
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = authManager.getPlexAuthToken()
-        else {
-            return nil
-        }
+        else { return nil }
         let resourceToken = server.accessToken ?? token
         return (url: connection.uri, token: resourceToken)
     }
-
+    
     private func showHUD(message: HUDMessage, duration: TimeInterval = 2) {
         hudDismissTask?.cancel()
         self.hudMessage = message
         hudDismissTask = Task {
             try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
-            guard !Task.isCancelled else { return }
-            if self.hudMessage == message {
-                self.hudMessage = nil
-            }
+            if self.hudMessage == message { self.hudMessage = nil }
         }
     }
 }

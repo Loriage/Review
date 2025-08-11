@@ -40,6 +40,11 @@ struct PlexLibrary: Decodable, Identifiable {
     }
 }
 
+struct Country: Identifiable, Hashable {
+    let id: String
+    let name: String
+}
+
 struct PlexLibraryLocation: Decodable, Identifiable {
     let id: Int
     let path: String
@@ -159,8 +164,16 @@ struct PlexLibraryContentItem: Decodable, Identifiable {
 
 struct PlexSetting: Decodable {
     let id: String
+    let label: String
+    let summary: String
     let type: String
     let value: String
+    let enumValues: String?
+}
+
+struct EnumValue: Identifiable, Hashable {
+    let id: String
+    let name: String
 }
 
 struct PlexPreferences: Decodable {

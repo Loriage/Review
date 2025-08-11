@@ -4,7 +4,8 @@ struct LibrarySettingsView: View {
     @StateObject private var viewModel: LibrarySettingsViewModel
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
-    @FocusState private var isTitleFieldFocused: Bool
+
+    @State private var showCopyHUD = false
 
     init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: LibrarySettingsViewModel(library: library, serverViewModel: serverViewModel, authManager: authManager))
@@ -15,44 +16,63 @@ struct LibrarySettingsView: View {
             ZStack {
                 Form {
                     Section(header: Text("Informations de la bibliothèque")) {
-                        HStack {
-                            Text("ID :")
-                            Text(viewModel.library.library.key)
-                                .font(.body.monospaced())
-                                .foregroundColor(.secondary)
-                        }
-                    }
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 12) {
+                                InfoPill(title: "ID", value: viewModel.library.library.key, customBackgroundColor: Color(.systemBackground))
+                                InfoPill(title: "NOM", value: viewModel.library.library.title, customBackgroundColor: Color(.systemBackground))
+                            }
+                            HStack(spacing: 12) {
+                                InfoPill(title: "TYPE", value: viewModel.library.library.type.capitalized, customBackgroundColor: Color(.systemBackground))
+                                InfoPill(title: "LANGUE", value: viewModel.library.library.language, customBackgroundColor: Color(.systemBackground))
+                            }
 
-                    Section(
-                        header: Text("Visibilité"),
-                        footer: Text("Restreindre où le contenu de cette bibliothèque doit apparaître.")
-                    ) {
-                        Picker("Visibilité", selection: $viewModel.preferences.visibility) {
-                            ForEach(LibraryVisibility.allCases) { visibility in
-                                Text(visibility.description).tag(visibility)
+                            ForEach(viewModel.library.library.locations) { location in
+                                HStack(spacing: 10) {
+                                    InfoPill(title: "CHEMIN", value: location.path, customBackgroundColor: Color(.systemBackground))
+                                    Button(action: {
+                                        UIPasteboard.general.string = location.path
+                                        withAnimation {
+                                            showCopyHUD = true
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                            withAnimation {
+                                                showCopyHUD = false
+                                            }
+                                        }
+                                    }) {
+                                        Image(systemName: "doc.on.doc")
+                                            .font(.title2)
+                                    }
+                                    .buttonStyle(.borderless)
+                                }
                             }
                         }
+                        .padding(.vertical, 5)
                     }
-                    Section(
-                        header: Text("Options de lecture"),
-                        footer: Text("Autoriser les bandes annonces à être jouées avant les objets de cette bibliothèque.").textCase(nil)
-                    ) {
-                        Toggle("Activer les bandes annonces", isOn: $viewModel.preferences.enableTrailers)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowBackground(Color.clear)
+
+                    Section(header: Text("Paramètres de la bibliothèque")) {
+                        ForEach(viewModel.preferenceItems) { item in
+                            PreferenceRowView(viewModel: item)
+                        }
                     }
                 }
                 if let hudMessage = viewModel.hudMessage {
                     HUDView(hudMessage: hudMessage)
+                }
+                if showCopyHUD {
+                    HUDView(hudMessage: HUDMessage(iconName: "doc.on.doc.fill", text: "Copié !", maxWidth: 180))
                         .transition(.scale.combined(with: .opacity))
-                        .animation(.spring(), value: viewModel.hudMessage)
+                        .zIndex(1)
                 }
             }
-            .navigationTitle("Réglages de la bibliothèque")
+            .navigationTitle("Réglages")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if viewModel.hasChanges {
                         Button("Sauvegarder") {
-                            isTitleFieldFocused = false
                             Task {
                                 await viewModel.saveChanges()
                             }
@@ -60,9 +80,44 @@ struct LibrarySettingsView: View {
                     }
                 }
             }
-            .onAppear {
-                viewModel.refreshState()
+        }
+    }
+}
+
+struct PreferenceRowView: View {
+    @ObservedObject var viewModel: PreferenceItemViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            controlView
+
+            if !viewModel.summary.isEmpty {
+                Text(viewModel.summary)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.leading, 1)
             }
+        }
+        .padding(.vertical, 5)
+    }
+
+    @ViewBuilder
+    private var controlView: some View {
+        switch viewModel.type {
+        case "bool":
+            Toggle(viewModel.label, isOn: viewModel.boolValue)
+        case "int", "text":
+            if !viewModel.enumValues.isEmpty {
+                Picker(viewModel.label, selection: $viewModel.value) {
+                    ForEach(viewModel.enumValues) { value in
+                        Text(value.name).tag(value.id)
+                    }
+                }
+            } else {
+                Text("Champ non supporté : \(viewModel.id)")
+            }
+        default:
+            Text("Type de champ inconnu : \(viewModel.type)")
         }
     }
 }
