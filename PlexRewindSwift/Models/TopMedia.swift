@@ -8,6 +8,7 @@ struct TopMedia: Identifiable {
     let totalWatchTimeSeconds: Int
     let lastViewedAt: Date?
     let posterURL: URL?
+    let sessions: [WatchSession]
 
     var formattedWatchTime: String {
         if totalWatchTimeSeconds <= 0 {

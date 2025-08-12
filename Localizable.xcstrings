@@ -132,7 +132,7 @@
     "Dernier scan :" : {
 
     },
-    "Dernier visionnage: %@" : {
+    "Dernière lecture : %@" : {
 
     },
     "Détails du média" : {
@@ -141,7 +141,7 @@
     "Distant" : {
 
     },
-    "Durée: %@" : {
+    "Durée de visionnage : %@" : {
 
     },
     "En attente de validation..." : {
@@ -201,9 +201,6 @@
     "Lancer une analyse complète ?" : {
 
     },
-    "Lectures: %lld" : {
-
-    },
     "Local" : {
 
     },
@@ -222,6 +219,9 @@
 
     },
     "Nombre de %@ :" : {
+
+    },
+    "Nombre de lectures : %lld" : {
 
     },
     "Nombre de médias" : {
@@ -329,9 +329,6 @@
 
     },
     "Tri" : {
-
-    },
-    "Trier" : {
 
     },
     "Trier par" : {

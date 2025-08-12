@@ -29,6 +29,7 @@ class TopStatsViewModel: ObservableObject {
     @Published var selectedTimeFilter: TimeFilter = .allTime
     @Published var sortOption: TopStatsSortOption = .byPlays
 
+    private var serverWideHistory: [WatchSession] = []
     private var unsortedMovies: [TopMedia] = []
     private var unsortedShows: [TopMedia] = []
     
@@ -40,6 +41,148 @@ class TopStatsViewModel: ObservableObject {
         self.serverViewModel = serverViewModel
         self.authManager = authManager
         self.plexService = plexService
+    }
+
+    func fetchTopMedia(forceRefresh: Bool = false) async {
+        if serverWideHistory.isEmpty || forceRefresh {
+            await loadServerWideHistory()
+        }
+        await applyFiltersAndSort()
+    }
+
+    private func loadServerWideHistory() async {
+        guard let serverID = serverViewModel.selectedServerID,
+              let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
+              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
+              let token = authManager.getPlexAuthToken()
+        else {
+            errorMessage = "Serveur non sélectionné."
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+        
+        let serverURL = connection.uri
+        let resourceToken = server.accessToken ?? token
+
+        self.loadingMessage = "Analyse de l'historique du serveur..."
+        do {
+            let fullHistory = try await plexService.fetchWatchHistory(serverURL: serverURL, token: token, year: 0, userID: nil) { count in
+                await MainActor.run { self.loadingMessage = "Analyse de \(count) visionnages..." }
+            }
+            let historyWithDurations = await fetchDurationsIfNeeded(for: fullHistory, serverURL: serverURL, token: resourceToken)
+            self.serverWideHistory = historyWithDurations
+            self.hasFetchedOnce = true
+        } catch {
+            handleError(error, context: "Chargement de l'historique global")
+        }
+        
+        isLoading = false
+        loadingMessage = "Chargement..."
+    }
+    
+    func applyFiltersAndSort() async {
+        guard hasFetchedOnce else { return }
+        
+        if serverWideHistory.isEmpty {
+            self.topMovies = []
+            self.topShows = []
+            self.unsortedMovies = []
+            self.unsortedShows = []
+            return
+        }
+        
+        isLoading = true
+        self.loadingMessage = "Application des filtres..."
+        await Task.yield()
+
+        var filteredHistory = filterHistory(serverWideHistory, by: selectedTimeFilter)
+
+        if let userID = selectedUserID {
+            filteredHistory = filteredHistory.filter { $0.accountID == userID }
+        }
+
+        await MainActor.run { self.loadingMessage = "Calcul des classements..." }
+        
+        let historyMovieGroups = Dictionary(grouping: filteredHistory.filter { $0.type == "movie" }, by: { $0.ratingKey ?? "" })
+        let historyShowGroups = Dictionary(grouping: filteredHistory.filter { $0.type == "episode" }, by: { $0.computedGrandparentRatingKey ?? "" })
+        
+        guard let serverID = serverViewModel.selectedServerID,
+              let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
+              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
+              let token = authManager.getPlexAuthToken()
+        else {
+            errorMessage = "Serveur non sélectionné."
+            isLoading = false
+            return
+        }
+        
+        let serverURL = connection.uri
+        let resourceToken = server.accessToken ?? token
+
+        self.unsortedMovies = historyMovieGroups.compactMap { (ratingKey, sessions) in
+            guard !ratingKey.isEmpty, let firstSession = sessions.first else { return nil }
+            let totalDuration = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+            return TopMedia(
+                id: ratingKey,
+                title: firstSession.title ?? "Titre inconnu",
+                mediaType: "movie",
+                viewCount: sessions.count,
+                totalWatchTimeSeconds: totalDuration,
+                lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
+                posterURL: firstSession.thumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(resourceToken)") },
+                sessions: sessions
+            )
+        }
+        
+        self.unsortedShows = historyShowGroups.compactMap { (ratingKey, sessions) in
+            guard !ratingKey.isEmpty, let firstSession = sessions.first else { return nil }
+            let totalDuration = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+            return TopMedia(
+                id: ratingKey,
+                title: firstSession.grandparentTitle ?? "Série inconnue",
+                mediaType: "show",
+                viewCount: sessions.count,
+                totalWatchTimeSeconds: totalDuration,
+                lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
+                posterURL: firstSession.grandparentThumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(resourceToken)") },
+                sessions: sessions
+            )
+        }
+
+        sortMedia()
+        isLoading = false
+    }
+    
+    func sortMedia() {
+        if sortOption == .byPlays {
+            topMovies = unsortedMovies.sorted {
+                if $0.viewCount != $1.viewCount {
+                    return $0.viewCount > $1.viewCount
+                }
+                return ($0.lastViewedAt ?? .distantPast) > ($1.lastViewedAt ?? .distantPast)
+            }
+            topShows = unsortedShows.sorted {
+                if $0.viewCount != $1.viewCount {
+                    return $0.viewCount > $1.viewCount
+                }
+                return ($0.lastViewedAt ?? .distantPast) > ($1.lastViewedAt ?? .distantPast)
+            }
+        } else {
+            topMovies = unsortedMovies.sorted {
+                if $0.totalWatchTimeSeconds != $1.totalWatchTimeSeconds {
+                    return $0.totalWatchTimeSeconds > $1.totalWatchTimeSeconds
+                }
+                return ($0.lastViewedAt ?? .distantPast) > ($1.lastViewedAt ?? .distantPast)
+            }
+            topShows = unsortedShows.sorted {
+                if $0.totalWatchTimeSeconds != $1.totalWatchTimeSeconds {
+                    return $0.totalWatchTimeSeconds > $1.totalWatchTimeSeconds
+                }
+                return ($0.lastViewedAt ?? .distantPast) > ($1.lastViewedAt ?? .distantPast)
+            }
+        }
     }
     
     private func getStartDate(for filter: TimeFilter) -> Date? {
@@ -108,44 +251,6 @@ class TopStatsViewModel: ObservableObject {
         
         return sessionsWithDurations
     }
-
-    func fetchTopMedia() async {
-        guard let serverID = serverViewModel.selectedServerID,
-              let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
-              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
-              let token = authManager.getPlexAuthToken()
-        else {
-            errorMessage = "Serveur non sélectionné."
-            return
-        }
-
-        isLoading = true
-        errorMessage = nil
-
-        let serverURL = connection.uri
-        let resourceToken = server.accessToken ?? token
-
-        if let userID = selectedUserID {
-            await fetchTopMediaForUser(userID: userID, serverURL: serverURL, token: resourceToken)
-        } else {
-            await fetchServerWideTopMedia(serverURL: serverURL, token: resourceToken)
-        }
-        
-        sortMedia()
-        hasFetchedOnce = true
-        isLoading = false
-        loadingMessage = "Chargement..."
-    }
-    
-    func sortMedia() {
-        if sortOption == .byPlays {
-            topMovies = unsortedMovies.sorted { $0.viewCount > $1.viewCount }
-            topShows = unsortedShows.sorted { $0.viewCount > $1.viewCount }
-        } else {
-            topMovies = unsortedMovies.sorted { $0.totalWatchTimeSeconds > $1.totalWatchTimeSeconds }
-            topShows = unsortedShows.sorted { $0.totalWatchTimeSeconds > $1.totalWatchTimeSeconds }
-        }
-    }
     
     private func handleError(_ error: Error, context: String) {
         let nsError = error as NSError
@@ -182,7 +287,8 @@ class TopStatsViewModel: ObservableObject {
                     viewCount: sessions.count,
                     totalWatchTimeSeconds: totalDuration,
                     lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.thumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") }
+                    posterURL: firstSession.thumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
+                    sessions: sessions
                 )
             }
             
@@ -196,7 +302,8 @@ class TopStatsViewModel: ObservableObject {
                     viewCount: sessions.count,
                     totalWatchTimeSeconds: totalDuration,
                     lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.grandparentThumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") }
+                    posterURL: firstSession.grandparentThumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
+                    sessions: sessions
                 )
             }
 
@@ -234,7 +341,8 @@ class TopStatsViewModel: ObservableObject {
                     viewCount: sessions.count,
                     totalWatchTimeSeconds: totalDuration,
                     lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.thumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") }
+                    posterURL: firstSession.thumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
+                    sessions: sessions
                 )
             }
 
@@ -248,7 +356,8 @@ class TopStatsViewModel: ObservableObject {
                     viewCount: sessions.count,
                     totalWatchTimeSeconds: totalDuration,
                     lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.grandparentThumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") }
+                    posterURL: firstSession.grandparentThumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
+                    sessions: sessions
                 )
             }
 

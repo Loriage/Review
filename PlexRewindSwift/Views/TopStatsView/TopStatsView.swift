@@ -18,7 +18,7 @@ struct TopStatsView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isLoading {
+                if viewModel.isLoading && !viewModel.hasFetchedOnce {
                     LoadingStateView(message: viewModel.loadingMessage)
                 } else if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
@@ -44,7 +44,7 @@ struct TopStatsView: View {
                             if !viewModel.topMovies.isEmpty {
                                 topMediaSection(
                                     title: "Films les plus populaires",
-                                    items: Array(viewModel.topMovies.prefix(5)),
+                                    items: Array(viewModel.topMovies.prefix(3)),
                                     fullList: viewModel.topMovies
                                 )
                             }
@@ -58,7 +58,7 @@ struct TopStatsView: View {
                         }
                     }
                     .refreshable {
-                        await viewModel.fetchTopMedia()
+                        await viewModel.fetchTopMedia(forceRefresh: true)
                     }
                 }
             }
@@ -84,19 +84,13 @@ struct TopStatsView: View {
                 if serverViewModel.availableUsers.isEmpty && serverViewModel.selectedServerID != nil {
                    await serverViewModel.loadUsers(for: serverViewModel.selectedServerID!)
                 }
-                if viewModel.topMovies.isEmpty && viewModel.topShows.isEmpty && !viewModel.hasFetchedOnce {
+                if !viewModel.hasFetchedOnce {
                     await viewModel.fetchTopMedia()
                 }
             }
-            .onChange(of: viewModel.selectedUserID) {
-                Task { await viewModel.fetchTopMedia() }
-            }
-            .onChange(of: viewModel.selectedTimeFilter) {
-                 Task { await viewModel.fetchTopMedia() }
-            }
-            .onChange(of: viewModel.sortOption) {
-                viewModel.sortMedia()
-            }
+            .onChange(of: viewModel.selectedUserID) { Task { await viewModel.applyFiltersAndSort() } }
+            .onChange(of: viewModel.selectedTimeFilter) { Task { await viewModel.applyFiltersAndSort() } }
+            .onChange(of: viewModel.sortOption) { viewModel.sortMedia() }
         }
     }
 
@@ -121,11 +115,8 @@ struct TopStatsView: View {
                                 .font(.headline)
                             
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Lectures: \(media.viewCount)")
-                                Text("Durée: \(media.formattedWatchTime)")
-                                if let lastViewed = media.lastViewedAt {
-                                    Text("Dernier visionnage: \(lastViewed.formatted(.relative(presentation: .named)))")
-                                }
+                                Text("Nombre de lectures : \(media.viewCount)")
+                                Text("Durée de visionnage : \(media.formattedWatchTime)")
                             }
                             .font(.subheadline)
                             .foregroundColor(.secondary)
