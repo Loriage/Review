@@ -12,6 +12,15 @@ struct MainTabView: View {
         let itemAppearance = UITabBarItemAppearance()
 
         itemAppearance.normal.badgeBackgroundColor = .accent
+        itemAppearance.normal.badgeTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+
+        itemAppearance.selected.badgeBackgroundColor = .systemGray
+
+        itemAppearance.normal.badgePositionAdjustment = UIOffset(horizontal: 2, vertical: 0)
+        itemAppearance.selected.badgePositionAdjustment = UIOffset(horizontal: 2, vertical: 0)
+
         tabBarAppearance.stackedLayoutAppearance = itemAppearance
         UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
