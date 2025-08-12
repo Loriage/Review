@@ -1,22 +1,5 @@
 import Foundation
 
-struct PlexHistoryResponse: Decodable {
-    let mediaContainer: MediaContainer
-
-    enum CodingKeys: String, CodingKey {
-        case mediaContainer = "MediaContainer"
-    }
-}
-
-struct MediaContainer: Decodable {
-    let size: Int
-    let metadata: [WatchSession]
-
-    enum CodingKeys: String, CodingKey {
-        case size, metadata = "Metadata"
-    }
-}
-
 struct WatchSession: Decodable, Identifiable {
     var id: String { historyKey ?? UUID().uuidString }
 
@@ -39,12 +22,8 @@ struct WatchSession: Decodable, Identifiable {
     let parentIndex: Int?
 
     var computedGrandparentRatingKey: String? {
-        if let gprk = self.grandparentRatingKey, !gprk.isEmpty {
-            return gprk
-        }
-        if let gpk = self.grandparentKey {
-            return gpk.components(separatedBy: "/").last
-        }
+        if let gprk = self.grandparentRatingKey, !gprk.isEmpty { return gprk }
+        if let gpk = self.grandparentKey { return gpk.components(separatedBy: "/").last }
         return nil
     }
 

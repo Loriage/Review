@@ -1,13 +1,5 @@
 import Foundation
 
-struct PlexActivityResponse: Decodable {
-    let mediaContainer: ActivityMediaContainer
-
-    enum CodingKeys: String, CodingKey {
-        case mediaContainer = "MediaContainer"
-    }
-}
-
 struct ActivityMediaContainer: Decodable {
     let size: Int
     let metadata: [PlexActivitySession]

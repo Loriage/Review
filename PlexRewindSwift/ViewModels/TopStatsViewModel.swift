@@ -1,28 +1,5 @@
 import Foundation
 
-enum TimeOfDay: String {
-    case morning = "Matin"
-    case afternoon = "Après-midi"
-    case evening = "Soirée"
-    case night = "Nuit"
-}
-
-enum TopStatsSortOption: String, CaseIterable, Identifiable {
-    case byPlays
-    case byDuration
-
-    var id: String { self.rawValue }
-
-    var displayName: String {
-        switch self {
-        case .byPlays:
-            return "Lectures"
-        case .byDuration:
-            return "Durée"
-        }
-    }
-}
-
 @MainActor
 class TopStatsViewModel: ObservableObject {
     @Published var topMovies: [TopMedia] = []
