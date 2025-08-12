@@ -30,7 +30,7 @@ struct MainTabView: View {
                 LibraryView(serverViewModel: serverViewModel, authManager: authManager)
             }
 
-            Tab("Search", systemImage: "magnifyingglass", role: .search) {
+            Tab("Recherche", systemImage: "magnifyingglass", role: .search) {
                     SearchView()
             }
 
