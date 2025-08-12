@@ -5,6 +5,7 @@ struct MainTabView: View {
     @EnvironmentObject var statsViewModel: StatsViewModel
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
+    @EnvironmentObject var topStatsViewModel: TopStatsViewModel
 
     var body: some View {
         TabView {
@@ -19,10 +20,11 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Bibliothèques", systemImage: "books.vertical.fill")
                 }
-            TopStatsView(serverViewModel: serverViewModel, authManager: authManager)
+            TopStatsView()
                 .tabItem {
                     Label("Top Stats", systemImage: "star.fill")
                 }
+                .environmentObject(topStatsViewModel)
 
             StatsView()
                 .tabItem {

@@ -1,19 +1,12 @@
 import SwiftUI
 
 struct TopStatsView: View {
-    @StateObject private var viewModel: TopStatsViewModel
+    @EnvironmentObject var viewModel: TopStatsViewModel
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
     
     @State private var isShowingFilterSheet = false
-
-    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
-        _viewModel = StateObject(wrappedValue: TopStatsViewModel(
-            serverViewModel: serverViewModel,
-            authManager: authManager
-        ))
-    }
 
     var body: some View {
         NavigationStack {
@@ -88,7 +81,9 @@ struct TopStatsView: View {
                    await serverViewModel.loadUsers(for: serverViewModel.selectedServerID!)
                 }
                 if !viewModel.hasFetchedOnce {
-                    await viewModel.fetchTopMedia()
+                    Task.detached {
+                        await viewModel.fetchTopMedia()
+                    }
                 }
             }
             .onChange(of: viewModel.selectedUserID) {
@@ -160,9 +155,6 @@ struct TopStatsView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Lectures: \(media.viewCount)")
                                 Text("Durée: \(media.formattedWatchTime)")
-                                if let lastViewed = media.lastViewedAt {
-                                    Text("Dernier visionnage: \(lastViewed.formatted(.relative(presentation: .named)))")
-                                }
                             }
                             .font(.subheadline)
                             .foregroundColor(.secondary)

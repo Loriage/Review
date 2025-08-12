@@ -337,10 +337,9 @@ class TopStatsViewModel: ObservableObject {
     private func handleError(_ error: Error, context: String) {
         let nsError = error as NSError
         if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled {
-            print("Request cancelled: \(context)")
-        } else {
-            self.errorMessage = "Erreur (\(context)): \(error.localizedDescription)"
+            return
         }
+        self.errorMessage = "Erreur (\(context)): \(error.localizedDescription)"
     }
 
     private func fetchServerWideTopMedia(serverURL: String, token: String) async {
