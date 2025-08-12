@@ -26,7 +26,7 @@ struct TopStatsView: View {
                         .padding()
                 } else {
                     List {
-                        if viewModel.topMovies.isEmpty && viewModel.topShows.isEmpty {
+                        if viewModel.topMovies.isEmpty && viewModel.topShows.isEmpty && viewModel.hasFetchedOnce {
                             VStack(alignment: .center, spacing: 10) {
                                 Image(systemName: "chart.bar.xaxis.ascending")
                                     .font(.system(size: 40))
@@ -41,10 +41,13 @@ struct TopStatsView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 50)
                         } else {
+                            if viewModel.hasFetchedOnce {
+                                funFactsSection
+                            }
                             if !viewModel.topMovies.isEmpty {
                                 topMediaSection(
                                     title: "Films les plus populaires",
-                                    items: Array(viewModel.topMovies.prefix(3)),
+                                    items: Array(viewModel.topMovies.prefix(5)),
                                     fullList: viewModel.topMovies
                                 )
                             }
@@ -88,23 +91,63 @@ struct TopStatsView: View {
                     await viewModel.fetchTopMedia()
                 }
             }
-            .onChange(of: viewModel.selectedUserID) { Task { await viewModel.applyFiltersAndSort() } }
-            .onChange(of: viewModel.selectedTimeFilter) { Task { await viewModel.applyFiltersAndSort() } }
-            .onChange(of: viewModel.sortOption) { viewModel.sortMedia() }
+            .onChange(of: viewModel.selectedUserID) {
+                 Task { await viewModel.applyFiltersAndSort() }
+            }
+            .onChange(of: viewModel.selectedTimeFilter) {
+                 Task { await viewModel.applyFiltersAndSort() }
+            }
+            .onChange(of: viewModel.sortOption) {
+                viewModel.sortMedia()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var funFactsSection: some View {
+        Section(header: Text("En bref").font(.headline)) {
+            VStack(spacing: 10) {
+                HStack(spacing: 10) {
+                    if let totalPlays = viewModel.funFactTotalPlays, totalPlays > 0 {
+                        StatPill(title: "Lectures", value: "\(totalPlays)", icon: "play.tv.fill", color: .blue)
+                    }
+                    if let formattedTime = viewModel.funFactFormattedWatchTime {
+                        StatPill(title: "Temps total", value: formattedTime, icon: "hourglass", color: .purple)
+                    }
+                    if let mostActiveDay = viewModel.funFactMostActiveDay {
+                        StatPill(title: "Jour favori", value: mostActiveDay, icon: "calendar", color: .red)
+                    }
+                }
+                HStack(spacing: 10) {
+                    if let topUser = viewModel.funFactTopUser {
+                        StatPill(title: "Top Profil", value: topUser, icon: "person.fill", color: .orange)
+                    }
+                    if let timeOfDay = viewModel.funFactBusiestTimeOfDay {
+                        StatPill(title: "Moment phare", value: timeOfDay.rawValue, icon: timeOfDayIcon(for: timeOfDay), color: .indigo)
+                    }
+                    if let activeUsers = viewModel.funFactActiveUsers, activeUsers > 0 {
+                        StatPill(title: "Profils actifs", value: "\(activeUsers)", icon: "person.3.fill", color: .cyan)
+                    }
+                }
+            }
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
+        }
+    }
+
+    private func timeOfDayIcon(for timeOfDay: TimeOfDay) -> String {
+        switch timeOfDay {
+        case .morning: return "sunrise.fill"
+        case .afternoon: return "sun.max.fill"
+        case .evening: return "sunset.fill"
+        case .night: return "moon.stars.fill"
         }
     }
 
     private func topMediaSection(title: String, items: [TopMedia], fullList: [TopMedia]) -> some View {
         Section {
             ForEach(items) { media in
-                NavigationLink(destination: MediaHistoryView(
-                    ratingKey: media.id,
-                    mediaType: media.mediaType,
-                    grandparentRatingKey: media.mediaType == "show" ? media.id : nil,
-                    serverViewModel: serverViewModel,
-                    authManager: authManager,
-                    statsViewModel: statsViewModel
-                )) {
+                NavigationLink(destination: TopMediaDetailView(title: title, items: fullList)) {
                     HStack(spacing: 15) {
                         AsyncImageView(url: media.posterURL, contentMode: .fill)
                             .frame(width: 60, height: 90)
@@ -115,8 +158,11 @@ struct TopStatsView: View {
                                 .font(.headline)
                             
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Nombre de lectures : \(media.viewCount)")
-                                Text("Durée de visionnage : \(media.formattedWatchTime)")
+                                Text("Lectures: \(media.viewCount)")
+                                Text("Durée: \(media.formattedWatchTime)")
+                                if let lastViewed = media.lastViewedAt {
+                                    Text("Dernier visionnage: \(lastViewed.formatted(.relative(presentation: .named)))")
+                                }
                             }
                             .font(.subheadline)
                             .foregroundColor(.secondary)

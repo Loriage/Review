@@ -14,18 +14,18 @@ struct StatPill: View {
             
             VStack {
                 Text(value)
-                    .font(.title3)
+                    .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
                 
                 Text(title)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
             }
         }
         .padding(.vertical)
         .frame(maxWidth: .infinity)
-        .background(.thinMaterial)
-        .cornerRadius(20)
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
     }
 }

@@ -1,5 +1,12 @@
 import Foundation
 
+enum TimeOfDay: String {
+    case morning = "Matin"
+    case afternoon = "Après-midi"
+    case evening = "Soirée"
+    case night = "Nuit"
+}
+
 enum TopStatsSortOption: String, CaseIterable, Identifiable {
     case byPlays
     case byDuration
@@ -28,6 +35,13 @@ class TopStatsViewModel: ObservableObject {
     @Published var selectedUserID: Int?
     @Published var selectedTimeFilter: TimeFilter = .allTime
     @Published var sortOption: TopStatsSortOption = .byPlays
+
+    @Published var funFactTotalPlays: Int?
+    @Published var funFactMostActiveDay: String?
+    @Published var funFactFormattedWatchTime: String?
+    @Published var funFactTopUser: String?
+    @Published var funFactBusiestTimeOfDay: TimeOfDay?
+    @Published var funFactActiveUsers: Int?
 
     private var serverWideHistory: [WatchSession] = []
     private var unsortedMovies: [TopMedia] = []
@@ -103,6 +117,8 @@ class TopStatsViewModel: ObservableObject {
             filteredHistory = filteredHistory.filter { $0.accountID == userID }
         }
 
+        calculateFunFacts(from: filteredHistory)
+
         await MainActor.run { self.loadingMessage = "Calcul des classements..." }
         
         let historyMovieGroups = Dictionary(grouping: filteredHistory.filter { $0.type == "movie" }, by: { $0.ratingKey ?? "" })
@@ -153,6 +169,72 @@ class TopStatsViewModel: ObservableObject {
 
         sortMedia()
         isLoading = false
+    }
+
+    private func calculateFunFacts(from history: [WatchSession]) {
+        self.funFactTotalPlays = history.count
+
+        let totalSeconds = history.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
+        let days = totalSeconds / 86400
+        let hours = (totalSeconds % 86400) / 3600
+        if days > 0 {
+            self.funFactFormattedWatchTime = "\(days)j \(hours)h"
+        } else {
+            self.funFactFormattedWatchTime = "\(hours)h"
+        }
+
+        let calendar = Calendar.current
+        let dayCounts = Dictionary(grouping: history, by: {
+            calendar.component(.weekday, from: Date(timeIntervalSince1970: $0.viewedAt ?? 0))
+        }).mapValues { $0.count }
+
+        if let (weekday, _) = dayCounts.max(by: { $0.value < $1.value }) {
+            self.funFactMostActiveDay = calendar.weekdaySymbols[weekday - 1].capitalized
+        } else {
+            self.funFactMostActiveDay = nil
+        }
+
+        if self.selectedUserID == nil {
+            let userCounts = Dictionary(grouping: history, by: { $0.accountID ?? -1 })
+                .mapValues { $0.count }
+            
+            if let (topUserID, _) = userCounts.max(by: { $0.value < $1.value }),
+               let topUser = serverViewModel.availableUsers.first(where: { $0.id == topUserID }) {
+                self.funFactTopUser = topUser.title
+            } else {
+                self.funFactTopUser = nil
+            }
+            self.funFactActiveUsers = Set(history.compactMap { $0.accountID }).count
+        } else {
+            if let selectedUser = serverViewModel.availableUsers.first(where: { $0.id == self.selectedUserID }) {
+                self.funFactTopUser = selectedUser.title
+            } else {
+                self.funFactTopUser = nil
+            }
+            self.funFactActiveUsers = nil
+        }
+        
+        let hourCounts = Dictionary(grouping: history, by: {
+            calendar.component(.hour, from: Date(timeIntervalSince1970: $0.viewedAt ?? 0))
+        }).mapValues { $0.count }
+
+        let timeOfDayCounts = hourCounts.reduce(into: [TimeOfDay: Int]()) { (result, hourCount) in
+            let (hour, count) = hourCount
+            let timeOfDay: TimeOfDay
+            switch hour {
+            case 6..<12: timeOfDay = .morning
+            case 12..<18: timeOfDay = .afternoon
+            case 18..<24: timeOfDay = .evening
+            default: timeOfDay = .night
+            }
+            result[timeOfDay, default: 0] += count
+        }
+
+        if let (busiestTime, _) = timeOfDayCounts.max(by: { $0.value < $1.value }) {
+            self.funFactBusiestTimeOfDay = busiestTime
+        } else {
+            self.funFactBusiestTimeOfDay = nil
+        }
     }
     
     func sortMedia() {

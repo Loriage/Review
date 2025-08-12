@@ -132,6 +132,9 @@
     "Dernier scan :" : {
 
     },
+    "Dernier visionnage: %@" : {
+
+    },
     "Dernière lecture : %@" : {
 
     },
@@ -144,7 +147,13 @@
     "Durée de visionnage : %@" : {
 
     },
+    "Durée: %@" : {
+
+    },
     "En attente de validation..." : {
+
+    },
+    "En bref" : {
 
     },
     "Êtes-vous sûr ?" : {
@@ -199,6 +208,9 @@
 
     },
     "Lancer une analyse complète ?" : {
+
+    },
+    "Lectures: %lld" : {
 
     },
     "Local" : {
