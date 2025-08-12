@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct StatPill: View {
+struct StatPill: View, Equatable {
     let title: String
     let value: String
     let icon: String

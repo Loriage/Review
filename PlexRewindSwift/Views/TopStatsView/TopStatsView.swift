@@ -96,47 +96,6 @@ struct TopStatsView: View {
         }
     }
 
-    @ViewBuilder
-    private var funFactsSection: some View {
-        Section(header: Text("En bref").font(.headline)) {
-            VStack(spacing: 10) {
-                HStack(spacing: 10) {
-                    if let totalPlays = viewModel.funFactTotalPlays, totalPlays > 0 {
-                        StatPill(title: "Lectures", value: "\(totalPlays)", icon: "play.tv.fill", color: .blue)
-                    }
-                    if let formattedTime = viewModel.funFactFormattedWatchTime {
-                        StatPill(title: "Temps total", value: formattedTime, icon: "hourglass", color: .purple)
-                    }
-                    if let mostActiveDay = viewModel.funFactMostActiveDay {
-                        StatPill(title: "Jour favori", value: mostActiveDay, icon: "calendar", color: .red)
-                    }
-                }
-                HStack(spacing: 10) {
-                    if let topUser = viewModel.funFactTopUser {
-                        StatPill(title: "Top Profil", value: topUser, icon: "person.fill", color: .orange)
-                    }
-                    if let timeOfDay = viewModel.funFactBusiestTimeOfDay {
-                        StatPill(title: "Moment phare", value: timeOfDay.rawValue, icon: timeOfDayIcon(for: timeOfDay), color: .indigo)
-                    }
-                    if let activeUsers = viewModel.funFactActiveUsers, activeUsers > 0 {
-                        StatPill(title: "Profils actifs", value: "\(activeUsers)", icon: "person.3.fill", color: .cyan)
-                    }
-                }
-            }
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowBackground(Color.clear)
-        }
-    }
-
-    private func timeOfDayIcon(for timeOfDay: TimeOfDay) -> String {
-        switch timeOfDay {
-        case .morning: return "sunrise.fill"
-        case .afternoon: return "sun.max.fill"
-        case .evening: return "sunset.fill"
-        case .night: return "moon.stars.fill"
-        }
-    }
-
     private func topMediaSection(title: String, items: [TopMedia], fullList: [TopMedia]) -> some View {
         Section {
             ForEach(items) { media in
@@ -174,6 +133,11 @@ struct TopStatsView: View {
             }
         }
     }
+
+    @ViewBuilder
+    private var funFactsSection: some View {
+        FunFactsView(viewModel: viewModel)
+    }
 }
 
 struct LoadingStateView: View {
@@ -197,5 +161,49 @@ struct LoadingStateView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct FunFactsView: View {
+    @ObservedObject var viewModel: TopStatsViewModel
+    
+    var body: some View {
+        Section(header: Text("En bref").font(.headline)) {
+            VStack(spacing: 10) {
+                HStack(spacing: 10) {
+                    if let totalPlays = viewModel.funFactTotalPlays, totalPlays > 0 {
+                        StatPill(title: "Lectures", value: "\(totalPlays)", icon: "play.tv.fill", color: .blue)
+                    }
+                    if let formattedTime = viewModel.funFactFormattedWatchTime {
+                        StatPill(title: "Temps total", value: formattedTime, icon: "hourglass", color: .purple)
+                    }
+                    if let mostActiveDay = viewModel.funFactMostActiveDay {
+                        StatPill(title: "Jour favori", value: mostActiveDay, icon: "calendar", color: .red)
+                    }
+                }
+                HStack(spacing: 10) {
+                    if let topUser = viewModel.funFactTopUser {
+                        StatPill(title: "Top Profil", value: topUser, icon: "person.fill", color: .orange)
+                    }
+                    if let timeOfDay = viewModel.funFactBusiestTimeOfDay {
+                        StatPill(title: "Moment phare", value: timeOfDay.rawValue, icon: timeOfDayIcon(for: timeOfDay), color: .indigo)
+                    }
+                    if let activeUsers = viewModel.funFactActiveUsers, activeUsers > 0 {
+                        StatPill(title: "Profils actifs", value: "\(activeUsers)", icon: "person.3.fill", color: .cyan)
+                    }
+                }
+            }
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
+        }
+    }
+    
+    private func timeOfDayIcon(for timeOfDay: TimeOfDay) -> String {
+        switch timeOfDay {
+        case .morning: return "sunrise.fill"
+        case .afternoon: return "sun.max.fill"
+        case .evening: return "sunset.fill"
+        case .night: return "moon.stars.fill"
+        }
     }
 }
