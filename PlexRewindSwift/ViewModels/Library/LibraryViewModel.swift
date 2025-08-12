@@ -8,17 +8,17 @@ class LibraryViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    private let plexService: PlexAPIService
+    private let libraryService: PlexLibraryService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
     
     private var currentServerDetails: (url: String, token: String)?
     private var cancellables = Set<AnyCancellable>()
 
-    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
+    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, libraryService: PlexLibraryService = PlexLibraryService()) {
         self.serverViewModel = serverViewModel
         self.authManager = authManager
-        self.plexService = plexService
+        self.libraryService = libraryService
         
         serverViewModel.$selectedServerID
             .sink { [weak self] _ in
@@ -75,7 +75,7 @@ class LibraryViewModel: ObservableObject {
         self.currentServerDetails = (url: serverURL, token: resourceToken)
         
         do {
-            let fetchedPlexLibs = try await plexService.fetchLibraries(serverURL: serverURL, token: resourceToken)
+            let fetchedPlexLibs = try await libraryService.fetchLibraries(serverURL: serverURL, token: resourceToken)
             let fetchedLibsDict = Dictionary(uniqueKeysWithValues: fetchedPlexLibs.map { ($0.uuid, $0) })
 
             self.displayLibraries.removeAll { fetchedLibsDict[$0.id] == nil }
@@ -133,7 +133,7 @@ class LibraryViewModel: ObservableObject {
         guard let details = self.currentServerDetails else { return nil }
 
         do {
-            let mediaItems = try await self.plexService.fetchAllMediaInSection(
+            let mediaItems = try await self.libraryService.fetchAllMediaInSection(
                 serverURL: details.url,
                 token: details.token,
                 libraryKey: library.key,
@@ -147,7 +147,6 @@ class LibraryViewModel: ObservableObject {
             return Array(sortedItems)
             
         } catch {
-            print("Erreur de récupération des ajouts récents pour la médiathèque \(library.key): \(error)")
             return nil
         }
     }
@@ -157,14 +156,14 @@ class LibraryViewModel: ObservableObject {
         
         do {
             if library.type == "show" {
-                let shows = try await self.plexService.fetchAllMediaInSection(
+                let shows = try await self.libraryService.fetchAllMediaInSection(
                     serverURL: details.url,
                     token: details.token,
                     libraryKey: library.key,
                     mediaType: 2
                 )
                 
-                let episodes = try await self.plexService.fetchAllMediaInSection(
+                let episodes = try await self.libraryService.fetchAllMediaInSection(
                     serverURL: details.url,
                     token: details.token,
                     libraryKey: library.key,
@@ -175,7 +174,7 @@ class LibraryViewModel: ObservableObject {
                 
                 return (totalSize, shows.count, episodes.count)
             } else {
-                let movies = try await self.plexService.fetchAllMediaInSection(
+                let movies = try await self.libraryService.fetchAllMediaInSection(
                     serverURL: details.url,
                     token: details.token,
                     libraryKey: library.key,
@@ -189,7 +188,6 @@ class LibraryViewModel: ObservableObject {
         } catch {
             let nsError = error as NSError
             if !(nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled) {
-                print("Erreur de calcul de la taille pour la médiathèque \(library.key): \(error)")
             }
             return nil
         }

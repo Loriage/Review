@@ -1,6 +1,6 @@
 import Foundation
 
-extension PlexAPIService {
+class PlexMetadataService {
     func fetchDuration(for ratingKey: String, serverURL: String, token: String) async throws -> Int? {
         guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)") else {
             return nil

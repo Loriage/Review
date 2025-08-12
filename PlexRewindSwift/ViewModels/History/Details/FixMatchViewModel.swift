@@ -6,14 +6,16 @@ class FixMatchViewModel: ObservableObject {
     @Published var isLoading = true
     @Published var hudMessage: HUDMessage?
 
-    private let plexService: PlexAPIService
+    private let metadataService: PlexMetadataService
+    private let actionsService: PlexActionsService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
     private let mediaRatingKey: String
 
-    init(ratingKey: String, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+    init(ratingKey: String, metadataService: PlexMetadataService, actionsService: PlexActionsService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         self.mediaRatingKey = ratingKey
-        self.plexService = plexService
+        self.metadataService = metadataService
+        self.actionsService = actionsService
         self.serverViewModel = serverViewModel
         self.authManager = authManager
     }
@@ -26,7 +28,7 @@ class FixMatchViewModel: ObservableObject {
         
         isLoading = true
         do {
-            let fetchedMatches = try await plexService.fetchMatches(for: mediaRatingKey, serverURL: details.url, token: details.token)
+            let fetchedMatches = try await metadataService.fetchMatches(for: mediaRatingKey, serverURL: details.url, token: details.token)
             self.matches = fetchedMatches
         } catch {
             hudMessage = HUDMessage(iconName: "xmark", text: "Erreur de chargement des correspondances.")
@@ -40,7 +42,7 @@ class FixMatchViewModel: ObservableObject {
         hudMessage = HUDMessage(iconName: "pencil", text: "Correction en cours...")
         
         do {
-            try await plexService.applyMatch(
+            try await actionsService.applyMatch(
                 for: mediaRatingKey,
                 guid: match.guid,
                 name: match.name,

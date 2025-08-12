@@ -5,15 +5,15 @@ class MediaActionsViewModel: ObservableObject {
     @Published var hudMessage: HUDMessage?
     @Published var isWorking = false
 
-    private let plexService: PlexAPIService
+    private let actionsService: PlexActionsService
     let serverViewModel: ServerViewModel
     let authManager: PlexAuthManager
     private var mediaRatingKey: String
 
     private var hudDismissTask: Task<Void, Never>?
 
-    init(ratingKey: String, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
-        self.plexService = plexService
+    init(ratingKey: String, actionsService: PlexActionsService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+        self.actionsService = actionsService
         self.serverViewModel = serverViewModel
         self.authManager = authManager
         self.mediaRatingKey = ratingKey
@@ -52,7 +52,7 @@ class MediaActionsViewModel: ObservableObject {
         guard let details = getServerDetails() else { return }
         isWorking = true
         do {
-            try await plexService.refreshMetadata(for: mediaRatingKey, serverURL: details.url, token: details.token)
+            try await actionsService.refreshMetadata(for: mediaRatingKey, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180))
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180))
@@ -64,7 +64,7 @@ class MediaActionsViewModel: ObservableObject {
         guard let details = getServerDetails() else { return }
         isWorking = true
         do {
-            try await plexService.analyzeMedia(for: mediaRatingKey, serverURL: details.url, token: details.token)
+            try await actionsService.analyzeMedia(for: mediaRatingKey, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Analyse démarrée.", maxWidth: 180))
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'analyse.", maxWidth: 180))

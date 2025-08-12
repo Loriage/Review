@@ -99,7 +99,14 @@ struct TopStatsView: View {
     private func topMediaSection(title: String, items: [TopMedia], fullList: [TopMedia]) -> some View {
         Section {
             ForEach(items) { media in
-                NavigationLink(destination: TopMediaDetailView(title: title, items: fullList)) {
+                NavigationLink(destination: MediaHistoryView(
+                    ratingKey: media.id,
+                    mediaType: media.mediaType,
+                    grandparentRatingKey: media.mediaType == "show" ? media.id : nil,
+                    serverViewModel: serverViewModel,
+                    authManager: authManager,
+                    statsViewModel: statsViewModel
+                )) {
                     HStack(spacing: 15) {
                         AsyncImageView(url: media.posterURL, contentMode: .fill)
                             .frame(width: 60, height: 90)

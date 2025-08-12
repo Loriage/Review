@@ -7,7 +7,8 @@ struct ImageSelectorView: View {
     init(ratingKey: String, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: ImageSelectorViewModel(
             ratingKey: ratingKey,
-            plexService: PlexAPIService(),
+            metadataService: PlexMetadataService(),
+            actionsService: PlexActionsService(),
             serverViewModel: serverViewModel,
             authManager: authManager
         ))

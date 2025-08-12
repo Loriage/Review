@@ -9,13 +9,13 @@ class MediaDetailsViewModel: ObservableObject {
     @Published var isLoading = true
     
     private let ratingKey: String
-    private let plexService: PlexAPIService
+    private let metadataService: PlexMetadataService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
 
-    init(ratingKey: String, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+    init(ratingKey: String, metadataService: PlexMetadataService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         self.ratingKey = ratingKey
-        self.plexService = plexService
+        self.metadataService = metadataService
         self.serverViewModel = serverViewModel
         self.authManager = authManager
     }
@@ -28,7 +28,7 @@ class MediaDetailsViewModel: ObservableObject {
         
         isLoading = true
         do {
-            let details = try await plexService.fetchFullMediaDetails(for: ratingKey, serverURL: serverDetails.url, token: serverDetails.token)
+            let details = try await metadataService.fetchFullMediaDetails(for: ratingKey, serverURL: serverDetails.url, token: serverDetails.token)
 
             if let media = details?.media.first {
                 self.mediaDetails = details
@@ -38,7 +38,6 @@ class MediaDetailsViewModel: ObservableObject {
                 self.audioStream = media.parts.first?.streams?.first(where: { $0.streamType == 2 })
             }
         } catch {
-            print("Erreur lors du chargement des détails du média: \(error)")
         }
         isLoading = false
     }

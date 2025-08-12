@@ -6,13 +6,13 @@ class ActivityViewModel: ObservableObject {
     @Published var state: ViewState = .noServerSelected
     
     private let serverViewModel: ServerViewModel
-    private let plexService: PlexAPIService
+    private let activityService: PlexActivityService
     private let geolocationService = GeolocationService()
     private var cancellables = Set<AnyCancellable>()
     
-    init(serverViewModel: ServerViewModel, plexService: PlexAPIService = PlexAPIService()) {
+    init(serverViewModel: ServerViewModel, activityService: PlexActivityService = PlexActivityService()) {
         self.serverViewModel = serverViewModel
-        self.plexService = plexService
+        self.activityService = activityService
         setupBindings()
     }
     
@@ -40,7 +40,7 @@ class ActivityViewModel: ObservableObject {
         let resourceToken = server.accessToken ?? token
         
         do {
-            var sessions = try await plexService.fetchCurrentActivity(serverURL: serverURL, token: resourceToken)
+            var sessions = try await activityService.fetchCurrentActivity(serverURL: serverURL, token: resourceToken)
             
             for i in sessions.indices {
                 let session = sessions[i]

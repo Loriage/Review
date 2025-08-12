@@ -14,7 +14,7 @@ class UserHistoryViewModel: ObservableObject {
     let statsViewModel: StatsViewModel
     let serverViewModel: ServerViewModel
     let authManager: PlexAuthManager
-    private let plexService: PlexAPIService
+    private let userService: PlexUserService
 
     init(userID: Int, userName: String, statsViewModel: StatsViewModel, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         self.userID = userID
@@ -22,7 +22,7 @@ class UserHistoryViewModel: ObservableObject {
         self.statsViewModel = statsViewModel
         self.serverViewModel = serverViewModel
         self.authManager = authManager
-        self.plexService = PlexAPIService()
+        self.userService = PlexUserService()
     }
 
     func loadInitialData() async {
@@ -47,7 +47,7 @@ class UserHistoryViewModel: ObservableObject {
         }
         
         do {
-            let homeUsers = try await plexService.fetchHomeUsers(token: token)
+            let homeUsers = try await userService.fetchHomeUsers(token: token)
             var foundUser: PlexUser?
 
             foundUser = homeUsers.first { $0.id == self.userID }
@@ -64,7 +64,6 @@ class UserHistoryViewModel: ObservableObject {
             }
         } catch {
             self.userProfileImageURL = nil
-            print("Erreur lors de la récupération des Home Users: \(error)")
         }
     }
 

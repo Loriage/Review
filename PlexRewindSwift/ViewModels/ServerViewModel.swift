@@ -10,13 +10,15 @@ class ServerViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    private let plexService: PlexAPIService
+    private let libraryService: PlexLibraryService
+    private let userService: PlexUserService
     let authManager: PlexAuthManager
     private var cancellables = Set<AnyCancellable>()
 
-    init(authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
+    init(authManager: PlexAuthManager, libraryService: PlexLibraryService = PlexLibraryService(), userService: PlexUserService = PlexUserService()) {
         self.authManager = authManager
-        self.plexService = plexService
+        self.libraryService = libraryService
+        self.userService = userService
         
         $selectedServerID
             .sink { [weak self] serverID in
@@ -39,7 +41,7 @@ class ServerViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            let servers = try await plexService.fetchServers(token: token)
+            let servers = try await libraryService.fetchServers(token: token)
             self.availableServers = servers
             if let server = servers.first, servers.count == 1 {
                 self.selectedServerID = server.id
@@ -63,7 +65,7 @@ class ServerViewModel: ObservableObject {
             let serverURL = connection.uri
             let resourceToken = server.accessToken ?? token
 
-            let usersFromServer = try await plexService.fetchUsers(serverURL: serverURL, token: resourceToken)
+            let usersFromServer = try await userService.fetchUsers(serverURL: serverURL, token: resourceToken)
             self.availableUsers = usersFromServer.filter { !$0.title.isEmpty }
         } catch {
             errorMessage = "Impossible de récupérer les utilisateurs du serveur. \(error.localizedDescription)"
@@ -74,7 +76,7 @@ class ServerViewModel: ObservableObject {
         guard let token = authManager.getPlexAuthToken(), !self.availableUsers.isEmpty else { return }
         
         do {
-            let homeUsers = try await plexService.fetchHomeUsers(token: token)
+            let homeUsers = try await userService.fetchHomeUsers(token: token)
             let avatarDict = Dictionary(uniqueKeysWithValues: homeUsers.map { ($0.id, $0.thumb) })
             
             var updatedUsers: [PlexUser] = []
@@ -88,7 +90,6 @@ class ServerViewModel: ObservableObject {
             
             self.availableUsers = updatedUsers
         } catch {
-            print("N'a pas pu récupérer les avatars du foyer Plex: \(error.localizedDescription)")
         }
     }
 }

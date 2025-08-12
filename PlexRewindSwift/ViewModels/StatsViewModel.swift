@@ -19,13 +19,15 @@ class StatsViewModel: ObservableObject {
     @Published var selectedMediaDetail: MediaDetail?
     
     private let serverViewModel: ServerViewModel
-    private let plexService: PlexAPIService
+    private let activityService: PlexActivityService
+    private let metadataService: PlexMetadataService
     private var fullHistory: [WatchSession] = []
     private var lastGeneratedHistory: [WatchSession] = []
 
-    init(serverViewModel: ServerViewModel, plexService: PlexAPIService = PlexAPIService()) {
+    init(serverViewModel: ServerViewModel, activityService: PlexActivityService = PlexActivityService(), metadataService: PlexMetadataService = PlexMetadataService()) {
         self.serverViewModel = serverViewModel
-        self.plexService = plexService
+        self.activityService = activityService
+        self.metadataService = metadataService
     }
     
     func updateFormattedSyncDate() {
@@ -54,7 +56,7 @@ class StatsViewModel: ObservableObject {
             let serverURL = connection.uri
             let resourceToken = server.accessToken ?? token
             
-            self.fullHistory = try await plexService.fetchWatchHistory(serverURL: serverURL, token: resourceToken, year: 0, userID: nil) { count in
+            self.fullHistory = try await activityService.fetchWatchHistory(serverURL: serverURL, token: resourceToken, year: 0, userID: nil) { count in
                 await MainActor.run {
                     self.loadingStatusMessage = "Analyse de \(count) visionnages..."
                 }
@@ -131,7 +133,7 @@ class StatsViewModel: ObservableObject {
             for session in historyForYear {
                 group.addTask {
                     guard let ratingKey = session.ratingKey else { return nil }
-                    let duration = try? await self.plexService.fetchDuration(
+                    let duration = try? await self.metadataService.fetchDuration(
                         for: ratingKey,
                         serverURL: serverURL,
                         token: resourceToken
@@ -212,7 +214,7 @@ class StatsViewModel: ObservableObject {
         }
         
         if let finalRatingKey = grandparentRatingKey ?? ratingKeyForSummary {
-            let details = try? await plexService.fetchMediaDetails(
+            let details = try? await metadataService.fetchMediaDetails(
                 for: finalRatingKey,
                 serverURL: serverURL,
                 token: resourceToken
@@ -265,7 +267,7 @@ class StatsViewModel: ObservableObject {
             return
         }
         
-        let details = try? await plexService.fetchMediaDetails(
+        let details = try? await metadataService.fetchMediaDetails(
             for: ratingKey,
             serverURL: serverURL,
             token: resourceToken

@@ -7,7 +7,8 @@ struct FixMatchView: View {
     init(ratingKey: String, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: FixMatchViewModel(
             ratingKey: ratingKey,
-            plexService: PlexAPIService(),
+            metadataService: PlexMetadataService(),
+            actionsService: PlexActionsService(),
             serverViewModel: serverViewModel,
             authManager: authManager
         ))

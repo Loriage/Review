@@ -9,7 +9,7 @@ struct MediaDetailsView: View {
     init(ratingKey: String, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: MediaDetailsViewModel(
             ratingKey: ratingKey,
-            plexService: PlexAPIService(),
+            metadataService: PlexMetadataService(),
             serverViewModel: serverViewModel,
             authManager: authManager
         ))

@@ -6,15 +6,17 @@ class ImageSelectorViewModel: ObservableObject {
     @Published var isLoading = true
     @Published var hudMessage: HUDMessage?
 
-    private let plexService: PlexAPIService
+    private let metadataService: PlexMetadataService
+    private let actionsService: PlexActionsService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
     private let mediaRatingKey: String
     private var hudDismissTask: Task<Void, Never>?
 
-    init(ratingKey: String, plexService: PlexAPIService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
+    init(ratingKey: String, metadataService: PlexMetadataService, actionsService: PlexActionsService, serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         self.mediaRatingKey = ratingKey
-        self.plexService = plexService
+        self.metadataService = metadataService
+        self.actionsService = actionsService
         self.serverViewModel = serverViewModel
         self.authManager = authManager
     }
@@ -62,14 +64,13 @@ class ImageSelectorViewModel: ObservableObject {
         isLoading = true
         
         do {
-            let fetchedPosters = try await plexService.fetchArtworks(for: mediaRatingKey, serverURL: details.url, token: details.token)
+            let fetchedPosters = try await metadataService.fetchArtworks(for: mediaRatingKey, serverURL: details.url, token: details.token)
 
             self.posters = fetchedPosters
             if self.posters.isEmpty {
                 showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Aucune image trouvée.", maxWidth: 320))
             }
         } catch {
-            print("Erreur lors du chargement des affiches: \(error.localizedDescription)")
             showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Erreur de chargement.", maxWidth: 320))
         }
         
@@ -90,7 +91,7 @@ class ImageSelectorViewModel: ObservableObject {
         hudMessage = HUDMessage(iconName: "photo", text: "Modification...")
         
         do {
-            try await plexService.setArtwork(for: mediaRatingKey, artworkKey: artworkIdentifier, serverURL: details.url, token: details.token)
+            try await actionsService.setArtwork(for: mediaRatingKey, artworkKey: artworkIdentifier, serverURL: details.url, token: details.token)
 
             var updatedPosters = self.posters
 

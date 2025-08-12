@@ -15,7 +15,7 @@ class MediaHistoryViewModel: ObservableObject {
     private let serverViewModel: ServerViewModel
     private let statsViewModel: StatsViewModel
     private let authManager: PlexAuthManager
-    private let plexService: PlexAPIService
+    private let metadataService: PlexMetadataService
     
     init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, statsViewModel: StatsViewModel, authManager: PlexAuthManager) {
         self.ratingKey = ratingKey
@@ -24,7 +24,7 @@ class MediaHistoryViewModel: ObservableObject {
         self.serverViewModel = serverViewModel
         self.statsViewModel = statsViewModel
         self.authManager = authManager
-        self.plexService = PlexAPIService()
+        self.metadataService = PlexMetadataService()
     }
 
     var displayTitle: String {
@@ -77,9 +77,8 @@ class MediaHistoryViewModel: ObservableObject {
         let keyForDetails = (mediaType == "episode" || mediaType == "show") ? (grandparentRatingKey ?? ratingKey) : ratingKey
         
         do {
-            self.mediaDetails = try await plexService.fetchMediaDetails(for: keyForDetails, serverURL: connection.uri, token: server.accessToken ?? token)
+            self.mediaDetails = try await metadataService.fetchMediaDetails(for: keyForDetails, serverURL: connection.uri, token: server.accessToken ?? token)
         } catch {
-            print("Erreur lors de la récupération des détails du média : \(error)")
         }
     }
 

@@ -49,12 +49,14 @@ class TopStatsViewModel: ObservableObject {
     
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
-    private let plexService: PlexAPIService
+    private let activityService: PlexActivityService
+    private let metadataService: PlexMetadataService
 
-    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
+    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, activityService: PlexActivityService = PlexActivityService(), metadataService: PlexMetadataService = PlexMetadataService()) {
         self.serverViewModel = serverViewModel
         self.authManager = authManager
-        self.plexService = plexService
+        self.activityService = activityService
+        self.metadataService = metadataService
     }
 
     func fetchTopMedia(forceRefresh: Bool = false) async {
@@ -82,7 +84,7 @@ class TopStatsViewModel: ObservableObject {
 
         self.loadingMessage = "Analyse de l'historique du serveur..."
         do {
-            let fullHistory = try await plexService.fetchWatchHistory(serverURL: serverURL, token: token, year: 0, userID: nil) { count in
+            let fullHistory = try await activityService.fetchWatchHistory(serverURL: serverURL, token: token, year: 0, userID: nil) { count in
                 await MainActor.run { self.loadingMessage = "Analyse de \(count) visionnages..." }
             }
             let historyWithDurations = await fetchDurationsIfNeeded(for: fullHistory, serverURL: serverURL, token: resourceToken)
@@ -307,7 +309,7 @@ class TopStatsViewModel: ObservableObject {
             for session in sessionsNeedingDuration {
                 group.addTask {
                     guard let ratingKey = session.ratingKey else { return session }
-                    let duration = try? await self.plexService.fetchDuration(for: ratingKey, serverURL: serverURL, token: token)
+                    let duration = try? await self.metadataService.fetchDuration(for: ratingKey, serverURL: serverURL, token: token)
                     var sessionWithDuration = session
                     sessionWithDuration.duration = duration
                     return sessionWithDuration
@@ -340,110 +342,5 @@ class TopStatsViewModel: ObservableObject {
             return
         }
         self.errorMessage = "Erreur (\(context)): \(error.localizedDescription)"
-    }
-
-    private func fetchServerWideTopMedia(serverURL: String, token: String) async {
-        self.loadingMessage = "Analyse de l'historique du serveur..."
-        do {
-            let fullHistory = try await plexService.fetchWatchHistory(serverURL: serverURL, token: token, year: 0, userID: nil) { count in
-                await MainActor.run { self.loadingMessage = "Analyse de \(count) visionnages..." }
-            }
-            
-            let filteredHistory = filterHistory(fullHistory, by: selectedTimeFilter)
-            
-            let historyWithDurations = await fetchDurationsIfNeeded(for: filteredHistory, serverURL: serverURL, token: token)
-            
-            await MainActor.run { self.loadingMessage = "Calcul des classements..." }
-            
-            let historyMovieGroups = Dictionary(grouping: historyWithDurations.filter { $0.type == "movie" }, by: { $0.ratingKey ?? "" })
-            let historyShowGroups = Dictionary(grouping: historyWithDurations.filter { $0.type == "episode" }, by: { $0.computedGrandparentRatingKey ?? "" })
-            
-            self.unsortedMovies = historyMovieGroups.compactMap { (ratingKey, sessions) in
-                guard !ratingKey.isEmpty, let firstSession = sessions.first else { return nil }
-                let totalDuration = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
-                return TopMedia(
-                    id: ratingKey,
-                    title: firstSession.title ?? "Titre inconnu",
-                    mediaType: "movie",
-                    viewCount: sessions.count,
-                    totalWatchTimeSeconds: totalDuration,
-                    lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.thumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
-                    sessions: sessions
-                )
-            }
-            
-            self.unsortedShows = historyShowGroups.compactMap { (ratingKey, sessions) in
-                guard !ratingKey.isEmpty, let firstSession = sessions.first else { return nil }
-                let totalDuration = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
-                return TopMedia(
-                    id: ratingKey,
-                    title: firstSession.grandparentTitle ?? "Série inconnue",
-                    mediaType: "show",
-                    viewCount: sessions.count,
-                    totalWatchTimeSeconds: totalDuration,
-                    lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.grandparentThumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
-                    sessions: sessions
-                )
-            }
-
-        } catch {
-            handleError(error, context: "Top Média Serveur")
-        }
-    }
-
-    private func fetchTopMediaForUser(userID: Int, serverURL: String, token: String) async {
-        self.loadingMessage = "Analyse de l'historique utilisateur..."
-        do {
-            let history = try await plexService.fetchWatchHistory(serverURL: serverURL, token: token, year: 0, userID: userID) { count in
-                await MainActor.run { self.loadingMessage = "Analyse de \(count) visionnages..." }
-            }
-
-            let filteredHistory = filterHistory(history, by: selectedTimeFilter)
-            
-            let historyWithDurations = await fetchDurationsIfNeeded(for: filteredHistory, serverURL: serverURL, token: token)
-
-            await MainActor.run { self.loadingMessage = "Calcul des classements..." }
-
-            let movies = historyWithDurations.filter { $0.type == "movie" }
-            let episodes = historyWithDurations.filter { $0.type == "episode" }
-
-            let movieGroups = Dictionary(grouping: movies, by: { $0.ratingKey ?? "" })
-            let showGroups = Dictionary(grouping: episodes, by: { $0.computedGrandparentRatingKey ?? "" })
-
-            self.unsortedMovies = movieGroups.compactMap { (ratingKey, sessions) in
-                guard !ratingKey.isEmpty, let firstSession = sessions.first else { return nil }
-                let totalDuration = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
-                return TopMedia(
-                    id: ratingKey,
-                    title: firstSession.title ?? "Titre inconnu",
-                    mediaType: "movie",
-                    viewCount: sessions.count,
-                    totalWatchTimeSeconds: totalDuration,
-                    lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.thumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
-                    sessions: sessions
-                )
-            }
-
-            self.unsortedShows = showGroups.compactMap { (ratingKey, sessions) in
-                guard !ratingKey.isEmpty, let firstSession = sessions.first else { return nil }
-                let totalDuration = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
-                return TopMedia(
-                    id: ratingKey,
-                    title: firstSession.grandparentTitle ?? "Série inconnue",
-                    mediaType: "show",
-                    viewCount: sessions.count,
-                    totalWatchTimeSeconds: totalDuration,
-                    lastViewedAt: sessions.max(by: { ($0.viewedAt ?? 0) < ($1.viewedAt ?? 0) })?.viewedAt.map { Date(timeIntervalSince1970: $0) },
-                    posterURL: firstSession.grandparentThumb.flatMap { URL(string: "\(serverURL)\($0)?X-Plex-Token=\(token)") },
-                    sessions: sessions
-                )
-            }
-
-        } catch {
-            handleError(error, context: "Historique Utilisateur")
-        }
     }
 }

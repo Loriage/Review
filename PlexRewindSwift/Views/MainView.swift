@@ -25,12 +25,18 @@ struct AuthenticatedContentView: View {
 
     init(authManager: PlexAuthManager) {
         self.authManager = authManager
-        let serverVM = ServerViewModel(authManager: authManager)
+        
+        let libraryService = PlexLibraryService()
+        let userService = PlexUserService()
+        let activityService = PlexActivityService()
+        let metadataService = PlexMetadataService()
+
+        let serverVM = ServerViewModel(authManager: authManager, libraryService: libraryService, userService: userService)
         _serverViewModel = StateObject(wrappedValue: serverVM)
         
-        _activityViewModel = StateObject(wrappedValue: ActivityViewModel(serverViewModel: serverVM))
-        _statsViewModel = StateObject(wrappedValue: StatsViewModel(serverViewModel: serverVM))
-        _topStatsViewModel = StateObject(wrappedValue: TopStatsViewModel(serverViewModel: serverVM, authManager: authManager))
+        _activityViewModel = StateObject(wrappedValue: ActivityViewModel(serverViewModel: serverVM, activityService: activityService))
+        _statsViewModel = StateObject(wrappedValue: StatsViewModel(serverViewModel: serverVM, activityService: activityService, metadataService: metadataService))
+        _topStatsViewModel = StateObject(wrappedValue: TopStatsViewModel(serverViewModel: serverVM, authManager: authManager, activityService: activityService, metadataService: metadataService))
     }
 
     var body: some View {

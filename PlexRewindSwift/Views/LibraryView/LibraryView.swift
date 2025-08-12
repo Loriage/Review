@@ -8,7 +8,8 @@ struct LibraryView: View {
     init(serverViewModel: ServerViewModel, authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: LibraryViewModel(
             serverViewModel: serverViewModel,
-            authManager: authManager
+            authManager: authManager,
+            libraryService: PlexLibraryService()
         ))
     }
     

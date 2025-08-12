@@ -2,28 +2,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-struct LibraryPreferences: Equatable {
-    var visibility: LibraryVisibility
-    var enableTrailers: Bool
-    var countryCode: String
-    var useOriginalTitles: Bool
-    var localizedArtwork: Bool
-    var useLocalAssets: Bool
-    var preferLocalMetadata: Bool
-    var findExtras: Bool
-    var collectionMode: CollectionMode
-    var skipNonTrailerExtras: Bool
-    var useRedbandTrailers: Bool
-    var includeExtrasWithLocalizedSubtitles: Bool
-    var includeAdultContent: Bool
-    var autoCollectionThreshold: String
-    var ratingsSource: String
-    var enableBIFGeneration: Bool
-    var enableCreditsMarkerGeneration: Bool
-    var enableVoiceActivityGeneration: Bool
-    var adDetection: String
-}
-
 @MainActor
 class PreferenceItemViewModel: ObservableObject, Identifiable {
     let id: String
@@ -77,7 +55,7 @@ class LibrarySettingsViewModel: ObservableObject {
     @Published var preferenceItems: [PreferenceItemViewModel] = []
     @Published var hudMessage: HUDMessage?
     
-    private let plexService: PlexAPIService
+    private let actionsService: PlexActionsService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
     private var hudDismissTask: Task<Void, Never>?
@@ -87,11 +65,11 @@ class LibrarySettingsViewModel: ObservableObject {
         return preferenceItems.contains { $0.hasChanged }
     }
 
-    init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
+    init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, actionsService: PlexActionsService = PlexActionsService()) {
         self.library = library
         self.serverViewModel = serverViewModel
         self.authManager = authManager
-        self.plexService = plexService
+        self.actionsService = actionsService
         
         self.preferenceItems = (library.library.preferences?.settings ?? [])
             .map { PreferenceItemViewModel(setting: $0) }
@@ -119,7 +97,7 @@ class LibrarySettingsViewModel: ObservableObject {
         guard !preferencesToUpdate.isEmpty else { return }
 
         do {
-            try await plexService.updateLibraryPreferences(for: library.library.key, preferences: preferencesToUpdate, serverURL: details.url, token: details.token)
+            try await actionsService.updateLibraryPreferences(for: library.library.key, preferences: preferencesToUpdate, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Paramètres mis à jour !"))
 
             self.preferenceItems.forEach { $0.reset() }

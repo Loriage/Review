@@ -27,7 +27,7 @@ struct MediaHistoryView: View {
 
         _actionsViewModel = StateObject(wrappedValue: MediaActionsViewModel(
             ratingKey: grandparentRatingKey ?? ratingKey,
-            plexService: PlexAPIService(),
+            actionsService: PlexActionsService(),
             serverViewModel: serverViewModel,
             authManager: authManager
         ))

@@ -16,7 +16,8 @@ class LibraryDetailViewModel: ObservableObject {
     private var totalMediaCount: Int? = nil
     private let pageSize = 30
 
-    private let plexService: PlexAPIService
+    private let libraryService: PlexLibraryService
+    private let actionsService: PlexActionsService
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
     private var cancellables = Set<AnyCancellable>()
@@ -28,11 +29,12 @@ class LibraryDetailViewModel: ObservableObject {
         case error(String)
     }
 
-    init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, plexService: PlexAPIService = PlexAPIService()) {
+    init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, libraryService: PlexLibraryService = PlexLibraryService(), actionsService: PlexActionsService = PlexActionsService()) {
         self.library = library
         self.serverViewModel = serverViewModel
         self.authManager = authManager
-        self.plexService = plexService
+        self.libraryService = libraryService
+        self.actionsService = actionsService
     }
 
     func loadInitialContent() async {
@@ -61,7 +63,7 @@ class LibraryDetailViewModel: ObservableObject {
         do {
             let mediaType = library.library.type == "movie" ? 1 : (library.library.type == "show" ? 2 : 4)
 
-            let allMedia = try await plexService.fetchAllMediaInSection(
+            let allMedia = try await libraryService.fetchAllMediaInSection(
                 serverURL: serverDetails.url,
                 token: serverDetails.token,
                 libraryKey: library.library.key,
@@ -84,7 +86,6 @@ class LibraryDetailViewModel: ObservableObject {
             self.chartData = dataPoints
             
         } catch {
-            print("Erreur lors de la génération des données du graphique: \(error.localizedDescription)")
         }
     }
 
@@ -96,7 +97,7 @@ class LibraryDetailViewModel: ObservableObject {
         
         do {
             let mediaType = library.library.type == "movie" ? 1 : 2
-            let (newMedia, totalCount) = try await plexService.fetchMediaFromSection(
+            let (newMedia, totalCount) = try await libraryService.fetchMediaFromSection(
                 serverURL: serverDetails.url,
                 token: serverDetails.token,
                 libraryKey: library.library.key,
@@ -120,7 +121,7 @@ class LibraryDetailViewModel: ObservableObject {
 
         } catch {
             state = .error("Impossible de charger le contenu: \(error.localizedDescription)")
-            self.canLoadMoreMedia = false 
+            self.canLoadMoreMedia = false
         }
     }
 
@@ -155,11 +156,10 @@ class LibraryDetailViewModel: ObservableObject {
         showHUD(message: HUDMessage(iconName: "waveform.path.ecg", text: "Lancement du scan...", maxWidth: 180))
         
         do {
-            try await plexService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key)
+            try await libraryService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Scan de la bibliothèque démarré.", maxWidth: 180))
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du lancement du scan.", maxWidth: 180))
-            print("Erreur lors du scan de la bibliothèque: \(error.localizedDescription)")
         }
     }
 
@@ -172,11 +172,10 @@ class LibraryDetailViewModel: ObservableObject {
         showHUD(message: HUDMessage(iconName: "arrow.trianglehead.counterclockwise", text: "Lancement de l'actualisation...", maxWidth: 180))
         
         do {
-            try await plexService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key, force: true)
+            try await libraryService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key, force: true)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180))
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180))
-            print("Erreur lors de l'actualisation des métadonnées : \(error.localizedDescription)")
         }
     }
 
@@ -189,11 +188,10 @@ class LibraryDetailViewModel: ObservableObject {
         showHUD(message: HUDMessage(iconName: "wand.and.rays", text: "Lancement de l'analyse...", maxWidth: 180))
         
         do {
-            try await plexService.analyzeLibrarySection(libraryKey: library.library.key, serverURL: details.url, token: details.token)
+            try await actionsService.analyzeLibrarySection(libraryKey: library.library.key, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Analyse de la bibliothèque démarrée.", maxWidth: 180))
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du lancement de l'analyse.", maxWidth: 180))
-            print("Erreur lors de l'analyse de la bibliothèque : \(error.localizedDescription)")
         }
     }
 
@@ -206,11 +204,10 @@ class LibraryDetailViewModel: ObservableObject {
         showHUD(message: HUDMessage(iconName: "trash", text: "Lancement du nettoyage...", maxWidth: 180))
         
         do {
-            try await plexService.emptyLibraryTrash(libraryKey: library.library.key, serverURL: details.url, token: details.token)
+            try await actionsService.emptyLibraryTrash(libraryKey: library.library.key, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "Corbeille de la bibliothèque vidée."))
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du nettoyage de la corbeille."))
-            print("Erreur lors du vidage de la corbeille : \(error.localizedDescription)")
         }
     }
 
