@@ -314,11 +314,11 @@ class StatsViewModel: ObservableObject {
     private func calculateStats(from history: [WatchSession], serverURL: String, token: String) {
         let movies = history.filter { $0.type == "movie" }
         let episodes = history.filter { $0.type == "episode" }
-
+        
         let totalTimeInSeconds = history.reduce(0) {
             $0 + (($1.duration ?? 0) / 1000)
         }
-
+        
         let moviesGrouped = Dictionary(grouping: movies, by: { $0.title ?? "Film inconnu" })
         let sortedMovies = moviesGrouped.sorted {
             switch selectedSortOption {
@@ -330,7 +330,7 @@ class StatsViewModel: ObservableObject {
                 return duration1 > duration2
             }
         }
-
+        
         let rankedMovies = sortedMovies.map { (title, sessions) -> RankedMedia in
             let representativeMovie = sessions.first
             let posterPath = representativeMovie?.thumb
@@ -339,8 +339,8 @@ class StatsViewModel: ObservableObject {
             }
             let subtitle = "Regardé \(sessions.count) fois"
             let movieTotalSeconds = sessions.reduce(0) { $0 + (($1.duration ?? 0) / 1000) }
-            let secondarySubtitle = formatDuration(seconds: movieTotalSeconds)
-
+            let secondarySubtitle = TimeFormatter.formatSeconds(movieTotalSeconds) // <-- Changement ici
+            
             return RankedMedia(
                 id: representativeMovie?.ratingKey ?? title,
                 title: title,
@@ -349,7 +349,7 @@ class StatsViewModel: ObservableObject {
                 posterURL: posterURL
             )
         }
-
+        
         let showsGrouped = Dictionary(grouping: episodes, by: { $0.showTitle })
         let sortedShows = showsGrouped.sorted {
             switch selectedSortOption {
@@ -361,7 +361,7 @@ class StatsViewModel: ObservableObject {
                 return duration1 > duration2
             }
         }
-
+        
         let rankedShows = sortedShows.map { (title, sessions) -> RankedMedia in
             let representativeShow = sessions.first
             let posterPath = representativeShow?.grandparentThumb
@@ -373,7 +373,7 @@ class StatsViewModel: ObservableObject {
             let showTotalSeconds = sessions.reduce(0) {
                 $0 + (($1.duration ?? 0) / 1000)
             }
-            let secondarySubtitle = formatDuration(seconds: showTotalSeconds)
+            let secondarySubtitle = TimeFormatter.formatSeconds(showTotalSeconds) // <-- Changement ici
             
             return RankedMedia(
                 id: representativeShow?.grandparentRatingKey ?? title,
@@ -383,7 +383,7 @@ class StatsViewModel: ObservableObject {
                 posterURL: posterURL
             )
         }
-
+        
         self.userStats = UserStats(
             totalWatchTimeMinutes: totalTimeInSeconds / 60,
             totalMovies: movies.count,

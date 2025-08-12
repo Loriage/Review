@@ -17,7 +17,6 @@ struct ActivityView: View {
                             VStack(spacing: 15) {
                                 ForEach(sessions) { session in
                                     ActivityRowView(session: session)
-                                        .environmentObject(serverViewModel)
                                 }
                             }
                             .padding()
@@ -62,80 +61,12 @@ struct ActivityView: View {
 }
 
 struct ActivityRowView: View {
-    @EnvironmentObject var serverViewModel: ServerViewModel
-    @EnvironmentObject var authManager: PlexAuthManager
-    @EnvironmentObject var statsViewModel: StatsViewModel
     let session: PlexActivitySession
-
     @State private var dominantColor: Color = Color(.systemGray4)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            
-            NavigationLink(destination: MediaHistoryView(
-                ratingKey: session.ratingKey,
-                mediaType: session.type,
-                grandparentRatingKey: session.grandparentRatingKey,
-                serverViewModel: serverViewModel,
-                authManager: authManager,
-                statsViewModel: statsViewModel
-            )) {
-                HStack(spacing: 15) {
-                    AsyncImageView(url: session.posterURL, contentMode: .fill) { color in
-                        self.dominantColor = color
-                    }
-                    .frame(width: 60, height: 90)
-                    .cornerRadius(8)
-                    .overlay(
-                        ZStack {
-                            if session.player.state == "paused" {
-                                Rectangle()
-                                    .fill(.black.opacity(0.5))
-                                
-                                Image(systemName: "pause.fill")
-                                    .font(.title)
-                                    .foregroundColor(.white)
-                                    .shadow(radius: 5)
-                            }
-                        }
-                        .cornerRadius(8)
-                        .allowsHitTesting(false)
-                    )
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(session.showTitle)
-                            .font(.headline)
-                            .lineLimit(1)
-                        
-                        if session.type == "episode", let seasonNumber = session.parentIndex, let episodeNumber = session.index {
-                            Text(session.title)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .lineLimit(1)
-                            
-                            Text("S\(seasonNumber) - E\(episodeNumber)")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .lineLimit(1)
-                        } else if session.type == "movie", let year = session.year {
-                            Text(String(year))
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        Text(formattedRemainingTime)
-                            .font(.subheadline.monospacedDigit())
-                            .foregroundColor(.secondary)
-                            .padding(.top, 2)
-                    }
-                    
-                    Spacer(minLength: 0)
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+            ActivityHeaderView(session: session, dominantColor: $dominantColor)
             
             ProgressView(value: session.progress)
                 .progressViewStyle(
@@ -145,105 +76,108 @@ struct ActivityRowView: View {
                         height: 5
                     )
                 )
-            
-            NavigationLink(destination: UserHistoryView(
-                userID: Int(session.user.id) ?? 0,
-                userName: session.user.title,
-                statsViewModel: statsViewModel,
-                serverViewModel: serverViewModel,
-                authManager: authManager
-            )) {
-                HStack(spacing: 15) {
-                    AsyncImageView(url: userThumbURL)
-                        .frame(width: 50, height: 50)
-                        .padding(.horizontal, 5)
-                        .clipShape(Circle())
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(session.user.title)
-                            .font(.subheadline.bold())
-                        
-                        Text(streamDescription)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        HStack{
-                            if session.player.local {
-                                Text("Local")
-                            } else if let location = session.location {
-                                Text(location)
-                            } else {
-                                Text("Distant")
-                            }
-                        }
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    }
-                    
-                    Spacer(minLength: 0)
-                    
-                    VStack(alignment: .trailing, spacing: 4) {
-                        if isAudioTranscoding {
-                            BadgeView(text: "AUDIO")
-                        }
-                        if isSoftwareTranscoding {
-                            BadgeView(text: "SW")
-                        }
-                        if isHardwareTranscoding {
-                            BadgeView(text: "HW")
-                        }
-                    }
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+
+            ActivityFooterView(session: session)
         }
-        .background(
-            .thinMaterial,
-            in: RoundedRectangle(cornerRadius: 20)
-        )
+        .background(.thinMaterial)
         .background(
             MeshGradient(
-                width: 3,
-                height: 3,
-                points: [
-                    [0, 0], [0.5, 0], [1, 0],
-                    [0, 0.5], [0.5, 0.5], [1, 0.5],
-                    [0, 1], [0.5, 1], [1, 1]
-                ],
-                colors: [
-                    .clear, dominantColor.opacity(0.3), .clear,
-                    Color.accentColor.opacity(0.2), dominantColor.opacity(0.3), Color.accentColor.opacity(0.2),
-                    .clear, .clear, dominantColor.opacity(0.2)
-                ]
+                width: 3, height: 3,
+                points: [ [0, 0], [0.5, 0], [1, 0], [0, 0.5], [0.5, 0.5], [1, 0.5], [0, 1], [0.5, 1], [1, 1] ],
+                colors: [ .clear, dominantColor.opacity(0.3), .clear, Color.accentColor.opacity(0.2), dominantColor.opacity(0.3), Color.accentColor.opacity(0.2), .clear, .clear, dominantColor.opacity(0.2) ]
             )
         )
         .cornerRadius(20)
     }
+}
 
-    private var isHardwareTranscoding: Bool {
-        guard let transcode = session.transcodeSession, transcode.videoDecision == "transcode" else { return false }
-        return transcode.transcodeHwRequested
-    }
-        
-    private var isSoftwareTranscoding: Bool {
-        guard let transcode = session.transcodeSession, transcode.videoDecision == "transcode" else { return false }
-        return !transcode.transcodeHwRequested
-    }
+private struct ActivityHeaderView: View {
+    @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
+    @EnvironmentObject var statsViewModel: StatsViewModel
+    
+    let session: PlexActivitySession
+    @Binding var dominantColor: Color
 
-    private var isAudioTranscoding: Bool {
-        guard let transcode = session.transcodeSession else { return false }
-        return transcode.audioDecision == "transcode"
-    }
-
-    private var serverName: String {
-        if let serverID = serverViewModel.selectedServerID,
-           let server = serverViewModel.availableServers.first(where: { $0.id == serverID }) {
-            return server.name
+    var body: some View {
+        NavigationLink(destination: MediaHistoryView(
+            ratingKey: session.ratingKey,
+            mediaType: session.type,
+            grandparentRatingKey: session.grandparentRatingKey,
+            serverViewModel: serverViewModel,
+            authManager: authManager,
+            statsViewModel: statsViewModel
+        )) {
+            HStack(spacing: 15) {
+                AsyncImageView(url: session.posterURL, contentMode: .fill) { color in
+                    self.dominantColor = color
+                }
+                .frame(width: 60, height: 90)
+                .cornerRadius(8)
+                .overlay(PosterOverlay(session: session))
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(session.showTitle)
+                        .font(.headline)
+                        .lineLimit(1)
+                    
+                    if session.type == "episode", let season = session.parentIndex, let episode = session.index {
+                        Text(session.title)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                        Text("S\(season) - E\(episode)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    } else if session.type == "movie", let year = session.year {
+                        Text(String(year))
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Text(TimeFormatter.formatRemainingSeconds(session.remainingTimeInSeconds))
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundColor(.secondary)
+                        .padding(.top, 2)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding()
         }
-        return "Serveur inconnu"
+        .buttonStyle(.plain)
+    }
+}
+
+private struct PosterOverlay: View {
+    let session: PlexActivitySession
+
+    var body: some View {
+        ZStack {
+            if session.player.state == "paused" {
+                Rectangle()
+                    .fill(.black.opacity(0.5))
+                Image(systemName: "pause.fill")
+                    .font(.title)
+                    .foregroundColor(.white)
+                    .shadow(radius: 5)
+            }
+        }
+        .cornerRadius(8)
+        .allowsHitTesting(false)
+    }
+}
+
+private struct ActivityFooterView: View {
+    @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
+    @EnvironmentObject var statsViewModel: StatsViewModel
+    
+    let session: PlexActivitySession
+
+    private var streamDescription: String {
+        let serverName = serverViewModel.availableServers.first { $0.id == serverViewModel.selectedServerID }?.name ?? "Serveur inconnu"
+        return "\(serverName) → \(session.player.product) (\(session.player.platform))"
     }
 
     private var userThumbURL: URL? {
@@ -251,7 +185,7 @@ struct ActivityRowView: View {
               let serverID = serverViewModel.selectedServerID,
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
-              let token = serverViewModel.authManager.getPlexAuthToken(),
+              let token = authManager.getPlexAuthToken(),
               var components = URLComponents(string: "\(connection.uri)/photo/:/transcode")
         else { return nil }
         
@@ -264,12 +198,74 @@ struct ActivityRowView: View {
         ]
         return components.url
     }
-    
-    private var streamDescription: String {
-        return "\(serverName) → \(session.player.product) (\(session.player.platform))"
+
+    var body: some View {
+        NavigationLink(destination: UserHistoryView(
+            userID: Int(session.user.id) ?? 0,
+            userName: session.user.title,
+            statsViewModel: statsViewModel,
+            serverViewModel: serverViewModel,
+            authManager: authManager
+        )) {
+            HStack(spacing: 15) {
+                AsyncImageView(url: userThumbURL)
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(session.user.title)
+                        .font(.subheadline.bold())
+                    
+                    Text(streamDescription)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    HStack {
+                        if session.player.local {
+                            Text("Local")
+                        } else if let location = session.location {
+                            Text(location)
+                        } else {
+                            Text("Distant")
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                }
+                
+                Spacer(minLength: 0)
+                
+                TranscodingBadgesView(transcodeSession: session.transcodeSession)
+            }
+            .padding()
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct TranscodingBadgesView: View {
+    let transcodeSession: PlexActivitySession.TranscodeSession?
+
+    private var isHardwareTranscoding: Bool {
+        guard let transcode = transcodeSession, transcode.videoDecision == "transcode" else { return false }
+        return transcode.transcodeHwRequested
     }
     
-    private var formattedRemainingTime: String {
-        return TimeFormatter.formatRemainingSeconds(session.remainingTimeInSeconds)
+    private var isSoftwareTranscoding: Bool {
+        guard let transcode = transcodeSession, transcode.videoDecision == "transcode" else { return false }
+        return !transcode.transcodeHwRequested
+    }
+
+    private var isAudioTranscoding: Bool {
+        guard let transcode = transcodeSession else { return false }
+        return transcode.audioDecision == "transcode"
+    }
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            if isAudioTranscoding { BadgeView(text: "AUDIO") }
+            if isSoftwareTranscoding { BadgeView(text: "SW") }
+            if isHardwareTranscoding { BadgeView(text: "HW") }
+        }
     }
 }

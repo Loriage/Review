@@ -40,9 +40,7 @@ struct TimeFormatter {
     static func formatTimestamp(_ timestamp: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let formatter = DateFormatter()
-
         formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yMMdd", options: 0, locale: Locale.current)
-
         return formatter.string(from: date)
     }
 }
