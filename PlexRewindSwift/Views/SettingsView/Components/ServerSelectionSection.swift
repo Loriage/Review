@@ -1,6 +1,6 @@
 import SwiftUI
 
-private struct ServerSelectionSection: View {
+struct ServerSelectionSection: View {
     @EnvironmentObject var serverViewModel: ServerViewModel
 
     var body: some View {
