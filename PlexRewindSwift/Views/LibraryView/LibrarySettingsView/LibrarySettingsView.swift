@@ -18,17 +18,17 @@ struct LibrarySettingsView: View {
                     Section(header: Text("Informations de la bibliothèque")) {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 12) {
-                                InfoPill(title: "ID", value: viewModel.library.library.key, customBackgroundColor: Color(.systemBackground))
-                                InfoPill(title: "NOM", value: viewModel.library.library.title, customBackgroundColor: Color(.systemBackground))
+                                InfoPill(title: "ID", value: viewModel.library.library.key)
+                                InfoPill(title: "NOM", value: viewModel.library.library.title)
                             }
                             HStack(spacing: 12) {
-                                InfoPill(title: "TYPE", value: viewModel.library.library.type.capitalized, customBackgroundColor: Color(.systemBackground))
-                                InfoPill(title: "LANGUE", value: viewModel.library.library.language, customBackgroundColor: Color(.systemBackground))
+                                InfoPill(title: "TYPE", value: viewModel.library.library.type.capitalized)
+                                InfoPill(title: "LANGUE", value: viewModel.library.library.language)
                             }
 
                             ForEach(viewModel.library.library.locations) { location in
                                 HStack(spacing: 10) {
-                                    InfoPill(title: "CHEMIN", value: location.path, customBackgroundColor: Color(.systemBackground))
+                                    InfoPill(title: "CHEMIN", value: location.path)
                                     Button(action: {
                                         UIPasteboard.general.string = location.path
                                         withAnimation {

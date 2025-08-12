@@ -4,6 +4,9 @@ struct InfoPill: View {
     let title: String
     let value: String
     var customBackgroundColor: Color? = nil
+    var customBackgroundMaterial: Material? = nil
+
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         VStack {
@@ -15,19 +18,30 @@ struct InfoPill: View {
                     Text(value)
                         .font(.headline.weight(.semibold))
                 }
-                
+
                 Spacer()
             }
         }
         .padding()
         .frame(maxHeight: .infinity)
-        .background{
-            if let color = customBackgroundColor {
+        .background {
+            if let material = customBackgroundMaterial {
+                Rectangle().fill(material)
+            } else if let color = customBackgroundColor {
                 Rectangle().fill(color)
             } else {
-                Rectangle().fill(Material.thin)
+                Rectangle().fill(defaultBackgroundColor)
             }
         }
         .cornerRadius(12)
+    }
+
+    private var defaultBackgroundColor: Color {
+        switch colorScheme {
+        case .dark:
+            return Color(.secondarySystemBackground)
+        default:
+            return .white
+        }
     }
 }

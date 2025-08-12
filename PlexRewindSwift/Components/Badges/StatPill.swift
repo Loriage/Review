@@ -1,11 +1,13 @@
 import SwiftUI
 
-struct StatPill: View, Equatable {
+struct StatPill: View {
     let title: String
     let value: String
     let icon: String
     let color: Color
-    
+
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
@@ -25,7 +27,18 @@ struct StatPill: View, Equatable {
         }
         .padding(.vertical)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
+        .background {
+            Rectangle().fill(defaultBackgroundColor)
+        }
         .cornerRadius(12)
+    }
+
+    private var defaultBackgroundColor: Color {
+        switch colorScheme {
+        case .dark:
+            return Color(.secondarySystemBackground)
+        default:
+            return .white
+        }
     }
 }
