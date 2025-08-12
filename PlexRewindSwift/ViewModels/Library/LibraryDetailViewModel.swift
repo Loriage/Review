@@ -18,8 +18,10 @@ class LibraryDetailViewModel: ObservableObject {
 
     private let libraryService: PlexLibraryService
     private let actionsService: PlexActionsService
-    private let serverViewModel: ServerViewModel
-    private let authManager: PlexAuthManager
+    let serverViewModel: ServerViewModel
+    let authManager: PlexAuthManager
+    let statsViewModel: StatsViewModel
+
     private var cancellables = Set<AnyCancellable>()
     private var hudDismissTask: Task<Void, Never>?
 
@@ -29,10 +31,11 @@ class LibraryDetailViewModel: ObservableObject {
         case error(String)
     }
 
-    init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, libraryService: PlexLibraryService = PlexLibraryService(), actionsService: PlexActionsService = PlexActionsService()) {
+    init(library: DisplayLibrary, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel, libraryService: PlexLibraryService = PlexLibraryService(), actionsService: PlexActionsService = PlexActionsService()) {
         self.library = library
         self.serverViewModel = serverViewModel
         self.authManager = authManager
+        self.statsViewModel = statsViewModel
         self.libraryService = libraryService
         self.actionsService = actionsService
     }

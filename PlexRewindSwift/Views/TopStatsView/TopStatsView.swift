@@ -4,7 +4,6 @@ struct TopStatsView: View {
     @EnvironmentObject var viewModel: TopStatsViewModel
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
-    @EnvironmentObject var statsViewModel: StatsViewModel
     
     @State private var isShowingFilterSheet = false
 
@@ -18,162 +17,83 @@ struct TopStatsView: View {
                         .foregroundColor(.red)
                         .padding()
                 } else {
-                    List {
-                        if viewModel.topMovies.isEmpty && viewModel.topShows.isEmpty && viewModel.hasFetchedOnce {
-                            VStack(alignment: .center, spacing: 10) {
-                                Image(systemName: "chart.bar.xaxis.ascending")
-                                    .font(.system(size: 40))
-                                    .foregroundColor(.secondary)
-                                Text("Aucune donnée")
-                                    .font(.title3.bold())
-                                Text("Aucun historique de visionnage trouvé pour cette sélection.")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 50)
-                        } else {
-                            if viewModel.hasFetchedOnce {
-                                funFactsSection
-                            }
-                            if !viewModel.topMovies.isEmpty {
-                                topMediaSection(
-                                    title: "Films les plus populaires",
-                                    items: Array(viewModel.topMovies.prefix(5)),
-                                    fullList: viewModel.topMovies
-                                )
-                            }
-                            if !viewModel.topShows.isEmpty {
-                                topMediaSection(
-                                    title: "Séries les plus populaires",
-                                    items: Array(viewModel.topShows.prefix(3)),
-                                    fullList: viewModel.topShows
-                                )
-                            }
-                        }
-                    }
-                    .refreshable {
-                        await viewModel.fetchTopMedia(forceRefresh: true)
-                    }
+                    listContent
                 }
             }
             .navigationTitle("Top Stats")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { isShowingFilterSheet = true }) {
-                        Label("Filtres", systemImage: "line.3.horizontal.decrease.circle")
-                    }
-                }
-            }
-            .sheet(isPresented: $isShowingFilterSheet) {
-                FilterSheetView(
-                    selectedUserID: $viewModel.selectedUserID,
-                    selectedTimeFilter: $viewModel.selectedTimeFilter,
-                    sortOption: $viewModel.sortOption
+            .toolbar { toolbarContent }
+            .sheet(isPresented: $isShowingFilterSheet, content: filterSheet)
+            .task { await initialLoad() }
+            .onChange(of: viewModel.selectedUserID) { Task { await viewModel.applyFiltersAndSort() } }
+            .onChange(of: viewModel.selectedTimeFilter) { Task { await viewModel.applyFiltersAndSort() } }
+            .onChange(of: viewModel.sortOption) { viewModel.sortMedia() }
+        }
+    }
+
+    private var listContent: some View {
+        List {
+            if viewModel.topMovies.isEmpty && viewModel.topShows.isEmpty && viewModel.hasFetchedOnce {
+                EmptyDataView(
+                    systemImageName: "chart.bar.xaxis.ascending",
+                    title: "Aucune donnée",
+                    message: "Aucun historique de visionnage trouvé pour cette sélection."
                 )
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
-            }
-            .task {
-                if serverViewModel.availableUsers.isEmpty && serverViewModel.selectedServerID != nil {
-                    await serverViewModel.loadUsers(for: serverViewModel.selectedServerID!)
+            } else {
+                if viewModel.hasFetchedOnce {
+                    FunFactsSection(viewModel: viewModel)
                 }
-                if !viewModel.hasFetchedOnce {
-                    await viewModel.fetchTopMedia()
+                if !viewModel.topMovies.isEmpty {
+                    TopMediaSection(title: "Films les plus populaires", items: Array(viewModel.topMovies.prefix(5)), fullList: viewModel.topMovies)
+                }
+                if !viewModel.topShows.isEmpty {
+                    TopMediaSection(title: "Séries les plus populaires", items: Array(viewModel.topShows.prefix(3)), fullList: viewModel.topShows)
                 }
             }
-            .onChange(of: viewModel.selectedUserID) {
-                Task { await viewModel.applyFiltersAndSort() }
-            }
-            .onChange(of: viewModel.selectedTimeFilter) {
-                Task { await viewModel.applyFiltersAndSort() }
-            }
-            .onChange(of: viewModel.sortOption) {
-                viewModel.sortMedia()
+        }
+        .refreshable { await viewModel.fetchTopMedia(forceRefresh: true) }
+    }
+
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button(action: { isShowingFilterSheet = true }) {
+                Label("Filtres", systemImage: "line.3.horizontal.decrease.circle")
             }
         }
     }
 
-    private func topMediaSection(title: String, items: [TopMedia], fullList: [TopMedia]) -> some View {
-        Section {
-            ForEach(items) { media in
-                NavigationLink(destination: MediaHistoryView(
-                    ratingKey: media.id,
-                    mediaType: media.mediaType,
-                    grandparentRatingKey: media.mediaType == "show" ? media.id : nil,
-                    serverViewModel: serverViewModel,
-                    authManager: authManager,
-                    statsViewModel: statsViewModel
-                )) {
-                    HStack(spacing: 15) {
-                        AsyncImageView(url: media.posterURL, contentMode: .fill)
-                            .frame(width: 60, height: 90)
-                            .cornerRadius(8)
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(media.title)
-                                .font(.headline)
-                            
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Lectures: \(media.viewCount)")
-                                Text("Durée: \(media.formattedWatchTime)")
-                            }
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding(.vertical, 5)
-                }
-            }
-        } header: {
-            HStack {
-                Text(title).font(.headline)
-                Spacer()
-                if fullList.count > items.count {
-                    NavigationLink(destination: TopMediaDetailView(title: title, items: fullList)) {
-                        Text("Voir plus")
-                            .font(.subheadline)
-                    }
-                }
-            }
-        }
+    private func filterSheet() -> some View {
+        FilterSheetView(
+            selectedUserID: $viewModel.selectedUserID,
+            selectedTimeFilter: $viewModel.selectedTimeFilter,
+            sortOption: $viewModel.sortOption
+        )
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
     }
 
-    @ViewBuilder
-    private var funFactsSection: some View {
-        FunFactsView(viewModel: viewModel)
+    private func initialLoad() async {
+        if serverViewModel.availableUsers.isEmpty && serverViewModel.selectedServerID != nil {
+            await serverViewModel.loadUsers(for: serverViewModel.selectedServerID!)
+        }
+        if !viewModel.hasFetchedOnce {
+            await viewModel.fetchTopMedia()
+        }
     }
 }
 
-struct LoadingStateView: View {
-    let message: String
-    @State private var isAnimating = false
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "film.stack")
-                .font(.system(size: 50))
-                .symbolEffect(.bounce.up.byLayer, value: isAnimating)
-                .onAppear { isAnimating = true }
-                .foregroundColor(.accentColor)
-            
-            Text(message)
-                .font(.headline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .contentTransition(.numericText())
-                .animation(.easeInOut, value: message)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct FunFactsView: View {
+private struct FunFactsSection: View {
     @ObservedObject var viewModel: TopStatsViewModel
-    
+
+    private func timeOfDayIcon(for timeOfDay: TimeOfDay) -> String {
+        switch timeOfDay {
+        case .morning: return "sunrise.fill"
+        case .afternoon: return "sun.max.fill"
+        case .evening: return "sunset.fill"
+        case .night: return "moon.stars.fill"
+        }
+    }
+
     var body: some View {
         Section(header: Text("En bref").font(.headline)) {
             VStack(spacing: 10) {
@@ -204,13 +124,77 @@ struct FunFactsView: View {
             .listRowBackground(Color.clear)
         }
     }
+}
+
+private struct TopMediaSection: View {
+    @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
+    @EnvironmentObject var statsViewModel: StatsViewModel
     
-    private func timeOfDayIcon(for timeOfDay: TimeOfDay) -> String {
-        switch timeOfDay {
-        case .morning: return "sunrise.fill"
-        case .afternoon: return "sun.max.fill"
-        case .evening: return "sunset.fill"
-        case .night: return "moon.stars.fill"
+    let title: String
+    let items: [TopMedia]
+    let fullList: [TopMedia]
+
+    var body: some View {
+        Section {
+            ForEach(items) { media in
+                NavigationLink(destination: MediaHistoryView(
+                    ratingKey: media.id,
+                    mediaType: media.mediaType,
+                    grandparentRatingKey: media.mediaType == "show" ? media.id : nil,
+                    serverViewModel: serverViewModel,
+                    authManager: authManager,
+                    statsViewModel: statsViewModel
+                )) {
+                    MediaRow(media: media)
+                }
+            }
+        } header: {
+            SectionHeader(title: title, fullList: fullList, items: items)
+        }
+    }
+}
+
+private struct MediaRow: View {
+    let media: TopMedia
+
+    var body: some View {
+        HStack(spacing: 15) {
+            AsyncImageView(url: media.posterURL, contentMode: .fill)
+                .frame(width: 60, height: 90)
+                .cornerRadius(8)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(media.title)
+                    .font(.headline)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Lectures: \(media.viewCount)")
+                    Text("Durée: \(media.formattedWatchTime)")
+                }
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            }
+        }
+        .padding(.vertical, 5)
+    }
+}
+
+private struct SectionHeader: View {
+    let title: String
+    let fullList: [TopMedia]
+    let items: [TopMedia]
+
+    var body: some View {
+        HStack {
+            Text(title).font(.headline)
+            Spacer()
+            if fullList.count > items.count {
+                NavigationLink(destination: TopMediaDetailView(title: title, items: fullList)) {
+                    Text("Voir plus")
+                        .font(.subheadline)
+                }
+            }
         }
     }
 }

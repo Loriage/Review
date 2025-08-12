@@ -17,19 +17,6 @@
     "%lld" : {
 
     },
-    "%lld lectures • %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld lectures • %2$@"
-          }
-        }
-      }
-    },
-    "%lld." : {
-
-    },
     "Accès non autorisé" : {
 
     },
@@ -48,9 +35,6 @@
     "Allez dans l'onglet \"Réglages\" pour choisir un serveur Plex." : {
 
     },
-    "Allez dans l'onglet \"Réglages\" pour sélectionner un serveur, une année, et générer votre Rewind." : {
-
-    },
     "Analyse tous les médias de la bibliothèque.\n\nL'analyse permet à Plex de collecter des informations pour optimiser la lecture de chaque média." : {
 
     },
@@ -60,9 +44,6 @@
     "Annuler" : {
 
     },
-    "Aucun historique de visionnage trouvé pour cette sélection." : {
-
-    },
     "Aucun historique trouvé" : {
 
     },
@@ -70,9 +51,6 @@
 
     },
     "Aucune activité" : {
-
-    },
-    "Aucune donnée" : {
 
     },
     "Aucune médiathèque" : {
@@ -157,9 +135,6 @@
 
     },
     "Fermer" : {
-
-    },
-    "Films les plus regardés" : {
 
     },
     "Filtres" : {
@@ -248,12 +223,6 @@
     "Période" : {
 
     },
-    "Plex Rewind" : {
-
-    },
-    "Prêt à commencer ?" : {
-
-    },
     "Re-synchroniser l'historique" : {
 
     },
@@ -310,9 +279,6 @@
     "Sélection du serveur" : {
 
     },
-    "Séries les plus regardées" : {
-
-    },
     "Serveur Plex" : {
 
     },
@@ -323,9 +289,6 @@
 
     },
     "Taille :" : {
-
-    },
-    "Top Spectateurs" : {
 
     },
     "Top Stats" : {
@@ -359,9 +322,6 @@
 
     },
     "Voir plus" : {
-
-    },
-    "Votre année en chiffres" : {
 
     },
     "Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur." : {

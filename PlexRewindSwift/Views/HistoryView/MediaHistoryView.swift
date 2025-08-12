@@ -17,31 +17,20 @@ struct MediaHistoryView: View {
 
     init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
-            ratingKey: ratingKey,
-            mediaType: mediaType,
-            grandparentRatingKey: grandparentRatingKey,
-            serverViewModel: serverViewModel,
-            statsViewModel: statsViewModel,
-            authManager: authManager
+            ratingKey: ratingKey, mediaType: mediaType, grandparentRatingKey: grandparentRatingKey,
+            serverViewModel: serverViewModel, statsViewModel: statsViewModel, authManager: authManager
         ))
 
         _actionsViewModel = StateObject(wrappedValue: MediaActionsViewModel(
             ratingKey: grandparentRatingKey ?? ratingKey,
             actionsService: PlexActionsService(),
-            serverViewModel: serverViewModel,
-            authManager: authManager
+            serverViewModel: serverViewModel, authManager: authManager
         ))
     }
 
     var body: some View {
-        ZStack{
-            Group {
-                if viewModel.isLoading {
-                    loadingView
-                } else {
-                    contentView
-                }
-            }
+        ZStack {
+            contentView
             if let hudMessage = actionsViewModel.hudMessage {
                 HUDView(hudMessage: hudMessage)
                     .transition(.scale.combined(with: .opacity))
@@ -49,208 +38,78 @@ struct MediaHistoryView: View {
         }
         .navigationTitle(viewModel.displayTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showingSettings = true }) {
-                    Image(systemName: "gearshape.fill")
-                }
-            }
-        }
-        .sheet(isPresented: $showingSettings) {
-            mediaSettingsSheet
-                .presentationDetents([.height(sheetHeight)])
-                .presentationDragIndicator(.visible)
-        }
-        .alert("Êtes-vous sûr ?", isPresented: $showingAnalysisAlert) {
-            Button("Annuler", role: .cancel) {}
-            Button("Analyser", role: .destructive) {
-                Task { await actionsViewModel.analyzeMedia() }
-            }
-        } message: {
-            Text("Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur.")
-        }
-        .sheet(isPresented: $showImageSelector, onDismiss: { Task { await viewModel.refreshSessionDetails() } }) {
-             ImageSelectorView(
-                 ratingKey: viewModel.ratingKeyForActions,
-                 serverViewModel: serverViewModel,
-                 authManager: authManager
-             )
-        }
-        .sheet(isPresented: $showMediaDetails) {
-            MediaDetailsView(
-                ratingKey: viewModel.ratingKey,
-                serverViewModel: serverViewModel,
-                authManager: authManager
-            )
-        }
-        .sheet(isPresented: $showFixMatchView, onDismiss: { Task { await viewModel.refreshSessionDetails() } }) {
-            FixMatchView(
-                ratingKey: viewModel.ratingKeyForActions,
-                serverViewModel: serverViewModel,
-                authManager: authManager
-            )
-        }
+        .toolbar { toolbarContent }
+        .sheet(isPresented: $showingSettings, content: settingsSheet)
+        .sheet(isPresented: $showImageSelector, onDismiss: refreshDetails, content: imageSelectorView)
+        .sheet(isPresented: $showMediaDetails, content: mediaDetailsView)
+        .sheet(isPresented: $showFixMatchView, onDismiss: refreshDetails, content: fixMatchView)
+        .alert("Êtes-vous sûr ?", isPresented: $showingAnalysisAlert, actions: analysisAlertActions, message: analysisAlertMessage)
         .task {
             await viewModel.loadData()
             actionsViewModel.update(ratingKey: viewModel.ratingKeyForActions)
         }
     }
 
-    private var loadingView: some View {
-        VStack(spacing: 20) {
-            ProgressView().scaleEffect(1.5)
-            Text("Chargement de l'historique...")
-                .foregroundColor(.secondary)
-        }
-    }
-
-    private var emptyView: some View {
-        Section{
-            VStack(spacing: 10) {
-                Image(systemName: "film.stack")
-                    .font(.system(size: 20))
-                    .foregroundColor(.secondary)
-                Text("Aucun historique trouvé")
-                    .font(.title3.bold())
-                Text("L'historique pour ce média est vide.")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .listRowInsets(EdgeInsets())
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
-    }
-
+    @ViewBuilder
     private var contentView: some View {
-        List {
-            headerSection
-
-            if viewModel.historyItems.isEmpty {
-                emptyView
-            } else {
-                historySection
+        if viewModel.isLoading {
+            ProgressView("Chargement de l'historique...")
+        } else {
+            List {
+                if viewModel.mediaDetails != nil {
+                    MediaHeaderView(viewModel: viewModel)
+                }
+                HistoryListView(viewModel: viewModel)
             }
-        }
-        .refreshable {
-            await viewModel.refreshData()
+            .refreshable { await viewModel.refreshData() }
         }
     }
     
-    @ViewBuilder
-    private var headerSection: some View {
-        if viewModel.mediaDetails != nil {
-            Section {
-                VStack(spacing: 0) {
-                    HStack {
-                        AsyncImageView(url: viewModel.displayPosterURL, refreshTrigger: viewModel.imageRefreshId, contentMode: .fit)
-                            .aspectRatio(2/3, contentMode: .fit)
-                            .frame(height: 250)
-                            .cornerRadius(16)
-                            .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
-                    }
-                    .padding(.top, 5)
-                    .padding(.bottom, 20)
-                    
-                    if let summary = viewModel.summary, !summary.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Résumé")
-                                .font(.title2.bold())
-                            Text(summary)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.bottom)
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button(action: { showingSettings = true }) {
+                Image(systemName: "gearshape.fill")
             }
-            .listRowInsets(EdgeInsets())
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
         }
     }
     
-    private var historySection: some View {
-        Section(header: Text("Historique des visionnages")) {
-            ForEach(viewModel.historyItems, id: \.id) { item in
-                VStack(alignment: .leading, spacing: 5) {
-                    if item.session.type == "episode" {
-                        Text(item.session.showTitle)
-                            .font(.headline)
-                    } else {
-                        Text(item.session.title ?? "Titre inconnu")
-                            .font(.headline)
-                    }
-                    
-                    if item.session.type == "episode" {
-                        Text("S\(item.session.parentIndex ?? 0) - E\(item.session.index ?? 0) - \(item.session.title ?? "Titre inconnu")")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    if let viewedAt = item.session.viewedAt {
-                        Text("\(item.userName ?? "Utilisateur inconnu") - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.vertical, 8)
-            }
+    private func settingsSheet() -> some View {
+        MediaSettingsSheet(
+            viewModel: viewModel, actionsViewModel: actionsViewModel,
+            showingSettings: $showingSettings, showMediaDetails: $showMediaDetails,
+            showImageSelector: $showImageSelector, showFixMatchView: $showFixMatchView,
+            showingAnalysisAlert: $showingAnalysisAlert
+        )
+        .presentationDetents([.height(sheetHeight)])
+        .presentationDragIndicator(.visible)
+        .onAppear { sheetHeight = viewModel.mediaType == "movie" ? 260 : 220 }
+    }
+    
+    private func imageSelectorView() -> some View {
+        ImageSelectorView(ratingKey: viewModel.ratingKeyForActions, serverViewModel: serverViewModel, authManager: authManager)
+    }
+    
+    private func mediaDetailsView() -> some View {
+        MediaDetailsView(ratingKey: viewModel.ratingKey, serverViewModel: serverViewModel, authManager: authManager)
+    }
+    
+    private func fixMatchView() -> some View {
+        FixMatchView(ratingKey: viewModel.ratingKeyForActions, serverViewModel: serverViewModel, authManager: authManager)
+    }
+    
+    private func refreshDetails() {
+        Task { await viewModel.refreshSessionDetails() }
+    }
+    
+    @ViewBuilder
+    private func analysisAlertActions() -> some View {
+        Button("Annuler", role: .cancel) {}
+        Button("Analyser", role: .destructive) {
+            Task { await actionsViewModel.analyzeMedia() }
         }
     }
-
-    @ViewBuilder
-    private var mediaSettingsSheet: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            if viewModel.mediaType == "movie" {
-                Button {
-                    showingSettings = false
-                    showMediaDetails = true
-                } label: {
-                    Label("Détails du média", systemImage: "info.circle")
-                }
-            }
-            
-            Button {
-                showingSettings = false
-                showImageSelector = true
-            } label: {
-                Label("Modifier l'image", systemImage: "photo")
-            }
-            
-            Button {
-                showingSettings = false
-                Task { await actionsViewModel.refreshMetadata() }
-            } label: {
-                Label("Actualiser les métadonnées", systemImage: "arrow.trianglehead.counterclockwise")
-            }
-            
-            Button {
-                showingSettings = false
-                showingAnalysisAlert = true
-            } label: {
-                Label("Analyser", systemImage: "wand.and.rays")
-            }
-            
-            Button {
-                showingSettings = false
-                showFixMatchView = true
-            } label: {
-                Label("Corriger l'association...", systemImage: "pencil")
-            }
-        }
-        .font(.headline)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal)
-        .padding(.top, 20)
-        .foregroundColor(.primary)
-        .presentationBackground(.regularMaterial)
-        .onAppear {
-            sheetHeight = viewModel.mediaType == "movie" ? 260 : 220
-        }
+    
+    private func analysisAlertMessage() -> some View {
+        Text("Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur.")
     }
 }
