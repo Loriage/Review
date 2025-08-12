@@ -60,6 +60,9 @@
     "Annuler" : {
 
     },
+    "Aucun historique de visionnage trouvé pour cette sélection." : {
+
+    },
     "Aucun historique trouvé" : {
 
     },
@@ -67,6 +70,9 @@
 
     },
     "Aucune activité" : {
+
+    },
+    "Aucune donnée" : {
 
     },
     "Aucune médiathèque" : {
@@ -126,10 +132,16 @@
     "Dernier scan :" : {
 
     },
+    "Dernier visionnage: %@" : {
+
+    },
     "Détails du média" : {
 
     },
     "Distant" : {
+
+    },
+    "Durée: %@" : {
 
     },
     "En attente de validation..." : {
@@ -142,6 +154,12 @@
 
     },
     "Films les plus regardés" : {
+
+    },
+    "Filtres" : {
+
+    },
+    "Filtres et Tri" : {
 
     },
     "Finalisez la connexion" : {
@@ -181,6 +199,9 @@
 
     },
     "Lancer une analyse complète ?" : {
+
+    },
+    "Lectures: %lld" : {
 
     },
     "Local" : {
@@ -298,10 +319,19 @@
     "Top Spectateurs" : {
 
     },
+    "Top Stats" : {
+
+    },
     "Tous les utilisateurs" : {
 
     },
     "Toutes" : {
+
+    },
+    "Tri" : {
+
+    },
+    "Trier" : {
 
     },
     "Trier par" : {
@@ -320,6 +350,9 @@
 
     },
     "Vider la corbeille ?" : {
+
+    },
+    "Voir plus" : {
 
     },
     "Votre année en chiffres" : {

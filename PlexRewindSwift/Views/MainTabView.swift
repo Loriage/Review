@@ -19,6 +19,10 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Bibliothèques", systemImage: "books.vertical.fill")
                 }
+            TopStatsView(serverViewModel: serverViewModel, authManager: authManager)
+                .tabItem {
+                    Label("Top Stats", systemImage: "star.fill")
+                }
 
             StatsView()
                 .tabItem {

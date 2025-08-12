@@ -8,12 +8,14 @@ struct MainView: View {
             let serverViewModel = ServerViewModel(authManager: authManager)
             let activityViewModel = ActivityViewModel(serverViewModel: serverViewModel)
             let statsViewModel = StatsViewModel(serverViewModel: serverViewModel)
+            /*let topStatsViewModel = TopStatsViewModel(serverViewModel: serverViewModel, authManager: authManager)*/
             
             MainTabView()
                 .environmentObject(authManager)
                 .environmentObject(serverViewModel)
                 .environmentObject(activityViewModel)
                 .environmentObject(statsViewModel)
+                /*.environmentObject(topStatsViewModel)*/
         } else if authManager.pin != nil {
             LoginPinView()
                 .environmentObject(authManager)

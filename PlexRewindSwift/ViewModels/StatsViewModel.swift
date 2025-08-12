@@ -390,7 +390,7 @@ class StatsViewModel: ObservableObject {
             rankedShows: rankedShows
         )
     }
-    
+
     private func formatDuration(seconds: Int) -> String {
         let hours = seconds / 3600
         let minutes = (seconds % 3600) / 60

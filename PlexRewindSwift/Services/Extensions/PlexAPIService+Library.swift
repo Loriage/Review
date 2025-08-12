@@ -20,14 +20,17 @@ struct MediaMetadata: Decodable, Identifiable {
     var id: String { ratingKey }
     let ratingKey: String
     let type: String
+    let title: String?
     let thumb: String?
     let addedAt: Int?
     let updatedAt: Int?
+    let lastViewedAt: TimeInterval?
+    let viewCount: Int?
     let media: [PlexMediaPartContainer]?
     let grandparentRatingKey: String?
-    
+
     enum CodingKeys: String, CodingKey {
-        case ratingKey, type, thumb, addedAt, updatedAt, grandparentRatingKey
+        case ratingKey, type, title, thumb, addedAt, updatedAt, lastViewedAt, viewCount, grandparentRatingKey
         case media = "Media"
     }
 }
@@ -263,5 +266,25 @@ extension PlexAPIService {
               (200...299).contains(httpResponse.statusCode) else {
             throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
         }
+    }
+
+    func fetchTopMedia(serverURL: String, token: String, type: Int) async throws -> [MediaMetadata] {
+        let urlString = "\(serverURL)/library/all/top?type=\(type)&X-Plex-Token=\(token)"
+        guard let url = URL(string: urlString) else {
+            throw PlexError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(APIConstants.clientIdentifier, forHTTPHeaderField: "X-Plex-Client-Identifier")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+        
+        let decodedResponse = try JSONDecoder().decode(PlexAllMediaResponse.self, from: data)
+        return decodedResponse.mediaContainer.metadata
     }
 }
