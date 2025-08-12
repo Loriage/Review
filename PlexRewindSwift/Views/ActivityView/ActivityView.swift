@@ -4,7 +4,7 @@ struct ActivityView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var activityViewModel: ActivityViewModel
-    
+
     let timer = Timer.publish(every: 8, on: .main, in: .common).autoconnect()
 
     var body: some View {
@@ -44,6 +44,13 @@ struct ActivityView: View {
             }
             .navigationTitle("Activité en cours")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(destination: SettingsView()) {
+                        Label("Réglages", systemImage: "gearshape.fill")
+                    }
+                }
+            }
             .onAppear {
                 if serverViewModel.availableServers.isEmpty && !serverViewModel.isLoading {
                     Task {

@@ -7,31 +7,37 @@ struct MainTabView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var topStatsViewModel: TopStatsViewModel
 
+    init() {
+        let tabBarAppearance = UITabBarAppearance()
+        let itemAppearance = UITabBarItemAppearance()
+
+        itemAppearance.normal.badgeBackgroundColor = .accent
+        tabBarAppearance.stackedLayoutAppearance = itemAppearance
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+    }
+
     var body: some View {
         TabView {
-            ActivityView()
-                .tabItem {
-                    Label("Activité", systemImage: "play.display")
-                }
-                .environmentObject(activityViewModel)
-                .environmentObject(statsViewModel)
+            Tab("Activité", systemImage: "play.circle") {
+                ActivityView()
+                    .environmentObject(activityViewModel)
+                    .environmentObject(statsViewModel)
+            }
+            .badge(activityViewModel.activityCount)
 
-            LibraryView(serverViewModel: serverViewModel, authManager: authManager)
-                .tabItem {
-                    Label("Bibliothèques", systemImage: "books.vertical.fill")
-                }
-            TopStatsView()
-                .tabItem {
-                    Label("Stats", systemImage: "list.number")
-                }
-                .environmentObject(topStatsViewModel)
+            Tab("Médias", systemImage: "books.vertical.fill") {
+                LibraryView(serverViewModel: serverViewModel, authManager: authManager)
+            }
 
-            SettingsView()
-                .tabItem {
-                    Label("Réglages", systemImage: "gear")
-                }
-                .environmentObject(serverViewModel)
-                .environmentObject(statsViewModel)
+            Tab("Search", systemImage: "magnifyingglass", role: .search) {
+                    SearchView()
+            }
+
+            Tab("Stats", systemImage: "list.number") {
+                TopStatsView()
+                    .environmentObject(topStatsViewModel)
+            }
         }
     }
 }

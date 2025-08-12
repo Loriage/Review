@@ -4,6 +4,7 @@ import Combine
 @MainActor
 class ActivityViewModel: ObservableObject {
     @Published var state: ViewState = .noServerSelected
+    @Published var activityCount: Int = 0
     
     private let serverViewModel: ServerViewModel
     private let activityService: PlexActivityService
@@ -33,6 +34,7 @@ class ActivityViewModel: ObservableObject {
               let token = serverViewModel.authManager.getPlexAuthToken()
         else {
             self.state = .noServerSelected
+            self.activityCount = 0
             return
         }
         
@@ -57,8 +59,10 @@ class ActivityViewModel: ObservableObject {
             
             if sessions.isEmpty {
                 self.state = .empty
+                self.activityCount = 0
             } else {
                 self.state = .content(sessions)
+                self.activityCount = sessions.count
             }
             
         } catch let error as PlexError {

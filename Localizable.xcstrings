@@ -176,6 +176,9 @@
     "Local" : {
 
     },
+    "Médias" : {
+
+    },
     "Mise à jour le: %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -212,6 +215,9 @@
 
     },
     "Re-synchroniser l'historique" : {
+
+    },
+    "Recherche" : {
 
     },
     "Recherche de correspondances..." : {
@@ -262,6 +268,9 @@
 
     },
     "Se déconnecter" : {
+
+    },
+    "Search" : {
 
     },
     "Serveur Plex" : {
