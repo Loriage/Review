@@ -95,9 +95,6 @@
     "Corriger l'association..." : {
 
     },
-    "Création du Rewind" : {
-
-    },
     "Créée le :" : {
 
     },
@@ -117,6 +114,9 @@
 
     },
     "Distant" : {
+
+    },
+    "Données" : {
 
     },
     "Durée de visionnage : %@" : {
@@ -146,9 +146,6 @@
     "Finalisez la connexion" : {
 
     },
-    "Générer le Rewind" : {
-
-    },
     "Générer mon Rewind" : {
 
     },
@@ -174,9 +171,6 @@
 
     },
     "L'historique pour cet utilisateur est vide." : {
-
-    },
-    "La génération du Rewind peut prendre du temps car elle récupère la durée de chaque film et épisode individuellement." : {
 
     },
     "Lancer une analyse complète ?" : {
@@ -295,9 +289,6 @@
 
     },
     "Tous les utilisateurs" : {
-
-    },
-    "Toutes" : {
 
     },
     "Tri" : {
