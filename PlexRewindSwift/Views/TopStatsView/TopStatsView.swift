@@ -44,10 +44,10 @@ struct TopStatsView: View {
                     FunFactsSection(viewModel: viewModel)
                 }
                 if !viewModel.topMovies.isEmpty {
-                    TopMediaSection(title: "Films les plus populaires", items: Array(viewModel.topMovies.prefix(5)), fullList: viewModel.topMovies)
+                    TopMediaSection(title: "Films les plus populaires", items: Array(viewModel.topMovies.prefix(4)), fullList: viewModel.topMovies)
                 }
                 if !viewModel.topShows.isEmpty {
-                    TopMediaSection(title: "Séries les plus populaires", items: Array(viewModel.topShows.prefix(3)), fullList: viewModel.topShows)
+                    TopMediaSection(title: "Séries les plus populaires", items: Array(viewModel.topShows.prefix(4)), fullList: viewModel.topShows)
                 }
             }
         }
