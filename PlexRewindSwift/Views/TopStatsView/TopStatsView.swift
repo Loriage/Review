@@ -78,19 +78,17 @@ struct TopStatsView: View {
             }
             .task {
                 if serverViewModel.availableUsers.isEmpty && serverViewModel.selectedServerID != nil {
-                   await serverViewModel.loadUsers(for: serverViewModel.selectedServerID!)
+                    await serverViewModel.loadUsers(for: serverViewModel.selectedServerID!)
                 }
                 if !viewModel.hasFetchedOnce {
-                    Task.detached {
-                        await viewModel.fetchTopMedia()
-                    }
+                    await viewModel.fetchTopMedia()
                 }
             }
             .onChange(of: viewModel.selectedUserID) {
-                 Task { await viewModel.applyFiltersAndSort() }
+                Task { await viewModel.applyFiltersAndSort() }
             }
             .onChange(of: viewModel.selectedTimeFilter) {
-                 Task { await viewModel.applyFiltersAndSort() }
+                Task { await viewModel.applyFiltersAndSort() }
             }
             .onChange(of: viewModel.sortOption) {
                 viewModel.sortMedia()

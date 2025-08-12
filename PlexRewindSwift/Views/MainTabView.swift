@@ -22,15 +22,9 @@ struct MainTabView: View {
                 }
             TopStatsView()
                 .tabItem {
-                    Label("Top Stats", systemImage: "star.fill")
+                    Label("Stats", systemImage: "list.number")
                 }
                 .environmentObject(topStatsViewModel)
-
-            StatsView()
-                .tabItem {
-                    Label("Stats", systemImage: "chart.bar.xaxis")
-                }
-                .environmentObject(statsViewModel)
 
             SettingsView()
                 .tabItem {

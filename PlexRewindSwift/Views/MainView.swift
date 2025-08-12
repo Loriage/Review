@@ -43,12 +43,5 @@ struct AuthenticatedContentView: View {
             .task {
                 await serverViewModel.loadServers()
             }
-            .onChange(of: serverViewModel.selectedServerID) { oldServerId, newServerID in
-                if newServerID != nil {
-                    Task.detached {
-                        await topStatsViewModel.fetchTopMedia()
-                    }
-                }
-            }
     }
 }
