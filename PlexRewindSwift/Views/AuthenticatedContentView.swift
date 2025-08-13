@@ -7,16 +7,19 @@ struct AuthenticatedContentView: View {
     @StateObject private var activityViewModel: ActivityViewModel
     @StateObject private var statsViewModel: StatsViewModel
     @StateObject private var topStatsViewModel: TopStatsViewModel
+    @StateObject private var searchViewModel: SearchViewModel
 
     init(authManager: PlexAuthManager) {
         self.authManager = authManager
         
         let serverVM = ServerViewModel(authManager: authManager)
-        
+        let statsVM = StatsViewModel(serverViewModel: serverVM)
+
         _serverViewModel = StateObject(wrappedValue: serverVM)
         _activityViewModel = StateObject(wrappedValue: ActivityViewModel(serverViewModel: serverVM))
-        _statsViewModel = StateObject(wrappedValue: StatsViewModel(serverViewModel: serverVM))
+        _statsViewModel = StateObject(wrappedValue: statsVM)
         _topStatsViewModel = StateObject(wrappedValue: TopStatsViewModel(serverViewModel: serverVM, authManager: authManager))
+        _searchViewModel = StateObject(wrappedValue: SearchViewModel(serverViewModel: serverVM, authManager: authManager))
     }
 
     var body: some View {
@@ -26,6 +29,7 @@ struct AuthenticatedContentView: View {
             .environmentObject(activityViewModel)
             .environmentObject(statsViewModel)
             .environmentObject(topStatsViewModel)
+            .environmentObject(searchViewModel)
             .task {
                 await serverViewModel.loadServers()
             }

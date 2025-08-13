@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    " (%@)" : {
+
+    },
     "%@" : {
 
     },
@@ -15,6 +18,9 @@
       }
     },
     "%lld" : {
+
+    },
+    "%lld épisodes" : {
 
     },
     "Accès non autorisé" : {
@@ -137,6 +143,9 @@
     "Fermer" : {
 
     },
+    "Films" : {
+
+    },
     "Filtres" : {
 
     },
@@ -174,9 +183,6 @@
 
     },
     "Local" : {
-
-    },
-    "Médias" : {
 
     },
     "Mise à jour le: %@" : {
@@ -268,6 +274,9 @@
 
     },
     "Se déconnecter" : {
+
+    },
+    "Séries" : {
 
     },
     "Serveur Plex" : {

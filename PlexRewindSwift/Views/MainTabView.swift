@@ -35,12 +35,12 @@ struct MainTabView: View {
             }
             .badge(activityViewModel.activityCount)
 
-            Tab("Médias", systemImage: "books.vertical.fill") {
+            Tab("Bibliothèques", systemImage: "books.vertical.fill") {
                 LibraryView(serverViewModel: serverViewModel, authManager: authManager)
             }
 
             Tab("Recherche", systemImage: "magnifyingglass", role: .search) {
-                    SearchView()
+                SearchView(serverViewModel: serverViewModel, authManager: authManager, statsViewModel: statsViewModel)
             }
 
             Tab("Stats", systemImage: "list.number") {

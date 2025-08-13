@@ -197,4 +197,41 @@ class PlexLibraryService {
         let decodedResponse = try JSONDecoder().decode(PlexAllMediaResponse.self, from: data)
         return decodedResponse.mediaContainer.metadata
     }
+
+    func searchContent(serverURL: String, token: String, query: String) async throws -> [SearchResult] {
+        guard var components = URLComponents(string: "\(serverURL)/search") else {
+            throw PlexError.invalidURL
+        }
+
+        let searchTypes = "movie,show"
+
+        components.queryItems = [
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "limit", value: "30"),
+            URLQueryItem(name: "searchTypes", value: searchTypes),
+            URLQueryItem(name: "includeCollections", value: "1"),
+            URLQueryItem(name: "X-Plex-Token", value: token)
+        ]
+
+        guard let url = components.url else {
+            throw PlexError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(APIConstants.clientIdentifier, forHTTPHeaderField: "X-Plex-Client-Identifier")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+
+        do {
+            let decodedResponse = try JSONDecoder().decode(PlexSearchResponse.self, from: data)
+            return decodedResponse.mediaContainer.metadata
+        } catch {
+            throw PlexError.decodingError(error)
+        }
+    }
 }
