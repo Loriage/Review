@@ -1,14 +1,14 @@
 import SwiftUI
 
-struct SeasonInfoView: View {
-    @ObservedObject var viewModel: SeasonHistoryViewModel
+struct EpisodeInfoView: View {
+    @ObservedObject var viewModel: EpisodeHistoryViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            if let details = viewModel.seasonDetails {
-                if let summary = details.summary, !summary.isEmpty {
+            if let details = viewModel.episodeDetails {
+                if let summary = viewModel.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(details.tagline ?? "Résumé")
+                        Text(details.tagline ?? "Resumé")
                             .font(.headline)
                         Text(summary)
                             .font(.subheadline)
@@ -20,11 +20,8 @@ struct SeasonInfoView: View {
                     .cornerRadius(12)
                 }
 
-                if let studio = details.studio, !studio.isEmpty {
-                    InfoRow(label: "Studio", value: studio)
-                }
-                if let genres = details.genre, !genres.isEmpty {
-                    InfoRow(label: "Genres", value: formatList(genres))
+                if let year = details.year {
+                    InfoRow(label: "Année de sortie", value: String(year))
                 }
                 if let directors = details.director, !directors.isEmpty {
                     InfoRow(label: "Réalisé par", value: formatList(directors))
@@ -40,8 +37,9 @@ struct SeasonInfoView: View {
                     .foregroundColor(.secondary)
             }
         }
+        .padding(.horizontal)
     }
-    
+
     private func formatList(_ items: [MetadataItem.Genre]) -> String {
         let maxItems = 8
         let names = items.prefix(maxItems).map { $0.tag }
