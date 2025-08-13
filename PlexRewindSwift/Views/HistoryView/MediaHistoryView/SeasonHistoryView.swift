@@ -64,10 +64,9 @@ struct SeasonHistoryView: View {
         VStack(alignment: .leading) {
             LazyVStack(spacing: 0) {
                 ForEach(viewModel.episodes) { episode in
-                    NavigationLink(destination: MediaHistoryView(
-                        ratingKey: episode.ratingKey,
-                        mediaType: "episode",
-                        grandparentRatingKey: viewModel.season.key,
+                    NavigationLink(destination: EpisodeHistoryView(
+                        episode: episode,
+                        showRatingKey: viewModel.showRatingKey,
                         serverViewModel: serverViewModel,
                         authManager: authManager,
                         statsViewModel: statsViewModel

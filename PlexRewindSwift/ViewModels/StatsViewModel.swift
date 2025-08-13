@@ -9,15 +9,7 @@ class StatsViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var lastSyncDate: Date?
     @Published var formattedLastSyncDate: String?
-    
-    // Propriétés pour l'ancienne vue Rewind - SUPPRIMÉES
-    // @Published var userStats: UserStats?
-    // @Published var selectedUserID: Int?
-    // @Published var selectedYear: Int? = nil
-    // @Published var availableYears: [Int] = []
-    // @Published var selectedSortOption: SortOption = .byPlays
-    // @Published var selectedMediaDetail: MediaDetail?
-    
+
     private let serverViewModel: ServerViewModel
     private let activityService: PlexActivityService
     private let metadataService: PlexMetadataService
@@ -97,24 +89,18 @@ class StatsViewModel: ObservableObject {
         ratingKeyForSummary = ratingKey
         
         if mediaType == "movie" {
-            let representativeSession = fullHistory.first { $0.ratingKey == ratingKey }
-            if let movieTitle = representativeSession?.title, !movieTitle.isEmpty {
-                filteredSessions = fullHistory.filter { $0.title == movieTitle && $0.type == "movie" }
-            }
+            filteredSessions = fullHistory.filter { $0.ratingKey == ratingKey }
         } else if mediaType == "episode" {
-            if let gprk = grandparentRatingKey {
-                filteredSessions = fullHistory.filter { $0.computedGrandparentRatingKey == gprk }
-            }
-            if filteredSessions.isEmpty {
-                let representativeSession = fullHistory.first { $0.ratingKey == ratingKey }
-                if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
-                    filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle }
-                }
-            }
+            filteredSessions = fullHistory.filter { $0.ratingKey == ratingKey }
             ratingKeyForSummary = grandparentRatingKey
-            
         } else if mediaType == "show" {
-            filteredSessions = fullHistory.filter { $0.computedGrandparentRatingKey == ratingKey }
+            let representativeSession = fullHistory.first { $0.computedGrandparentRatingKey == ratingKey }
+
+            if let showTitle = representativeSession?.grandparentTitle, !showTitle.isEmpty {
+                filteredSessions = fullHistory.filter { $0.grandparentTitle == showTitle && $0.type == "episode" }
+            } else {
+                filteredSessions = fullHistory.filter { $0.computedGrandparentRatingKey == ratingKey }
+            }
             ratingKeyForSummary = ratingKey
         }
         

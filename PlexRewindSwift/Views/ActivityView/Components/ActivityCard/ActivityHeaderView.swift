@@ -10,8 +10,8 @@ struct ActivityHeaderView: View {
 
     var body: some View {
         NavigationLink(destination: MediaHistoryView(
-            ratingKey: session.ratingKey,
-            mediaType: session.type,
+            ratingKey: session.grandparentRatingKey ?? session.ratingKey,
+            mediaType: session.type == "movie" ? "movie" : "show",
             grandparentRatingKey: session.grandparentRatingKey,
             serverViewModel: serverViewModel,
             authManager: authManager,
