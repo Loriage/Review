@@ -234,4 +234,17 @@ class PlexLibraryService {
             throw PlexError.decodingError(error)
         }
     }
+
+    func fetchAllTitles(serverURL: String, token: String) async throws -> [String] {
+        let allLibraries = try await fetchLibraries(serverURL: serverURL, token: token)
+        var allTitles: [String] = []
+
+        for library in allLibraries where library.type == "movie" || library.type == "show" {
+            let mediaType = library.type == "movie" ? 1 : 2
+            let media = try await fetchAllMediaInSection(serverURL: serverURL, token: token, libraryKey: library.key, mediaType: mediaType)
+            allTitles.append(contentsOf: media.compactMap { $0.title })
+        }
+
+        return Array(Set(allTitles))
+    }
 }

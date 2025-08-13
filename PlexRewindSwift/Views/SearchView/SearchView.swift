@@ -75,6 +75,11 @@ struct SearchView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always))
+        .onAppear {
+            Task {
+                await viewModel.cacheAllServerTitles()
+            }
+        }
     }
     
     private func mediaHistoryDestination(for result: SearchResult) -> some View {

@@ -3,7 +3,6 @@ import Combine
 
 @MainActor
 class SearchViewModel: ObservableObject {
-
     enum SearchState {
         case idle
         case loading
@@ -15,6 +14,9 @@ class SearchViewModel: ObservableObject {
     @Published var searchText = ""
     @Published private(set) var searchResults: [SearchResult] = []
     @Published private(set) var state: SearchState = .idle
+
+    private var allServerTitles: [String] = []
+    private var isCacheLoading = false
 
     private let serverViewModel: ServerViewModel
     private let authManager: PlexAuthManager
@@ -37,6 +39,18 @@ class SearchViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
+    func cacheAllServerTitles() async {
+        guard allServerTitles.isEmpty, !isCacheLoading, let serverDetails = getServerDetails() else { return }
+        
+        isCacheLoading = true
+        do {
+            self.allServerTitles = try await libraryService.fetchAllTitles(serverURL: serverDetails.url, token: serverDetails.token)
+        } catch {
+            print("Failed to cache server titles: \(error.localizedDescription)")
+        }
+        isCacheLoading = false
+    }
+
     func performSearch(query: String) async {
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
             self.searchResults = []
@@ -50,16 +64,33 @@ class SearchViewModel: ObservableObject {
         }
         
         self.state = .loading
-        
-        do {
-            let apiResults = try await libraryService.searchContent(serverURL: serverDetails.url, token: serverDetails.token, query: query)
 
-            let filteredResults = apiResults.filter { result in
-                result.title.localizedCaseInsensitiveContains(query)
+        do {
+            var apiResults = try await libraryService.searchContent(serverURL: serverDetails.url, token: serverDetails.token, query: query)
+
+            if apiResults.isEmpty {
+                if let correctedQuery = StringSimilarityHelper.findBestMatch(for: query, from: self.allServerTitles) {
+                    apiResults = try await libraryService.searchContent(serverURL: serverDetails.url, token: serverDetails.token, query: correctedQuery)
+                }
             }
 
-            self.searchResults = filteredResults
-            self.state = filteredResults.isEmpty ? .empty : .loaded
+            var finalResults = apiResults.filter { result in
+                let isCorrectType = result.type == "movie" || result.type == "show"
+                let titleMatches = result.title.localizedCaseInsensitiveContains(query)
+                
+                return isCorrectType && titleMatches
+            }
+
+            if finalResults.isEmpty {
+                if let correctedQuery = StringSimilarityHelper.findBestMatch(for: query, from: self.allServerTitles) {
+                    let correctedApiResults = try await libraryService.searchContent(serverURL: serverDetails.url, token: serverDetails.token, query: correctedQuery)
+
+                    finalResults = correctedApiResults.filter { $0.type == "movie" || $0.type == "show" }
+                }
+            }
+
+            self.searchResults = finalResults
+            self.state = finalResults.isEmpty ? .empty : .loaded
             
         } catch {
             self.state = .error("Erreur lors de la recherche : \(error.localizedDescription)")
