@@ -2,6 +2,12 @@ import SwiftUI
 
 struct SeasonsView: View {
     @ObservedObject var viewModel: MediaHistoryViewModel
+    let showRatingKey: String
+
+    @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
+    @EnvironmentObject var statsViewModel: StatsViewModel
+
     private let columns = [GridItem(.adaptive(minimum: 110), spacing: 10)]
 
     var body: some View {
@@ -9,29 +15,37 @@ struct SeasonsView: View {
             if !viewModel.seasons.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(viewModel.seasons.sorted(by: { $0.index ?? -1 < $1.index ?? -1 })) { season in
-                        AsyncImageView(url: viewModel.seasonPosterURL(for: season))
-                            .aspectRatio(2/3, contentMode: .fill)
-                            .overlay(alignment: .bottomLeading) {
-                                Text(season.title)
-                                    .font(.subheadline.bold())
-                                    .foregroundColor(.white)
-                                    .lineLimit(1)
-                                    .padding([.horizontal, .bottom], 10)
-                                    .padding(.top, 40)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(
-                                        LinearGradient(
-                                            gradient: Gradient(stops: [
-                                                .init(color: .black.opacity(0.9), location: 0),
-                                                .init(color: .clear, location: 0.90)
-                                            ]),
-                                            startPoint: .bottom,
-                                            endPoint: .top
+                        NavigationLink(destination: SeasonHistoryView(
+                            season: season,
+                            showRatingKey: showRatingKey,
+                            serverViewModel: serverViewModel,
+                            authManager: authManager,
+                            statsViewModel: statsViewModel
+                        )) {
+                            AsyncImageView(url: viewModel.seasonPosterURL(for: season))
+                                .aspectRatio(2/3, contentMode: .fill)
+                                .overlay(alignment: .bottomLeading) {
+                                    Text(season.title)
+                                        .font(.headline.weight(.bold))
+                                        .foregroundColor(.white)
+                                        .lineLimit(1)
+                                        .padding(10)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .background(
+                                            LinearGradient(
+                                                gradient: Gradient(stops: [
+                                                    .init(color: .black.opacity(0.9), location: 0),
+                                                    .init(color: .clear, location: 0.90)
+                                                ]),
+                                                startPoint: .bottom,
+                                                endPoint: .top
+                                            )
                                         )
-                                    )
-                            }
-                            .cornerRadius(12)
-                            .shadow(color: .black.opacity(0.25), radius: 2, y: 2)
+                                }
+                                .cornerRadius(12)
+                                .shadow(color: .black.opacity(0.25), radius: 2, y: 2)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal)

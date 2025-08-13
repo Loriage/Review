@@ -89,6 +89,9 @@
     "Chargement de l'historique..." : {
 
     },
+    "Chargement des épisodes..." : {
+
+    },
     "Chargement..." : {
 
     },
@@ -138,6 +141,12 @@
 
     },
     "En bref" : {
+
+    },
+    "Épisode %lld" : {
+
+    },
+    "Épisodes" : {
 
     },
     "Êtes-vous sûr ?" : {

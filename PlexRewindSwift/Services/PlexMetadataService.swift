@@ -1,6 +1,25 @@
 import Foundation
 
 class PlexMetadataService {
+    func fetchEpisodes(for seasonRatingKey: String, serverURL: String, token: String) async throws -> [PlexEpisode] {
+        let urlString = "\(serverURL)/library/metadata/\(seasonRatingKey)/children?X-Plex-Token=\(token)"
+        guard let url = URL(string: urlString) else {
+            throw PlexError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+
+        let decodedResponse = try JSONDecoder().decode(PlexEpisodeResponse.self, from: data)
+        return decodedResponse.mediaContainer.metadata
+    }
+    
     func fetchSeasons(for showRatingKey: String, serverURL: String, token: String) async throws -> [PlexSeason] {
         let urlString = "\(serverURL)/library/metadata/\(showRatingKey)/children?X-Plex-Token=\(token)"
         guard let url = URL(string: urlString) else {

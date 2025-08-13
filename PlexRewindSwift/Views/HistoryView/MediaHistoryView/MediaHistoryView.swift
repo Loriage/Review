@@ -56,12 +56,12 @@ struct MediaHistoryView: View {
 
                         switch selectedTab {
                         case .history:
-                            HistoryListView(viewModel: viewModel)
+                            HistoryListView(historyItems: viewModel.historyItems)
                         case .information:
                             MediaInfoView(viewModel: viewModel)
                                 .padding(.horizontal)
                         case .seasons:
-                            SeasonsView(viewModel: viewModel)
+                            SeasonsView(viewModel: viewModel, showRatingKey: viewModel.ratingKeyForActions)
                         }
                     }
                     .padding(.vertical)

@@ -1,10 +1,14 @@
 import SwiftUI
 
 struct HistoryListView: View {
-    @ObservedObject var viewModel: MediaHistoryViewModel
+    let historyItems: [MediaHistoryItem]
+
+    @EnvironmentObject var statsViewModel: StatsViewModel
+    @EnvironmentObject var serverViewModel: ServerViewModel
+    @EnvironmentObject var authManager: PlexAuthManager
 
     var body: some View {
-        if viewModel.historyItems.isEmpty {
+        if historyItems.isEmpty {
             emptyHistoryView
         } else {
             historySection
@@ -14,19 +18,19 @@ struct HistoryListView: View {
     private var historySection: some View {
         VStack(alignment: .leading) {
             LazyVStack(spacing: 0) {
-                ForEach(viewModel.historyItems) { item in
+                ForEach(historyItems) { item in
                     NavigationLink(destination: UserHistoryView(
                         userID: item.session.accountID ?? 0,
                         userName: item.userName ?? "Utilisateur inconnu",
-                        statsViewModel: viewModel.statsViewModel,
-                        serverViewModel: viewModel.serverViewModel,
-                        authManager: viewModel.authManager
+                        statsViewModel: statsViewModel,
+                        serverViewModel: serverViewModel,
+                        authManager: authManager
                     )) {
                         historyRow(for: item)
                     }
                     .buttonStyle(.plain)
 
-                    if item.id != viewModel.historyItems.last?.id {
+                    if item.id != historyItems.last?.id {
                         Divider().padding(.leading, 16)
                     }
                 }

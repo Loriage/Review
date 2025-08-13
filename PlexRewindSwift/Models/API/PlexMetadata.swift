@@ -1,16 +1,16 @@
 import Foundation
 
 struct MetadataItem: Decodable {
-    let duration: Int
-    let summary: String?
+    let duration: Int?
+    var summary: String?
     let year: Int?
     let art: String?
     let tagline: String?
-    let genre: [Genre]?
-    let director: [Genre]?
-    let writer: [Genre]?
-    let role: [Genre]?
-    let studio: String?
+    var genre: [Genre]?
+    var director: [Genre]?
+    var writer: [Genre]?
+    var role: [Genre]?
+    var studio: String?
 
     let title: String?
     let thumb: String?
