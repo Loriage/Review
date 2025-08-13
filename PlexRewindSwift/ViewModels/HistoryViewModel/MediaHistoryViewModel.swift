@@ -115,8 +115,13 @@ class MediaHistoryViewModel: ObservableObject {
         }
         
         self.historyItems = result.sessions.map { session in
-            let userName = serverViewModel.availableUsers.first { $0.id == session.accountID }?.title
-            return MediaHistoryItem(id: session.id, session: session, userName: userName)
+            let user = serverViewModel.availableUsers.first { $0.id == session.accountID }
+            let userName = user?.title
+            var userThumbURL: URL?
+            if let thumbString = user?.thumb {
+                userThumbURL = URL(string: thumbString)
+            }
+            return MediaHistoryItem(id: session.id, session: session, userName: userName, userThumbURL: userThumbURL)
         }
     }
 

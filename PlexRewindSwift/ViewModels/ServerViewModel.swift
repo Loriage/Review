@@ -25,7 +25,6 @@ class ServerViewModel: ObservableObject {
                 guard let self = self, let serverID = serverID else { return }
                 Task {
                     await self.loadUsers(for: serverID)
-                    await self.matchAndSetProfilePictures()
                 }
             }
             .store(in: &cancellables)
@@ -65,8 +64,19 @@ class ServerViewModel: ObservableObject {
             let serverURL = connection.uri
             let resourceToken = server.accessToken ?? token
 
-            let usersFromServer = try await userService.fetchUsers(serverURL: serverURL, token: resourceToken)
+            var usersFromServer = try await userService.fetchUsers(serverURL: serverURL, token: resourceToken)
+
+            if let mainAccount = try? await userService.fetchAccount(token: token) {
+                if let adminIndex = usersFromServer.firstIndex(where: { $0.id == 1 }) {
+                    if usersFromServer[adminIndex].title == mainAccount.title {
+                        usersFromServer[adminIndex].thumb = mainAccount.thumb
+                    }
+                }
+            }
+
             self.availableUsers = usersFromServer.filter { !$0.title.isEmpty }
+
+            await matchAndSetProfilePictures()
         } catch {
             errorMessage = "Impossible de récupérer les utilisateurs du serveur. \(error.localizedDescription)"
         }

@@ -39,6 +39,31 @@ class PlexUserParser: NSObject, XMLParserDelegate {
 
 
 class PlexUserService {
+
+    func fetchAccount(token: String) async throws -> PlexUser {
+        guard let url = URL(string: "https://plex.tv/api/v2/user") else {
+            throw PlexError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(APIConstants.clientIdentifier, forHTTPHeaderField: "X-Plex-Client-Identifier")
+        request.setValue(token, forHTTPHeaderField: "X-Plex-Token")
+
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let accountResponse = try decoder.decode(PlexAccount.self, from: data)
+
+        return PlexUser(id: accountResponse.id, title: accountResponse.title, thumb: accountResponse.thumb)
+    }
+
     func fetchUsers(serverURL: String, token: String) async throws -> [PlexUser] {
         guard let url = URL(string: "\(serverURL)/accounts?X-Plex-Token=\(token)") else {
             throw PlexError.invalidURL
@@ -81,7 +106,7 @@ class PlexUserService {
 
         let parser = PlexUserParser()
         let parsedUsers = parser.parse(data: data)
-        
+
         return parsedUsers
     }
 }

@@ -54,6 +54,7 @@ struct MediaHistoryItem: Identifiable {
     let id: String
     let session: WatchSession
     let userName: String?
+    let userThumbURL: URL?
 }
 
 enum LoadingState: Equatable {
