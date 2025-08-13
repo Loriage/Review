@@ -61,27 +61,29 @@ struct SeasonHistoryView: View {
     }
     
     private var episodeList: some View {
-        LazyVStack(spacing: 0) {
-            ForEach(viewModel.episodes) { episode in
-                NavigationLink(destination: MediaHistoryView(
-                    ratingKey: episode.ratingKey,
-                    mediaType: "episode",
-                    grandparentRatingKey: viewModel.season.key,
-                    serverViewModel: serverViewModel,
-                    authManager: authManager,
-                    statsViewModel: statsViewModel
-                )) {
-                    episodeRow(for: episode)
-                }
-                .buttonStyle(.plain)
-                
-                if episode.id != viewModel.episodes.last?.id {
-                    Divider().padding(.leading, 150)
+        VStack(alignment: .leading) {
+            LazyVStack(spacing: 0) {
+                ForEach(viewModel.episodes) { episode in
+                    NavigationLink(destination: MediaHistoryView(
+                        ratingKey: episode.ratingKey,
+                        mediaType: "episode",
+                        grandparentRatingKey: viewModel.season.key,
+                        serverViewModel: serverViewModel,
+                        authManager: authManager,
+                        statsViewModel: statsViewModel
+                    )) {
+                        episodeRow(for: episode)
+                    }
+                    .buttonStyle(.plain)
+                    
+                    if episode.id != viewModel.episodes.last?.id {
+                        Divider().padding(.leading, 16)
+                    }
                 }
             }
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(12)
         }
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(12)
         .padding(.horizontal)
     }
     
@@ -105,7 +107,9 @@ struct SeasonHistoryView: View {
                 .font(.body.weight(.semibold))
                 .foregroundColor(.secondary.opacity(0.5))
         }
-        .padding(10)
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(Rectangle())
     }
 }
