@@ -19,18 +19,23 @@ struct AllMediaContainer: Decodable {
 struct MediaMetadata: Decodable, Identifiable {
     var id: String { ratingKey }
     let ratingKey: String
+    let key: String
     let type: String
     let title: String?
+    let summary: String?
+    let year: Int?
     let thumb: String?
+    let leafCount: Int?
     let addedAt: Int?
-    let updatedAt: Int?
-    let lastViewedAt: TimeInterval?
-    let viewCount: Int?
-    let media: [PlexMediaPartContainer]?
+    let grandparentKey: String?
     let grandparentRatingKey: String?
+    let grandparentTitle: String?
+    let grandparentThumb: String?
+    let media: [PlexMediaPartContainer]?
 
     enum CodingKeys: String, CodingKey {
-        case ratingKey, type, title, thumb, addedAt, updatedAt, lastViewedAt, viewCount, grandparentRatingKey
+        case ratingKey, key, type, title, summary, year, thumb, leafCount, addedAt,
+             grandparentKey, grandparentRatingKey, grandparentTitle, grandparentThumb
         case media = "Media"
     }
 }
@@ -202,9 +207,9 @@ class PlexLibraryService {
         guard var components = URLComponents(string: "\(serverURL)/search") else {
             throw PlexError.invalidURL
         }
-
+        
         let searchTypes = "movie,show"
-
+        
         components.queryItems = [
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "limit", value: "30"),
@@ -212,21 +217,22 @@ class PlexLibraryService {
             URLQueryItem(name: "includeCollections", value: "1"),
             URLQueryItem(name: "X-Plex-Token", value: token)
         ]
-
+        
         guard let url = components.url else {
             throw PlexError.invalidURL
         }
-
+        
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue(APIConstants.clientIdentifier, forHTTPHeaderField: "X-Plex-Client-Identifier")
-
+        request.setValue(Locale.preferredLocale().identifier, forHTTPHeaderField: "Accept-Language")
+        
         let (data, response) = try await URLSession.shared.data(for: request)
-
+        
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
         }
-
+        
         do {
             let decodedResponse = try JSONDecoder().decode(PlexSearchResponse.self, from: data)
             return decodedResponse.mediaContainer.metadata
@@ -238,13 +244,25 @@ class PlexLibraryService {
     func fetchAllTitles(serverURL: String, token: String) async throws -> [String] {
         let allLibraries = try await fetchLibraries(serverURL: serverURL, token: token)
         var allTitles: [String] = []
-
+        
         for library in allLibraries where library.type == "movie" || library.type == "show" {
             let mediaType = library.type == "movie" ? 1 : 2
             let media = try await fetchAllMediaInSection(serverURL: serverURL, token: token, libraryKey: library.key, mediaType: mediaType)
             allTitles.append(contentsOf: media.compactMap { $0.title })
         }
-
+        
         return Array(Set(allTitles))
+    }
+
+    func fetchAllSearchableMedia(serverURL: String, token: String) async throws -> [MediaMetadata] {
+        let allLibraries = try await fetchLibraries(serverURL: serverURL, token: token)
+        var allMedia: [MediaMetadata] = []
+        
+        for library in allLibraries where library.type == "movie" || library.type == "show" {
+            let mediaType = library.type == "movie" ? 1 : 2
+            let media = try await fetchAllMediaInSection(serverURL: serverURL, token: token, libraryKey: library.key, mediaType: mediaType)
+            allMedia.append(contentsOf: media)
+        }
+        return allMedia
     }
 }

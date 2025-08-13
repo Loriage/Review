@@ -15,7 +15,7 @@ class SearchViewModel: ObservableObject {
     @Published private(set) var searchResults: [SearchResult] = []
     @Published private(set) var state: SearchState = .idle
 
-    private var allServerTitles: [String] = []
+    private var searchableMediaCache: [MediaMetadata] = []
     private var isCacheLoading = false
 
     private let serverViewModel: ServerViewModel
@@ -29,72 +29,86 @@ class SearchViewModel: ObservableObject {
         self.libraryService = libraryService
 
         $searchText
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
             .removeDuplicates()
             .sink { [weak self] query in
-                Task {
-                    await self?.performSearch(query: query)
-                }
+                self?.performLocalSearch(query: query)
             }
             .store(in: &cancellables)
     }
 
-    func cacheAllServerTitles() async {
-        guard allServerTitles.isEmpty, !isCacheLoading, let serverDetails = getServerDetails() else { return }
+    func cacheAllSearchableMedia() async {
+        guard searchableMediaCache.isEmpty, !isCacheLoading, let serverDetails = getServerDetails() else { return }
         
         isCacheLoading = true
+        state = .loading
         do {
-            self.allServerTitles = try await libraryService.fetchAllTitles(serverURL: serverDetails.url, token: serverDetails.token)
+            let allMedia = try await libraryService.fetchAllSearchableMedia(serverURL: serverDetails.url, token: serverDetails.token)
+
+            self.searchableMediaCache = allMedia
+            self.state = .idle
         } catch {
-            print("Failed to cache server titles: \(error.localizedDescription)")
+            self.state = .error("Impossible de charger le catalogue pour la recherche.")
         }
         isCacheLoading = false
     }
 
-    func performSearch(query: String) async {
-        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+    private func performLocalSearch(query: String) {
+        if query.trimmingCharacters(in: .whitespaces).isEmpty {
             self.searchResults = []
             self.state = .idle
             return
         }
         
-        guard let serverDetails = getServerDetails() else {
-            self.state = .error("Aucun serveur sélectionné.")
-            return
+        let normalizedQuery = query.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+        let queryWords = normalizedQuery.components(separatedBy: .whitespacesAndNewlines).filter { !$0.isEmpty }
+        
+        let filteredResults = searchableMediaCache.filter { media in
+            guard let title = media.title else { return false }
+            
+            let normalizedTitle = title.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+
+            if normalizedTitle.contains(normalizedQuery) {
+                return true
+            }
+
+            if StringSimilarityHelper.levenshteinDistance(a: normalizedQuery, b: normalizedTitle) <= 2 {
+                return true
+            }
+
+            if queryWords.count == 1 {
+                let singleQueryWord = queryWords[0]
+                let wordsInTitle = normalizedTitle.components(separatedBy: .whitespacesAndNewlines)
+                for titleWord in wordsInTitle {
+                    if StringSimilarityHelper.levenshteinDistance(a: singleQueryWord, b: titleWord) <= 1 {
+                        return true
+                    }
+                }
+            }
+            
+            return false
         }
         
-        self.state = .loading
-
-        do {
-            var apiResults = try await libraryService.searchContent(serverURL: serverDetails.url, token: serverDetails.token, query: query)
-
-            if apiResults.isEmpty {
-                if let correctedQuery = StringSimilarityHelper.findBestMatch(for: query, from: self.allServerTitles) {
-                    apiResults = try await libraryService.searchContent(serverURL: serverDetails.url, token: serverDetails.token, query: correctedQuery)
-                }
-            }
-
-            var finalResults = apiResults.filter { result in
-                let isCorrectType = result.type == "movie" || result.type == "show"
-                let titleMatches = result.title.localizedCaseInsensitiveContains(query)
-                
-                return isCorrectType && titleMatches
-            }
-
-            if finalResults.isEmpty {
-                if let correctedQuery = StringSimilarityHelper.findBestMatch(for: query, from: self.allServerTitles) {
-                    let correctedApiResults = try await libraryService.searchContent(serverURL: serverDetails.url, token: serverDetails.token, query: correctedQuery)
-
-                    finalResults = correctedApiResults.filter { $0.type == "movie" || $0.type == "show" }
-                }
-            }
-
-            self.searchResults = finalResults
-            self.state = finalResults.isEmpty ? .empty : .loaded
-            
-        } catch {
-            self.state = .error("Erreur lors de la recherche : \(error.localizedDescription)")
+        self.searchResults = filteredResults.map { media in
+            SearchResult(
+                ratingKey: media.ratingKey,
+                key: media.key,
+                type: media.type,
+                title: media.title ?? "",
+                summary: media.summary,
+                thumb: media.thumb,
+                year: media.year,
+                leafCount: media.leafCount,
+                index: nil,
+                parentIndex: nil,
+                grandparentKey: media.grandparentKey,
+                grandparentRatingKey: media.grandparentRatingKey,
+                grandparentTitle: media.grandparentTitle,
+                grandparentThumb: media.grandparentThumb
+            )
         }
+        
+        self.state = self.searchResults.isEmpty ? .empty : .loaded
     }
 
     func posterURL(for result: SearchResult) -> URL? {

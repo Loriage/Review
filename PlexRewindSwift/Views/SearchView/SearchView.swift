@@ -77,7 +77,7 @@ struct SearchView: View {
         .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always))
         .onAppear {
             Task {
-                await viewModel.cacheAllServerTitles()
+                await viewModel.cacheAllSearchableMedia()
             }
         }
     }
