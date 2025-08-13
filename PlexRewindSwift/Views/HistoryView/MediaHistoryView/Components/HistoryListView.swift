@@ -12,11 +12,19 @@ struct HistoryListView: View {
     }
 
     private var historySection: some View {
-        Section(header: Text("Historique des visionnages")) {
-            ForEach(viewModel.historyItems) { item in
-                historyRow(for: item)
+        VStack(alignment: .leading) {
+            LazyVStack(spacing: 0) {
+                ForEach(viewModel.historyItems) { item in
+                    historyRow(for: item)
+                    if item.id != viewModel.historyItems.last?.id {
+                        Divider().padding(.leading, 16)
+                    }
+                }
             }
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(12)
         }
+        .padding(.horizontal)
     }
     
     private func historyRow(for item: MediaHistoryItem) -> some View {
@@ -41,27 +49,25 @@ struct HistoryListView: View {
                     .foregroundColor(.secondary)
             }
         }
-        .padding(.vertical, 8)
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var emptyHistoryView: some View {
-        Section {
-            VStack(spacing: 10) {
-                Image(systemName: "film.stack")
-                    .font(.system(size: 20))
-                    .foregroundColor(.secondary)
-                Text("Aucun historique trouvé")
-                    .font(.title3.bold())
-                Text("L'historique pour ce média est vide.")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-            }
-            .frame(maxWidth: .infinity)
+        VStack(spacing: 10) {
+            Image(systemName: "film.stack")
+                .font(.system(size: 20))
+                .foregroundColor(.secondary)
+            Text("Aucun historique trouvé")
+                .font(.title3.bold())
+            Text("L'historique pour ce média est vide.")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
         }
-        .listRowInsets(EdgeInsets())
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 50)
     }
 }

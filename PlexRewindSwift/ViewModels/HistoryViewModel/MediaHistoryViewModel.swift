@@ -7,6 +7,7 @@ class MediaHistoryViewModel: ObservableObject {
     @Published var isLoading = true
     @Published var mediaDetails: MetadataItem?
     @Published var imageRefreshId = UUID()
+    @Published var seasons: [PlexSeason] = []
 
     let ratingKey: String
     let mediaType: String
@@ -39,17 +40,18 @@ class MediaHistoryViewModel: ObservableObject {
     }
 
     var displayPosterURL: URL? {
-        guard let serverID = serverViewModel.selectedServerID,
-              let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
-              let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
-              let token = authManager.getPlexAuthToken(),
+        guard let serverDetails = getServerDetails(),
               let thumbPath = mediaDetails?.thumb ?? mediaDetails?.grandparentThumb
         else {
             return nil
         }
-        
-        let resourceToken = server.accessToken ?? token
-        return URL(string: "\(connection.uri)\(thumbPath)?X-Plex-Token=\(resourceToken)")
+        return URL(string: "\(serverDetails.url)\(thumbPath)?X-Plex-Token=\(serverDetails.token)")
+    }
+    
+    func seasonPosterURL(for season: PlexSeason) -> URL? {
+        guard let path = season.thumb, let serverDetails = getServerDetails() else { return nil }
+        let urlString = "\(serverDetails.url)\(path)?X-Plex-Token=\(serverDetails.token)"
+        return URL(string: urlString)
     }
 
     var summary: String? {
@@ -62,22 +64,45 @@ class MediaHistoryViewModel: ObservableObject {
         await withTaskGroup(of: Void.self) { group in
             group.addTask { await self.fetchMediaDetails() }
             group.addTask { await self.fetchHistory() }
+            if mediaType == "show" || mediaType == "episode" {
+                group.addTask { await self.fetchSeasons() }
+            }
         }
         
         self.isLoading = false
     }
     
-    private func fetchMediaDetails() async {
+    private func getServerDetails() -> (url: String, token: String)? {
         guard let serverID = serverViewModel.selectedServerID,
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = authManager.getPlexAuthToken()
+        else { return nil }
+        let resourceToken = server.accessToken ?? token
+        return (url: connection.uri, token: resourceToken)
+    }
+    
+    private func fetchSeasons() async {
+        guard let serverDetails = getServerDetails(),
+              let showRatingKey = grandparentRatingKey ?? (mediaType == "show" ? ratingKey : nil)
+        else {
+            return
+        }
+        do {
+            self.seasons = try await metadataService.fetchSeasons(for: showRatingKey, serverURL: serverDetails.url, token: serverDetails.token)
+        } catch {
+            print("Failed to fetch seasons: \(error)")
+        }
+    }
+
+    private func fetchMediaDetails() async {
+        guard let serverDetails = getServerDetails()
         else { return }
         
         let keyForDetails = (mediaType == "episode" || mediaType == "show") ? (grandparentRatingKey ?? ratingKey) : ratingKey
         
         do {
-            self.mediaDetails = try await metadataService.fetchMediaDetails(for: keyForDetails, serverURL: connection.uri, token: server.accessToken ?? token)
+            self.mediaDetails = try await metadataService.fetchMediaDetails(for: keyForDetails, serverURL: serverDetails.url, token: serverDetails.token)
         } catch {
         }
     }

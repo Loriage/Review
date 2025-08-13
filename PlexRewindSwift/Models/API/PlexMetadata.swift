@@ -7,6 +7,10 @@ struct MetadataItem: Decodable {
     let art: String?
     let tagline: String?
     let genre: [Genre]?
+    let director: [Genre]?
+    let writer: [Genre]?
+    let role: [Genre]?
+    let studio: String?
 
     let title: String?
     let thumb: String?
@@ -16,5 +20,13 @@ struct MetadataItem: Decodable {
     struct Genre: Decodable, Identifiable {
         let id: Int
         let tag: String
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case duration, summary, year, art, tagline, title, thumb, grandparentThumb, grandparentRatingKey, studio
+        case genre = "Genre"
+        case director = "Director"
+        case writer = "Writer"
+        case role = "Role"
     }
 }

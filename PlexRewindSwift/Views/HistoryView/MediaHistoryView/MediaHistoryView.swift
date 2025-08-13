@@ -8,12 +8,17 @@ struct MediaHistoryView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
 
+    @State private var selectedTab: MediaHistoryTab = .information
     @State private var showingSettings = false
     @State private var showMediaDetails = false
     @State private var showImageSelector = false
     @State private var showFixMatchView = false
     @State private var showingAnalysisAlert = false
     @State private var sheetHeight: CGFloat = 250
+
+    enum MediaHistoryTab {
+        case history, information, seasons
+    }
 
     init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, authManager: PlexAuthManager, statsViewModel: StatsViewModel) {
         _viewModel = StateObject(wrappedValue: MediaHistoryViewModel(
@@ -30,7 +35,40 @@ struct MediaHistoryView: View {
 
     var body: some View {
         ZStack {
-            contentView
+            if viewModel.isLoading {
+                ProgressView("Chargement...")
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        if viewModel.mediaDetails != nil {
+                            MediaHeaderView(viewModel: viewModel)
+                        }
+                        
+                        Picker("Menu", selection: $selectedTab) {
+                            Text("Informations").tag(MediaHistoryTab.information)
+                            Text("Historique").tag(MediaHistoryTab.history)
+                            if viewModel.mediaType == "show" || viewModel.mediaType == "episode" {
+                                Text("Saisons").tag(MediaHistoryTab.seasons)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal)
+
+                        switch selectedTab {
+                        case .history:
+                            HistoryListView(viewModel: viewModel)
+                        case .information:
+                            MediaInfoView(viewModel: viewModel)
+                                .padding(.horizontal)
+                        case .seasons:
+                            SeasonsView(viewModel: viewModel)
+                        }
+                    }
+                    .padding(.vertical)
+                }
+                .refreshable { await viewModel.refreshData() }
+            }
+            
             if let hudMessage = actionsViewModel.hudMessage {
                 HUDView(hudMessage: hudMessage)
                     .transition(.scale.combined(with: .opacity))
@@ -47,21 +85,6 @@ struct MediaHistoryView: View {
         .task {
             await viewModel.loadData()
             actionsViewModel.update(ratingKey: viewModel.ratingKeyForActions)
-        }
-    }
-
-    @ViewBuilder
-    private var contentView: some View {
-        if viewModel.isLoading {
-            ProgressView("Chargement de l'historique...")
-        } else {
-            List {
-                if viewModel.mediaDetails != nil {
-                    MediaHeaderView(viewModel: viewModel)
-                }
-                HistoryListView(viewModel: viewModel)
-            }
-            .refreshable { await viewModel.refreshData() }
         }
     }
     
