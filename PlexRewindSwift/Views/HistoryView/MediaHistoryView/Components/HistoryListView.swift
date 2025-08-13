@@ -15,7 +15,17 @@ struct HistoryListView: View {
         VStack(alignment: .leading) {
             LazyVStack(spacing: 0) {
                 ForEach(viewModel.historyItems) { item in
-                    historyRow(for: item)
+                    NavigationLink(destination: UserHistoryView(
+                        userID: item.session.accountID ?? 0,
+                        userName: item.userName ?? "Utilisateur inconnu",
+                        statsViewModel: viewModel.statsViewModel,
+                        serverViewModel: viewModel.serverViewModel,
+                        authManager: viewModel.authManager
+                    )) {
+                        historyRow(for: item)
+                    }
+                    .buttonStyle(.plain)
+
                     if item.id != viewModel.historyItems.last?.id {
                         Divider().padding(.leading, 16)
                     }
@@ -53,10 +63,17 @@ struct HistoryListView: View {
                         .foregroundColor(.secondary)
                 }
             }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.body.weight(.semibold))
+                .foregroundColor(.secondary.opacity(0.5))
         }
         .padding(.horizontal)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
     }
 
     private var emptyHistoryView: some View {

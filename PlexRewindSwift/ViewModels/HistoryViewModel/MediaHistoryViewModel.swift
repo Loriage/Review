@@ -13,9 +13,9 @@ class MediaHistoryViewModel: ObservableObject {
     let mediaType: String
     let grandparentRatingKey: String?
     
-    private let serverViewModel: ServerViewModel
-    private let statsViewModel: StatsViewModel
-    private let authManager: PlexAuthManager
+    let serverViewModel: ServerViewModel
+    let statsViewModel: StatsViewModel
+    let authManager: PlexAuthManager
     private let metadataService: PlexMetadataService
     
     init(ratingKey: String, mediaType: String, grandparentRatingKey: String?, serverViewModel: ServerViewModel, statsViewModel: StatsViewModel, authManager: PlexAuthManager) {
