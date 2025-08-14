@@ -16,6 +16,23 @@ struct ServerDetailsView: View {
             Section(header: Text("Paramètres")) {
                 NavigationLink(destination: InfoView()) {
                     HStack(spacing: 10) {
+                        Image(systemName: "gearshape")
+                            .font(.title2)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Préférences")
+                                .font(.headline)
+                            Text("Configure ton serveur, tu en as le pouvoir !")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 2)
+                }
+                .buttonStyle(.plain)
+
+                NavigationLink(destination: InfoView()) {
+                    HStack(spacing: 10) {
                         Image(systemName: "chart.xyaxis.line")
                             .font(.title2)
                         
@@ -23,6 +40,24 @@ struct ServerDetailsView: View {
                             Text("Graphes")
                                 .font(.headline)
                             Text("Découvre ce qui peut rendre ton serveur poussif.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 2)
+                }
+                .buttonStyle(.plain)
+
+                
+                NavigationLink(destination: InfoView()) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "newspaper")
+                            .font(.title2)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Fichiers journaux")
+                                .font(.headline)
+                            Text("Parfois, il faut savoir défricher.")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
