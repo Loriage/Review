@@ -78,6 +78,9 @@
     "Aucun serveur sélectionné" : {
 
     },
+    "Aucun serveur trouvé." : {
+
+    },
     "Aucune activité" : {
 
     },
@@ -108,6 +111,9 @@
     "Changer d'image" : {
 
     },
+    "Changer de serveur" : {
+
+    },
     "Chargement de l'historique..." : {
 
     },
@@ -126,6 +132,9 @@
     "Choisissez un serveur..." : {
 
     },
+    "Compte" : {
+
+    },
     "Corriger l'association" : {
 
     },
@@ -141,6 +150,9 @@
     "Date" : {
 
     },
+    "Découvre ce qui peut rendre ton serveur poussif." : {
+
+    },
     "Dernier scan :" : {
 
     },
@@ -148,6 +160,9 @@
 
     },
     "Détails du média" : {
+
+    },
+    "Détails du serveur" : {
 
     },
     "Distant" : {
@@ -192,6 +207,9 @@
     "Finalisez la connexion" : {
 
     },
+    "Graphes" : {
+
+    },
     "Historique" : {
 
     },
@@ -213,13 +231,13 @@
     "Informations de la bibliothèque" : {
 
     },
+    "Informations générales" : {
+
+    },
     "Informations non disponibles." : {
 
     },
     "Informations Système" : {
-
-    },
-    "infos" : {
 
     },
     "Interrompre" : {
@@ -278,6 +296,9 @@
     "Par défaut, le serveur de médias ne détruit pas immédiatement les informations concernant les médias.\n\nCela est utile quand un lecteur est temporairement déconnecté.\n\nLorsque vous videz la corbeille pour une section, toutes les informations sur les médias manquants sont supprimées." : {
 
     },
+    "Paramètres" : {
+
+    },
     "Paramètres de la bibliothèque" : {
 
     },
@@ -288,6 +309,9 @@
 
     },
     "Plex" : {
+
+    },
+    "Plex Pass" : {
 
     },
     "Re-synchroniser l'historique" : {
@@ -349,7 +373,13 @@
     "Séries" : {
 
     },
+    "Serveur" : {
+
+    },
     "Serveur Plex" : {
+
+    },
+    "Serveurs disponibles" : {
 
     },
     "Stats" : {
@@ -386,6 +416,9 @@
 
     },
     "Utilisateur" : {
+
+    },
+    "Version %@" : {
 
     },
     "Vider" : {

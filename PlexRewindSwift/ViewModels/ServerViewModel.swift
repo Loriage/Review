@@ -42,8 +42,9 @@ class ServerViewModel: ObservableObject {
         do {
             let servers = try await libraryService.fetchServers(token: token)
             self.availableServers = servers
-            if let server = servers.first, servers.count == 1 {
-                self.selectedServerID = server.id
+
+            if let firstServer = servers.first {
+                self.selectedServerID = firstServer.id
             }
         } catch {
             errorMessage = "Impossible de récupérer la liste des serveurs. \(error.localizedDescription)"
@@ -68,7 +69,7 @@ class ServerViewModel: ObservableObject {
 
             if let mainAccount = try? await userService.fetchAccount(token: token) {
                 if let adminIndex = usersFromServer.firstIndex(where: { $0.id == 1 }) {
-                    if usersFromServer[adminIndex].title == mainAccount.title {
+                    if usersFromServer[adminIndex].title == mainAccount.username {
                         usersFromServer[adminIndex].thumb = mainAccount.thumb
                     }
                 }

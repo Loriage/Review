@@ -4,6 +4,8 @@ struct PlexResource: Codable, Identifiable {
     let name: String
     let product: String
     let productVersion: String
+    let platform: String
+    let platformVersion: String
     let clientIdentifier: String
     let createdAt: String
     let lastSeenAt: String
