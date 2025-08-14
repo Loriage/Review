@@ -25,6 +25,10 @@ class EpisodeHistoryViewModel: ObservableObject {
         self.metadataService = PlexMetadataService()
     }
 
+    var ratingKeyForActions: String {
+        return episode.ratingKey
+    }
+
     var displayTitle: String {
         return episodeDetails?.title ?? episode.title
     }
@@ -88,5 +92,13 @@ class EpisodeHistoryViewModel: ObservableObject {
             }
             return MediaHistoryItem(id: session.id, session: session, userName: userName, userThumbURL: userThumbURL)
         }
+    }
+
+    func refreshSessionDetails() async {
+        if let url = displayPosterURL {
+            ImageCache.shared.invalidate(url: url)
+        }
+        self.imageRefreshId = UUID()
+        await fetchEpisodeDetails()
     }
 }

@@ -38,6 +38,9 @@
     "Actualiser les métadonnées" : {
 
     },
+    "Actualiser les métadonnées de l'épisode" : {
+
+    },
     "Afficher l'historique de l'élément" : {
 
     },
@@ -51,6 +54,9 @@
 
     },
     "Analyser" : {
+
+    },
+    "Analyser l'épisode" : {
 
     },
     "Annuler" : {
@@ -234,6 +240,9 @@
           }
         }
       }
+    },
+    "Modifier l'affiche de l'épisode" : {
+
     },
     "Modifier l'image" : {
 
