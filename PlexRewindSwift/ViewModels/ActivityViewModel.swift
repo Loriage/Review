@@ -71,8 +71,10 @@ class ActivityViewModel: ObservableObject {
             } else {
                 self.state = .empty
             }
+            self.activityCount = 0
         } catch {
             self.state = .empty
+            self.activityCount = 0
         }
     }
 }
