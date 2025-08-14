@@ -4,9 +4,12 @@ struct ActivityHeaderView: View {
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
+    @EnvironmentObject var activityViewModel: ActivityViewModel
     
     let session: PlexActivitySession
     @Binding var dominantColor: Color
+    
+    @ObservedObject var actionsViewModel: ActivityActionsViewModel
     
     @State private var isShowingSheet = false
     @State private var isShowingStopAlert = false
@@ -69,20 +72,14 @@ struct ActivityHeaderView: View {
             }) {
                 Image(systemName: "info.circle")
                     .foregroundColor(.secondary)
-                    .font(.title2.weight(.semibold))
+                    .font(.title2.weight(.medium))
             }
             .buttonStyle(.plain)
         }
         .padding()
         .sheet(isPresented: $isShowingSheet) {
-            let actionsViewModel = ActivityActionsViewModel(
-                session: session,
-                serverViewModel: serverViewModel,
-                authManager: authManager
-            )
             ActivitySettingsSheet(
                 session: session,
-                actionsViewModel: actionsViewModel,
                 isPresented: $isShowingSheet,
                 showStopAlert: $isShowingStopAlert,
                 navigateToMediaHistory: $navigateToMediaHistory,
@@ -96,8 +93,7 @@ struct ActivityHeaderView: View {
             Button("Annuler", role: .cancel) { }
             Button("Interrompre", role: .destructive) {
                 Task {
-                    let viewModel = ActivityActionsViewModel(session: session, serverViewModel: serverViewModel, authManager: authManager)
-                    await viewModel.stopPlayback(reason: stopReason)
+                    await actionsViewModel.stopPlayback(reason: stopReason)
                 }
             }
         } message: {

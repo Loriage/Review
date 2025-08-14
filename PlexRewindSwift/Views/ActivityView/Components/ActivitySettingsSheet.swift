@@ -2,9 +2,8 @@ import SwiftUI
 
 struct ActivitySettingsSheet: View {
     let session: PlexActivitySession
-    
-    @StateObject var actionsViewModel: ActivityActionsViewModel
-
+        
+    @EnvironmentObject var activityViewModel: ActivityViewModel
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var statsViewModel: StatsViewModel
     @EnvironmentObject var authManager: PlexAuthManager
@@ -13,17 +12,8 @@ struct ActivitySettingsSheet: View {
     @Binding var showStopAlert: Bool
     @Binding var navigateToMediaHistory: Bool
     @Binding var navigateToUserHistory: Bool
-    
-    @State private var showMediaDetails = false
 
-    init(session: PlexActivitySession, actionsViewModel: ActivityActionsViewModel, isPresented: Binding<Bool>, showStopAlert: Binding<Bool>, navigateToMediaHistory: Binding<Bool>, navigateToUserHistory: Binding<Bool>) {
-        self.session = session
-        self._actionsViewModel = StateObject(wrappedValue: actionsViewModel)
-        self._isPresented = isPresented
-        self._showStopAlert = showStopAlert
-        self._navigateToMediaHistory = navigateToMediaHistory
-        self._navigateToUserHistory = navigateToUserHistory
-    }
+    @State private var showMediaDetails = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -48,11 +38,11 @@ struct ActivitySettingsSheet: View {
                 Label("Détails du média", systemImage: "info.circle")
             }
             
-            Button(action: { handleActionAsync { await actionsViewModel.refreshMetadata() } }) {
+            Button(action: { handleActionAsync { await activityViewModel.refreshMetadata(for: session) } }) {
                 Label("Actualiser les métadonnées", systemImage: "arrow.triangle.2.circlepath")
             }
             
-            Button(action: { handleActionAsync { await actionsViewModel.analyzeMedia() } }) {
+            Button(action: { handleActionAsync { await activityViewModel.analyzeMedia(for: session) } }) {
                 Label("Analyser", systemImage: "wand.and.rays")
             }
             

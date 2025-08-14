@@ -9,37 +9,44 @@ struct ActivityView: View {
 
     var body: some View {
         NavigationStack {
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack {
-                        switch activityViewModel.state {
-                        case .content(let sessions):
-                            VStack(spacing: 15) {
-                                ForEach(sessions) { session in
-                                    ActivityRowView(session: session)
+            ZStack {
+                GeometryReader { geometry in
+                    ScrollView {
+                        VStack {
+                            switch activityViewModel.state {
+                            case .content(let sessions):
+                                VStack(spacing: 15) {
+                                    ForEach(sessions) { session in
+                                        ActivityRowView(session: session)
+                                    }
                                 }
+                                .padding()
+                                Spacer()
+                            case .loading:
+                                ProgressView()
+                                
+                            case .forbidden:
+                                PermissionDeniedView()
+                                
+                            case .noServerSelected:
+                                NoServerView()
+                                
+                            case .empty:
+                                EmptyStateView()
                             }
-                            .padding()
-                            Spacer()
-                        case .loading:
-                            ProgressView()
-                            
-                        case .forbidden:
-                            PermissionDeniedView()
-                            
-                        case .noServerSelected:
-                            NoServerView()
-                            
-                        case .empty:
-                            EmptyStateView()
                         }
+                        .frame(maxWidth: .infinity)
+                        .frame(minHeight: geometry.size.height)
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(minHeight: geometry.size.height)
+                    .scrollIndicators(.hidden)
+                    .refreshable {
+                        await activityViewModel.refreshActivity()
+                    }
                 }
-                .scrollIndicators(.hidden)
-                .refreshable {
-                    await activityViewModel.refreshActivity()
+                if let hudMessage = activityViewModel.hudMessage {
+                    HUDView(hudMessage: hudMessage)
+                        .transition(.scale.combined(with: .opacity))
+                        .animation(.spring(), value: activityViewModel.hudMessage)
                 }
             }
             .navigationTitle("Activité en cours")

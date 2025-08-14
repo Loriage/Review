@@ -16,7 +16,7 @@ struct AuthenticatedContentView: View {
         let statsVM = StatsViewModel(serverViewModel: serverVM)
 
         _serverViewModel = StateObject(wrappedValue: serverVM)
-        _activityViewModel = StateObject(wrappedValue: ActivityViewModel(serverViewModel: serverVM))
+        _activityViewModel = StateObject(wrappedValue: ActivityViewModel(serverViewModel: serverVM, authManager: authManager))
         _statsViewModel = StateObject(wrappedValue: statsVM)
         _topStatsViewModel = StateObject(wrappedValue: TopStatsViewModel(serverViewModel: serverVM, authManager: authManager))
         _searchViewModel = StateObject(wrappedValue: SearchViewModel(serverViewModel: serverVM, authManager: authManager))
