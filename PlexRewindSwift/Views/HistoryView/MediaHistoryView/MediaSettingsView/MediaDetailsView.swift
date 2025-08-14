@@ -43,6 +43,7 @@ struct MediaDetailsView: View {
                                         Text("CHEMIN").font(.caption).foregroundColor(.secondary)
                                         HStack {
                                             Text(part.file ?? "Chemin non disponible")
+                                                .font(.headline.weight(.semibold))
                                                 .lineLimit(1)
                                                 .truncationMode(.middle)
                                         }

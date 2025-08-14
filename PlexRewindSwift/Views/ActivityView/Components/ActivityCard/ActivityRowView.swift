@@ -2,26 +2,16 @@ import SwiftUI
 
 struct ActivityRowView: View {
     let session: PlexActivitySession
-    
-    @StateObject private var actionsViewModel: ActivityActionsViewModel
+
     @State private var dominantColor: Color = Color(.systemGray4)
     
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
 
-    init(session: PlexActivitySession) {
-        self.session = session
-        _actionsViewModel = StateObject(wrappedValue: ActivityActionsViewModel(
-            session: session,
-            serverViewModel: ServerViewModel(authManager: PlexAuthManager()),
-            authManager: PlexAuthManager()
-        ))
-    }
-
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                ActivityHeaderView(session: session, dominantColor: $dominantColor, actionsViewModel: actionsViewModel)
+                ActivityHeaderView(session: session, dominantColor: $dominantColor)
                 
                 ProgressView(value: session.progress)
                     .progressViewStyle(
@@ -43,12 +33,6 @@ struct ActivityRowView: View {
                 )
             )
             .cornerRadius(20)
-
-            if let hudMessage = actionsViewModel.hudMessage {
-                HUDView(hudMessage: hudMessage)
-                    .transition(.scale.combined(with: .opacity))
-                    .animation(.spring(), value: actionsViewModel.hudMessage)
-            }
         }
     }
 }

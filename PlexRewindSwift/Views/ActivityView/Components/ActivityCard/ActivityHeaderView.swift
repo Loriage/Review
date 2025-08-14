@@ -9,8 +9,6 @@ struct ActivityHeaderView: View {
     let session: PlexActivitySession
     @Binding var dominantColor: Color
     
-    @ObservedObject var actionsViewModel: ActivityActionsViewModel
-    
     @State private var isShowingSheet = false
     @State private var isShowingStopAlert = false
     @State private var navigateToMediaHistory = false
@@ -93,7 +91,7 @@ struct ActivityHeaderView: View {
             Button("Annuler", role: .cancel) { }
             Button("Interrompre", role: .destructive) {
                 Task {
-                    await actionsViewModel.stopPlayback(reason: stopReason)
+                    await activityViewModel.stopPlayback(for: session, reason: stopReason)
                 }
             }
         } message: {
