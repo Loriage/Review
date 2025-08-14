@@ -71,7 +71,7 @@ private struct MediaGrowthChartView: View {
             .frame(height: 180)
         }
         .padding()
-        .background(.thinMaterial)
+        .background(Color(.secondarySystemBackground))
         .cornerRadius(16)
     }
 }
