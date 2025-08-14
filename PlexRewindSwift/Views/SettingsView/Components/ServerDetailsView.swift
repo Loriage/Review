@@ -14,7 +14,7 @@ struct ServerDetailsView: View {
             }
             
             Section(header: Text("Paramètres")) {
-                NavigationLink(destination: InfoView()) {
+                NavigationLink(destination: PrefsView()) {
                     HStack(spacing: 10) {
                         Image(systemName: "gearshape")
                             .font(.title2)
@@ -49,7 +49,7 @@ struct ServerDetailsView: View {
                 .buttonStyle(.plain)
 
                 
-                NavigationLink(destination: InfoView()) {
+                NavigationLink(destination: LogsView()) {
                     HStack(spacing: 10) {
                         Image(systemName: "newspaper")
                             .font(.title2)

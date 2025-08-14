@@ -299,16 +299,25 @@
     "Nombre de médias" : {
 
     },
+    "Non défini" : {
+
+    },
     "Par défaut, le serveur de médias ne détruit pas immédiatement les informations concernant les médias.\n\nCela est utile quand un lecteur est temporairement déconnecté.\n\nLorsque vous videz la corbeille pour une section, toutes les informations sur les médias manquants sont supprimées." : {
 
     },
     "Paramètres" : {
 
     },
+    "Paramètres avancés du serveur" : {
+
+    },
     "Paramètres de la bibliothèque" : {
 
     },
     "Paramètres Plex" : {
+
+    },
+    "Paramètres supplémentaires pour administrateur de serveur expérimenté uniquement." : {
 
     },
     "Parfois, il faut savoir défricher." : {
@@ -326,6 +335,12 @@
     "Préférences" : {
 
     },
+    "Quitter" : {
+
+    },
+    "Quitter sans sauvegarder ?" : {
+
+    },
     "Re-synchroniser l'historique" : {
 
     },
@@ -339,6 +354,9 @@
 
     },
     "Rendez-vous sur le site web suivant et entrez le code ci-dessous :" : {
+
+    },
+    "Rester" : {
 
     },
     "Revivez votre année de visionnage avec des statistiques personnalisées sur vos films et séries préférés." : {
@@ -448,7 +466,13 @@
     "Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur." : {
 
     },
+    "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter ?" : {
+
+    },
     "Vous pouvez envoyer un message à l'utilisateur pour l'informer de la raison de l'interruption." : {
+
+    },
+    "Vue des fichiers journaux à implémenter." : {
 
     }
   },
