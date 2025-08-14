@@ -56,7 +56,7 @@ struct ActivitySettingsSheet: View {
             }
             .foregroundColor(.red)
         }
-        .font(.headline)
+        .font(.body)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .padding(.top, 20)

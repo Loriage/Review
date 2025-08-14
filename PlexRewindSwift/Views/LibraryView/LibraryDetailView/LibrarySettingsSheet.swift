@@ -31,7 +31,7 @@ struct LibrarySettingsSheet: View {
                 Label("Vider la corbeille", systemImage: "trash")
             }
         }
-        .font(.headline)
+        .font(.body)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .padding(.top, 20)

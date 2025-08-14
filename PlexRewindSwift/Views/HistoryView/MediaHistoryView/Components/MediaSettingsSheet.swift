@@ -34,7 +34,7 @@ struct MediaSettingsSheet: View {
                 Label("Corriger l'association...", systemImage: "pencil")
             }
         }
-        .font(.headline)
+        .font(.body)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .padding(.top, 20)
