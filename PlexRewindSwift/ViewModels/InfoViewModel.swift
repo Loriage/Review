@@ -7,7 +7,8 @@ class InfoViewModel: ObservableObject {
     @Published var remoteNetworkData: [(Date, Double)] = []
     @Published var plexCpuData: [(Date, Double)] = []
     @Published var systemCpuData: [(Date, Double)] = []
-    @Published var ramData: [(Date, Double)] = []
+    @Published var plexRamData: [(Date, Double)] = []
+    @Published var systemRamData: [(Date, Double)] = []
     @Published var networkUnit: String = "Kb/s"
     @Published var isLoading = true
     
@@ -58,7 +59,8 @@ class InfoViewModel: ObservableObject {
             
             plexCpuData = resources.map { (Date(timeIntervalSince1970: TimeInterval($0.at)), $0.processCpuUtilization) }
             systemCpuData = resources.map { (Date(timeIntervalSince1970: TimeInterval($0.at)), $0.hostCpuUtilization) }
-            ramData = resources.map { (Date(timeIntervalSince1970: TimeInterval($0.at)), $0.hostMemoryUtilization) }
+            plexRamData = resources.map { (Date(timeIntervalSince1970: TimeInterval($0.at)), $0.processMemoryUtilization) }
+            systemRamData = resources.map { (Date(timeIntervalSince1970: TimeInterval($0.at)), $0.hostMemoryUtilization) }
 
             let allTimestamps = Set(bandwidth.map { $0.at }).sorted()
 

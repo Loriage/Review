@@ -31,10 +31,10 @@ struct InfoView: View {
                             unit: "%"
                         )
 
-                        ChartView(
+                        RamChartView(
                             title: "Utilisation RAM",
-                            data: viewModel.ramData,
-                            color: .green,
+                            plexData: viewModel.plexRamData,
+                            systemData: viewModel.systemRamData,
                             unit: "%"
                         )
                     }
@@ -53,11 +53,102 @@ struct InfoView: View {
     }
 }
 
+struct RamChartView: View {
+    let title: String
+    let plexData: [(Date, Double)]
+    let systemData: [(Date, Double)]
+    let unit: String
+
+    private var latestDate: Date {
+        let maxPlex = plexData.max(by: { $0.0 < $1.0 })?.0
+        let maxSystem = systemData.max(by: { $0.0 < $1.0 })?.0
+        
+        if let maxPlex = maxPlex, let maxSystem = maxSystem {
+            return max(maxPlex, maxSystem)
+        }
+        return maxPlex ?? maxSystem ?? Date()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.headline.bold())
+                .padding(.bottom, 5)
+
+            Chart {
+                ForEach(plexData, id: \.0) { date, value in
+                    LineMark(x: .value("Date", date), y: .value("Plex", value))
+                        .foregroundStyle(by: .value("Usage", "Plex Media Server"))
+                        .interpolationMethod(.monotone)
+                }
+                
+                ForEach(systemData, id: \.0) { date, value in
+                    LineMark(x: .value("Date", date), y: .value("Système", value))
+                        .foregroundStyle(by: .value("Usage", "Système"))
+                        .interpolationMethod(.monotone)
+                }
+            }
+            .chartForegroundStyleScale([
+                "Plex Media Server": Color.cyan,
+                "Système": Color.pink
+            ])
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisGridLine()
+                    AxisValueLabel {
+                        if let doubleValue = value.as(Double.self) {
+                            Text("\(doubleValue, specifier: "%.0f")\(unit)")
+                        }
+                    }
+                }
+            }
+            .chartXAxis {
+                AxisMarks(values: .automatic(desiredCount: 4)) { value in
+                    AxisGridLine()
+                    if let date = value.as(Date.self) {
+                        AxisValueLabel(formatted(date: date, relativeTo: latestDate))
+                    }
+                }
+            }
+            .chartLegend(position: .top, alignment: .trailing)
+            .frame(height: 200)
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(16)
+    }
+
+    private func formatted(date: Date, relativeTo latestDate: Date) -> String {
+        let difference = latestDate.timeIntervalSince(date)
+        
+        if difference <= 1 {
+            return "Maintenant"
+        }
+        
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.allowedUnits = [.minute, .second]
+        formatter.maximumUnitCount = 1
+        
+        return formatter.string(from: difference) ?? ""
+    }
+}
+
 struct NetworkChartView: View {
     let title: String
     let localData: [(Date, Double)]
     let remoteData: [(Date, Double)]
     let unit: String
+
+    private var latestDate: Date {
+        let maxLocal = localData.max(by: { $0.0 < $1.0 })?.0
+        let maxRemote = remoteData.max(by: { $0.0 < $1.0 })?.0
+        
+        if let maxLocal = maxLocal, let maxRemote = maxRemote {
+            return max(maxLocal, maxRemote)
+        }
+        return maxLocal ?? maxRemote ?? Date()
+    }
 
     private func scaleValue(_ bytes: Double) -> Double {
         let bits = bytes * 8
@@ -103,8 +194,8 @@ struct NetworkChartView: View {
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 4)) { value in
                     AxisGridLine()
-                    if value.as(Date.self) != nil {
-                        AxisValueLabel(format: .dateTime.hour().minute().second())
+                    if let date = value.as(Date.self) {
+                        AxisValueLabel(formatted(date: date, relativeTo: latestDate))
                     }
                 }
             }
@@ -115,6 +206,21 @@ struct NetworkChartView: View {
         .background(Color(.secondarySystemBackground))
         .cornerRadius(16)
     }
+
+    private func formatted(date: Date, relativeTo latestDate: Date) -> String {
+        let difference = latestDate.timeIntervalSince(date)
+        
+        if difference <= 1 {
+            return "Maintenant"
+        }
+        
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.allowedUnits = [.minute, .second]
+        formatter.maximumUnitCount = 1
+        
+        return formatter.string(from: difference) ?? ""
+    }
 }
 
 struct CpuChartView: View {
@@ -122,6 +228,16 @@ struct CpuChartView: View {
     let plexData: [(Date, Double)]
     let systemData: [(Date, Double)]
     let unit: String
+
+    private var latestDate: Date {
+        let maxPlex = plexData.max(by: { $0.0 < $1.0 })?.0
+        let maxSystem = systemData.max(by: { $0.0 < $1.0 })?.0
+        
+        if let maxPlex = maxPlex, let maxSystem = maxSystem {
+            return max(maxPlex, maxSystem)
+        }
+        return maxPlex ?? maxSystem ?? Date()
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -159,8 +275,8 @@ struct CpuChartView: View {
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 4)) { value in
                     AxisGridLine()
-                    if value.as(Date.self) != nil {
-                        AxisValueLabel(format: .dateTime.hour().minute().second())
+                    if let date = value.as(Date.self) {
+                        AxisValueLabel(formatted(date: date, relativeTo: latestDate))
                     }
                 }
             }
@@ -171,52 +287,19 @@ struct CpuChartView: View {
         .background(Color(.secondarySystemBackground))
         .cornerRadius(16)
     }
-}
 
-
-struct ChartView: View {
-    let title: String
-    let data: [(Date, Double)]
-    let color: Color
-    let unit: String
-
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(title)
-                .font(.headline.bold())
-                .padding(.bottom, 10)
-
-            Chart {
-                ForEach(data, id: \.0) { date, value in
-                    LineMark(x: .value("Date", date), y: .value(title, value))
-                        .interpolationMethod(.monotone).foregroundStyle(color)
-                    AreaMark(x: .value("Date", date), y: .value(title, value))
-                        .interpolationMethod(.monotone)
-                        .foregroundStyle(LinearGradient(gradient: Gradient(colors: [color.opacity(0.4), color.opacity(0.01)]), startPoint: .top, endPoint: .bottom))
-                }
-            }
-            .chartYAxis {
-                AxisMarks(position: .leading) { value in
-                    AxisGridLine()
-                    AxisValueLabel {
-                        if let doubleValue = value.as(Double.self) {
-                            Text("\(doubleValue, specifier: "%.1f") \(unit)")
-                        }
-                    }
-                }
-            }
-            .chartXAxis {
-                AxisMarks(values: .automatic(desiredCount: 4)) { value in
-                    AxisGridLine()
-                    if value.as(Date.self) != nil {
-                        AxisValueLabel(format: .dateTime.hour().minute().second())
-                    }
-                }
-            }
-            .frame(height: 200)
+    private func formatted(date: Date, relativeTo latestDate: Date) -> String {
+        let difference = latestDate.timeIntervalSince(date)
+        
+        if difference <= 1 {
+            return "Maintenant"
         }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(16)
+        
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.allowedUnits = [.minute, .second]
+        formatter.maximumUnitCount = 1
+        
+        return formatter.string(from: difference) ?? ""
     }
 }
