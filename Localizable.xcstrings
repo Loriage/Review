@@ -4,6 +4,26 @@
     " (%@)" : {
 
     },
+    "%.0f%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$.0f%2$@"
+          }
+        }
+      }
+    },
+    "%.1f %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$.1f %2$@"
+          }
+        }
+      }
+    },
     "%@" : {
 
     },
@@ -99,6 +119,9 @@
 
     },
     "Chargement de l'historique..." : {
+
+    },
+    "Chargement des données..." : {
 
     },
     "Chargement des épisodes..." : {
@@ -203,6 +226,12 @@
     "Informations non disponibles." : {
 
     },
+    "Informations Système" : {
+
+    },
+    "infos" : {
+
+    },
     "Interrompre" : {
 
     },
@@ -266,6 +295,9 @@
 
     },
     "Période" : {
+
+    },
+    "Plex" : {
 
     },
     "Re-synchroniser l'historique" : {
@@ -336,6 +368,9 @@
     "Synchroniser l'historique complet" : {
 
     },
+    "Système" : {
+
+    },
     "Taille :" : {
 
     },
@@ -351,7 +386,13 @@
     "Trier par" : {
 
     },
+    "Type" : {
+
+    },
     "Type de champ inconnu : %@" : {
+
+    },
+    "Usage" : {
 
     },
     "Utilisateur" : {

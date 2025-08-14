@@ -52,7 +52,10 @@ struct ActivityView: View {
             .navigationTitle("Activité en cours")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    NavigationLink(destination: InfoView()) {
+                        Label("infos", systemImage: "info.circle")
+                    }
                     NavigationLink(destination: SettingsView()) {
                         Label("Réglages", systemImage: "gearshape.fill")
                     }
