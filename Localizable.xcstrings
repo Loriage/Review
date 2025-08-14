@@ -38,6 +38,12 @@
     "Actualiser les métadonnées" : {
 
     },
+    "Afficher l'historique de l'élément" : {
+
+    },
+    "Afficher l'historique de l'utilisateur" : {
+
+    },
     "Allez dans l'onglet \"Réglages\" pour choisir un serveur Plex." : {
 
     },
@@ -191,6 +197,15 @@
     "Informations non disponibles." : {
 
     },
+    "Interrompre" : {
+
+    },
+    "Interrompre l'écoute" : {
+
+    },
+    "Interrompre la lecture" : {
+
+    },
     "L'historique pour ce média est vide." : {
 
     },
@@ -204,6 +219,9 @@
 
     },
     "Menu" : {
+
+    },
+    "Message (optionnel)" : {
 
     },
     "Mise à jour le: %@" : {
@@ -343,6 +361,9 @@
 
     },
     "Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur." : {
+
+    },
+    "Vous pouvez envoyer un message à l'utilisateur pour l'informer de la raison de l'interruption." : {
 
     }
   },

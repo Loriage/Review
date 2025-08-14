@@ -7,54 +7,122 @@ struct ActivityHeaderView: View {
     
     let session: PlexActivitySession
     @Binding var dominantColor: Color
+    
+    @State private var isShowingSheet = false
+    @State private var isShowingStopAlert = false
+    @State private var navigateToMediaHistory = false
+    @State private var navigateToUserHistory = false
+    @State private var stopReason = ""
 
     var body: some View {
-        NavigationLink(destination: MediaHistoryView(
-            ratingKey: session.grandparentRatingKey ?? session.ratingKey,
-            mediaType: session.type == "movie" ? "movie" : "show",
-            grandparentRatingKey: session.grandparentRatingKey,
-            serverViewModel: serverViewModel,
-            authManager: authManager,
-            statsViewModel: statsViewModel
-        )) {
-            HStack(spacing: 15) {
-                AsyncImageView(url: session.posterURL, contentMode: .fill) { color in
-                    self.dominantColor = color
-                }
-                .frame(width: 60, height: 90)
-                .cornerRadius(8)
-                .overlay(PosterOverlay(session: session))
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(session.showTitle)
-                        .font(.headline)
-                        .lineLimit(1)
+        HStack(alignment: .top, spacing: 15) {
+            NavigationLink(destination: MediaHistoryView(
+                ratingKey: session.grandparentRatingKey ?? session.ratingKey,
+                mediaType: session.type == "movie" ? "movie" : "show",
+                grandparentRatingKey: session.grandparentRatingKey,
+                serverViewModel: serverViewModel,
+                authManager: authManager,
+                statsViewModel: statsViewModel
+            )) {
+                HStack(spacing: 15) {
+                    AsyncImageView(url: session.posterURL, contentMode: .fill) { color in
+                        self.dominantColor = color
+                    }
+                    .frame(width: 60, height: 90)
+                    .cornerRadius(8)
+                    .overlay(PosterOverlay(session: session))
                     
-                    if session.type == "episode", let season = session.parentIndex, let episode = session.index {
-                        Text(session.title)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(session.showTitle)
+                            .font(.headline)
                             .lineLimit(1)
-                        Text("S\(season) - E\(episode)")
-                            .font(.subheadline)
+                        
+                        if session.type == "episode", let season = session.parentIndex, let episode = session.index {
+                            Text(session.title)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+                            Text("S\(season) - E\(episode)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+                        } else if session.type == "movie", let year = session.year {
+                            Text(String(year))
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Text(TimeFormatter.formatRemainingSeconds(session.remainingTimeInSeconds))
+                            .font(.subheadline.monospacedDigit())
                             .foregroundColor(.secondary)
-                            .lineLimit(1)
-                    } else if session.type == "movie", let year = session.year {
-                        Text(String(year))
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .padding(.top, 2)
                     }
                     
-                    Text(TimeFormatter.formatRemainingSeconds(session.remainingTimeInSeconds))
-                        .font(.subheadline.monospacedDigit())
-                        .foregroundColor(.secondary)
-                        .padding(.top, 2)
+                    Spacer()
                 }
-                Spacer(minLength: 0)
+                .contentShape(Rectangle())
             }
-            .padding()
-            .contentShape(Rectangle())
+            .buttonStyle(.plain)
+
+            Button(action: {
+                isShowingSheet.toggle()
+            }) {
+                Image(systemName: "info.circle")
+                    .foregroundColor(.secondary)
+                    .font(.title2.weight(.semibold))
+            }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
+        .padding()
+        .sheet(isPresented: $isShowingSheet) {
+            let actionsViewModel = ActivityActionsViewModel(
+                session: session,
+                serverViewModel: serverViewModel,
+                authManager: authManager
+            )
+            ActivitySettingsSheet(
+                session: session,
+                actionsViewModel: actionsViewModel,
+                isPresented: $isShowingSheet,
+                showStopAlert: $isShowingStopAlert,
+                navigateToMediaHistory: $navigateToMediaHistory,
+                navigateToUserHistory: $navigateToUserHistory
+            )
+            .presentationDetents([.height(280)])
+            .presentationDragIndicator(.visible)
+        }
+        .alert("Interrompre la lecture", isPresented: $isShowingStopAlert) {
+            TextField("Message (optionnel)", text: $stopReason)
+            Button("Annuler", role: .cancel) { }
+            Button("Interrompre", role: .destructive) {
+                Task {
+                    let viewModel = ActivityActionsViewModel(session: session, serverViewModel: serverViewModel, authManager: authManager)
+                    await viewModel.stopPlayback(reason: stopReason)
+                }
+            }
+        } message: {
+            Text("Vous pouvez envoyer un message à l'utilisateur pour l'informer de la raison de l'interruption.")
+        }
+        .navigationDestination(isPresented: $navigateToMediaHistory) {
+            MediaHistoryView(
+                ratingKey: session.grandparentRatingKey ?? session.ratingKey,
+                mediaType: session.type == "movie" ? "movie" : "show",
+                grandparentRatingKey: session.grandparentRatingKey,
+                serverViewModel: serverViewModel,
+                authManager: authManager,
+                statsViewModel: statsViewModel
+            )
+        }
+        .navigationDestination(isPresented: $navigateToUserHistory) {
+            if let userId = Int(session.user.id) {
+                UserHistoryView(
+                    userID: userId,
+                    userName: session.user.title,
+                    statsViewModel: statsViewModel,
+                    serverViewModel: serverViewModel,
+                    authManager: authManager
+                )
+            }
+        }
     }
 }

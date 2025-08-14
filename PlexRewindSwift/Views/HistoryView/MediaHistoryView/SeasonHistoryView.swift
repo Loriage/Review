@@ -76,7 +76,7 @@ struct SeasonHistoryView: View {
                     .buttonStyle(.plain)
                     
                     if episode.id != viewModel.episodes.last?.id {
-                        Divider().padding(.leading, 16)
+                        Divider().padding(.leading, 130)
                     }
                 }
             }

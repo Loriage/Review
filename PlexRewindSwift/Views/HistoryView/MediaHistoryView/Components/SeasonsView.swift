@@ -26,16 +26,17 @@ struct SeasonsView: View {
                                 .aspectRatio(2/3, contentMode: .fill)
                                 .overlay(alignment: .bottomLeading) {
                                     Text(season.title)
-                                        .font(.headline.weight(.bold))
+                                        .font(.headline.weight(.semibold))
                                         .foregroundColor(.white)
                                         .lineLimit(1)
-                                        .padding(10)
+                                        .padding([.leading, .trailing, .bottom], 10)
+                                        .padding(.top, 30)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .background(
                                             LinearGradient(
                                                 gradient: Gradient(stops: [
                                                     .init(color: .black.opacity(0.9), location: 0),
-                                                    .init(color: .clear, location: 0.90)
+                                                    .init(color: .clear, location: 1)
                                                 ]),
                                                 startPoint: .bottom,
                                                 endPoint: .top

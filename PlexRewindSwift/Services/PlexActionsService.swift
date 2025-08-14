@@ -1,6 +1,32 @@
 import Foundation
 
 class PlexActionsService {
+    func stopPlayback(sessionId: String, reason: String, serverURL: String, token: String) async throws {
+        guard var components = URLComponents(string: "\(serverURL)/status/sessions/terminate") else {
+            throw PlexError.invalidURL
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "sessionId", value: sessionId),
+            URLQueryItem(name: "reason", value: reason),
+            URLQueryItem(name: "X-Plex-Token", value: token)
+        ]
+        
+        guard let url = components.url else { throw PlexError.invalidURL }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(APIConstants.clientIdentifier, forHTTPHeaderField: "X-Plex-Client-Identifier")
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw PlexError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+    }
+    
     func refreshMetadata(for ratingKey: String, serverURL: String, token: String) async throws {
         let urlString = "\(serverURL)/library/metadata/\(ratingKey)/refresh?X-Plex-Token=\(token)"
         try await performPutRequest(for: urlString)

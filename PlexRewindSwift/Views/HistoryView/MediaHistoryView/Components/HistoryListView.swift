@@ -31,7 +31,7 @@ struct HistoryListView: View {
                     .buttonStyle(.plain)
 
                     if item.id != historyItems.last?.id {
-                        Divider().padding(.leading, 16)
+                        Divider().padding(.leading, 80)
                     }
                 }
             }

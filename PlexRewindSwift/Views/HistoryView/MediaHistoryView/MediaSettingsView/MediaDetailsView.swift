@@ -38,9 +38,6 @@ struct MediaDetailsView: View {
                     } else if let info = viewModel.mediaInfo, let part = info.parts.first {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 20) {
-                                Text("Détails du média")
-                                    .font(.title2.bold())
-                                    .padding(.bottom, 10)
                                 HStack(spacing: 10) {
                                     VStack(alignment: .leading) {
                                         Text("CHEMIN").font(.caption).foregroundColor(.secondary)
@@ -100,7 +97,7 @@ struct MediaDetailsView: View {
                         .zIndex(1)
                 }
             }
-            .navigationTitle("Informations")
+            .navigationTitle("Détails du média")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
