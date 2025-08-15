@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TopMediaDetailView: View {
-    let title: String
+    let title: LocalizedStringKey
     private let originalItems: [TopMedia]
     @State private var displayedItems: [TopMedia]
 
@@ -15,7 +15,7 @@ struct TopMediaDetailView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
 
-    init(title: String, items: [TopMedia]) {
+    init(title: LocalizedStringKey, items: [TopMedia]) {
         self.title = title
         self.originalItems = items
         self._displayedItems = State(initialValue: items)
@@ -29,7 +29,7 @@ struct TopMediaDetailView: View {
                 }
             }
         }
-        .navigationTitle(LocalizedStringKey(title))
+        .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
         .sheet(isPresented: $isShowingFilterSheet, content: filterSheet)

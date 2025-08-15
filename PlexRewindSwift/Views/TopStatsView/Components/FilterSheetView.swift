@@ -29,7 +29,7 @@ struct FilterSheetView: View {
                 Section(header: Text("filter.sheet.sort")) {
                     Picker("filter.sheet.sort.by", selection: $sortOption) {
                         ForEach(TopStatsSortOption.allCases) { option in
-                            Text(LocalizedStringKey(option.displayName)).tag(option)
+                            Text(option.displayName).tag(option)
                         }
                     }
                     .pickerStyle(.inline)

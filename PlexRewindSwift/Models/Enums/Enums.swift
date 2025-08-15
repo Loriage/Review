@@ -1,10 +1,20 @@
 import Foundation
+import SwiftUI
 
 enum SortOption: String, CaseIterable, Identifiable {
-    case byPlays = "Lectures"
-    case byDuration = "Durée"
+    case byPlays
+    case byDuration
 
     var id: String { self.rawValue }
+
+    var localizedName: LocalizedStringKey {
+        switch self {
+        case .byPlays:
+            return "sort.option.by.plays"
+        case .byDuration:
+            return "sort.option.by.duration"
+        }
+    }
 }
 
 enum ViewState {

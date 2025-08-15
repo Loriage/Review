@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum TopStatsSortOption: String, CaseIterable, Identifiable {
     case byPlays
@@ -6,12 +7,12 @@ enum TopStatsSortOption: String, CaseIterable, Identifiable {
 
     var id: String { self.rawValue }
 
-    var displayName: String {
+    var displayName: LocalizedStringKey {
         switch self {
         case .byPlays:
-            return "\(String(localized: "sort.option.by.plays"))"
+            return "sort.option.by.plays"
         case .byDuration:
-            return "\(String(localized: "sort.option.by.duration"))"
+            return "sort.option.by.duration"
         }
     }
 }

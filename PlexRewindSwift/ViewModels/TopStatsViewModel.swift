@@ -28,8 +28,9 @@ class TopStatsViewModel: ObservableObject {
     private let authManager: PlexAuthManager
     private let activityService: PlexActivityService
     private let metadataService: PlexMetadataService
+    private let languageManager: LanguageManager
 
-    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, activityService: PlexActivityService = PlexActivityService(), metadataService: PlexMetadataService = PlexMetadataService()) {
+    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, activityService: PlexActivityService = PlexActivityService(), metadataService: PlexMetadataService = PlexMetadataService(), languageManager: LanguageManager) {
         self.serverViewModel = serverViewModel
         self.authManager = authManager
         self.activityService = activityService
@@ -168,7 +169,13 @@ class TopStatsViewModel: ObservableObject {
         }).mapValues { $0.count }
 
         if let (weekday, _) = dayCounts.max(by: { $0.value < $1.value }) {
-            self.funFactMostActiveDay = calendar.weekdaySymbols[weekday - 1].capitalized
+            let formatter = DateFormatter()
+
+            let currentAppLocale = Locale(identifier: languageManager.availableLanguages)
+
+            formatter.locale = currentAppLocale
+            
+            self.funFactMostActiveDay = formatter.weekdaySymbols[weekday - 1].capitalized
         } else {
             self.funFactMostActiveDay = nil
         }

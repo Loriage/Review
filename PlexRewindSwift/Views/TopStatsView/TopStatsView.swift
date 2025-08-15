@@ -44,10 +44,10 @@ struct TopStatsView: View {
                     FunFactsSection(viewModel: viewModel)
                 }
                 if !viewModel.topMovies.isEmpty {
-                    TopMediaSection(title: "\(String(localized: "top.stats.movies.title"))", items: Array(viewModel.topMovies.prefix(4)), fullList: viewModel.topMovies)
+                    TopMediaSection(title: "top.stats.movies.title", items: Array(viewModel.topMovies.prefix(4)), fullList: viewModel.topMovies)
                 }
                 if !viewModel.topShows.isEmpty {
-                    TopMediaSection(title: "\(String(localized: "top.stats.shows.title"))", items: Array(viewModel.topShows.prefix(4)), fullList: viewModel.topShows)
+                    TopMediaSection(title: "top.stats.shows.title", items: Array(viewModel.topShows.prefix(4)), fullList: viewModel.topShows)
                 }
             }
         }

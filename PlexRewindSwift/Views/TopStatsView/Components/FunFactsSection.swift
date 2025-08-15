@@ -20,15 +20,15 @@ struct FunFactsSection: View {
                         StatPill(title: "fun.facts.total.plays", value: "\(totalPlays)", icon: "play.tv.fill", color: .blue)
                     }
                     if let time = viewModel.funFactFormattedWatchTime {
-                        StatPill(title: "fun.facts.total.time", value: time, icon: "hourglass", color: .purple)
+                        StatPill(title: "fun.facts.total.time", value: "\(time)", icon: "hourglass", color: .purple)
                     }
                     if let day = viewModel.funFactMostActiveDay {
-                        StatPill(title: "fun.facts.favorite.day", value: day, icon: "calendar", color: .red)
+                        StatPill(title: "fun.facts.favorite.day", value: "\(day)", icon: "calendar", color: .red)
                     }
                 }
                 HStack(spacing: 10) {
                     if let user = viewModel.funFactTopUser {
-                        StatPill(title: "fun.facts.top.user", value: user, icon: "person.fill", color: .orange)
+                        StatPill(title: "fun.facts.top.user", value: "\(user)", icon: "person.fill", color: .orange)
                     }
                     if let timeOfDay = viewModel.funFactBusiestTimeOfDay {
                         StatPill(title: "fun.facts.busiest.time", value: timeOfDay.displayName, icon: timeOfDayIcon(for: timeOfDay), color: .indigo)

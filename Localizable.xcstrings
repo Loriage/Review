@@ -1993,6 +1993,12 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Language"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
             "state" : "translated",
             "value" : "Language"
           }
@@ -2180,13 +2186,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Size"
+            "value" : "Size:"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Taille"
+            "value" : "Taille:"
           }
         }
       }
