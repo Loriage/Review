@@ -43,14 +43,14 @@ The app allows you to monitor current activity, explore your libraries, get deta
 ## Screenshots
 
 <p align="center">
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/activity.jpg" alt="Activity Feed Screenshot" width="100"/>
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/libraries.jpg" alt="Libraries View Screenshot" width="100"/>
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/library-detail.jpg" alt="Library Details Screenshot" width="100"/>
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/all-stats.jpg" alt="All Stats Screenshot" width="100"/>
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/user-stats.jpg" alt="User Stats Screenshot" width="100"/>
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/media-detail.jpg" alt="Media Details Screenshot" width="100"/>
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/show-seasons.jpg" alt="Show Seasons Screenshot" width="100"/>
-  <img src="https://github.com/Loriage/Review/blob/main/screnshots/library-settings.jpg" alt="Library Settings Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/activity.jpg" alt="Activity Feed Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/libraries.jpg" alt="Libraries View Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/library-detail.jpg" alt="Library Details Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/all-stats.jpg" alt="All Stats Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/user-stats.jpg" alt="User Stats Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/media-detail.jpg" alt="Media Details Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/show-seasons.jpg" alt="Show Seasons Screenshot" width="100"/>
+  <img src="https://github.com/Loriage/Review/blob/main/screenshots/library-settings.jpg" alt="Library Settings Screenshot" width="100"/>
 </p>
 
 
