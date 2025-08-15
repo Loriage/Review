@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/github/license/Loriage/Review-Swift-App?color=%239944ee)](./LICENSE)
 [![Made with SwiftUI](https://img.shields.io/badge/Made%20with-SwiftUI-blue.svg?logo=swift)](https://developer.apple.com/xcode/swiftui/)
 
-**Review** is a native iOS application that provides a comprehensive dashboard for your Plex Media Server. It connects directly to your server's official API, meaning **no third-party tools like Tautulli are required**.
+**Review** is a native iOS application that provides a comprehensive dashboard for your Plex Media Server. It connects directly to your server's official API, meaning **no third-party tools are required**.
 
 The app allows you to monitor current activity, explore your libraries, get detailed statistics about your media consumption, and manage your server and library settings.
 
