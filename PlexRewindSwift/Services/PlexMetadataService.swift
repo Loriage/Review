@@ -2,7 +2,7 @@ import Foundation
 
 class PlexMetadataService {
     func fetchEpisodes(for seasonRatingKey: String, serverURL: String, token: String) async throws -> [PlexEpisode] {
-        let urlString = "\(serverURL)/library/metadata/\(seasonRatingKey)/children?X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/metadata/\(seasonRatingKey)/children?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         guard let url = URL(string: urlString) else {
             throw PlexError.invalidURL
         }
@@ -21,7 +21,7 @@ class PlexMetadataService {
     }
     
     func fetchSeasons(for showRatingKey: String, serverURL: String, token: String) async throws -> [PlexSeason] {
-        let urlString = "\(serverURL)/library/metadata/\(showRatingKey)/children?X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/metadata/\(showRatingKey)/children?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         guard let url = URL(string: urlString) else {
             throw PlexError.invalidURL
         }
@@ -40,7 +40,7 @@ class PlexMetadataService {
     }
 
     func fetchDuration(for ratingKey: String, serverURL: String, token: String) async throws -> Int? {
-        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             return nil
         }
 
@@ -59,7 +59,7 @@ class PlexMetadataService {
     }
 
     func fetchMediaDetails(for ratingKey: String, serverURL: String, token: String) async throws -> MetadataItem? {
-        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             throw PlexError.invalidURL
         }
 
@@ -78,7 +78,7 @@ class PlexMetadataService {
     }
 
     func fetchFullMediaDetails(for ratingKey: String, serverURL: String, token: String) async throws -> MediaDetails? {
-        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             throw PlexError.invalidURL
         }
 
@@ -96,7 +96,7 @@ class PlexMetadataService {
     }
 
     func fetchArtworks(for ratingKey: String, serverURL: String, token: String) async throws -> [PlexArtwork] {
-        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)/posters?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/library/metadata/\(ratingKey)/posters?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             throw PlexError.invalidURL
         }
 
@@ -118,7 +118,7 @@ class PlexMetadataService {
     }
 
     func fetchMatches(for ratingKey: String, serverURL: String, token: String) async throws -> [PlexMatch] {
-        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/matches?manual=1&X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/matches?manual=1&X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         guard let url = URL(string: urlString) else {
             throw PlexError.invalidURL
         }

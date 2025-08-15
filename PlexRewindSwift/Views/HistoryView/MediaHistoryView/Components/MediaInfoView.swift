@@ -8,8 +8,11 @@ struct MediaInfoView: View {
             if let details = viewModel.mediaDetails {
                 if let summary = viewModel.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        if let tagline = details.tagline, !tagline.isEmpty {
-                            Text(tagline)
+                        if let details = details.tagline {
+                            Text(details)
+                                .font(.headline)
+                        } else {
+                            Text("media.info.summary")
                                 .font(.headline)
                         }
                         Text(summary)

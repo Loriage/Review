@@ -28,9 +28,18 @@ struct UserHistoryListView: View {
 private struct UserHistoryRow: View {
     let session: WatchSession
     @ObservedObject var viewModel: UserHistoryViewModel
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
     
     var body: some View {
-        HStack(spacing: 15) {
+
+        let currentAppLocale: Locale
+        if selectedLanguage == "system" {
+            currentAppLocale = .autoupdatingCurrent
+        } else {
+            currentAppLocale = Locale(identifier: selectedLanguage)
+        }
+
+        return HStack(spacing: 15) {
             AsyncImageView(url: viewModel.posterURL(for: session), contentMode: .fill)
                 .frame(width: 60, height: 90)
                 .cornerRadius(8)
@@ -39,7 +48,7 @@ private struct UserHistoryRow: View {
                 mediaTitles
                 
                 if let viewedAt = session.viewedAt {
-                    Text("\(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
+                    Text("\(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named).locale(currentAppLocale)))")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }

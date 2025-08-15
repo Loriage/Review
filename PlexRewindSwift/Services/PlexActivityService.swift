@@ -2,7 +2,7 @@ import Foundation
 
 class PlexActivityService {
     func fetchCurrentActivity(serverURL: String, token: String) async throws -> [PlexActivitySession] {
-        guard let url = URL(string: "\(serverURL)/status/sessions?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/status/sessions?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             throw PlexError.invalidURL
         }
 
@@ -47,6 +47,7 @@ class PlexActivityService {
                 urlString += "&accountID=\(userID)"
             }
             urlString += "&X-Plex-Token=\(token)"
+            urlString += "&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
             
             guard let url = URL(string: urlString) else { throw PlexError.invalidURL }
             

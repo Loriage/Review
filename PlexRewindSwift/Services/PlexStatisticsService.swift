@@ -9,7 +9,8 @@ class PlexStatisticsService {
         
         components.queryItems = [
             URLQueryItem(name: "timespan", value: "6"),
-            URLQueryItem(name: "X-Plex-Token", value: token)
+            URLQueryItem(name: "X-Plex-Token", value: token),
+            URLQueryItem(name: "X-Plex-Language", value: LanguageHelper.getCurrentLanguageCode()),
         ]
         
         guard let url = components.url else { throw PlexError.invalidURL }
