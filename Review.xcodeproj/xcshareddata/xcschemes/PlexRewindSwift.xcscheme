@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1640"
+   LastUpgradeVersion = "2600"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "87231B6B2E4108330061FFDD"
-               BuildableName = "PlexRewindSwift.app"
-               BlueprintName = "PlexRewindSwift"
-               ReferencedContainer = "container:PlexRewindSwift.xcodeproj">
+               BuildableName = "Review.app"
+               BlueprintName = "Review"
+               ReferencedContainer = "container:Review.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "87231B6B2E4108330061FFDD"
-            BuildableName = "PlexRewindSwift.app"
-            BlueprintName = "PlexRewindSwift"
-            ReferencedContainer = "container:PlexRewindSwift.xcodeproj">
+            BuildableName = "Review.app"
+            BlueprintName = "Review"
+            ReferencedContainer = "container:Review.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "87231B6B2E4108330061FFDD"
-            BuildableName = "PlexRewindSwift.app"
-            BlueprintName = "PlexRewindSwift"
-            ReferencedContainer = "container:PlexRewindSwift.xcodeproj">
+            BuildableName = "Review.app"
+            BlueprintName = "Review"
+            ReferencedContainer = "container:Review.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

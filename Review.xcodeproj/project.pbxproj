@@ -11,27 +11,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		87231B6C2E4108330061FFDD /* PlexRewindSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlexRewindSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		87231B6C2E4108330061FFDD /* Review.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Review.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87338DE02E469397007B6403 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		87231BA62E4113920061FFDD /* Exceptions for "PlexRewindSwift" folder in "PlexRewindSwift" target */ = {
+		87231BA62E4113920061FFDD /* Exceptions for "Review" folder in "Review" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 87231B6B2E4108330061FFDD /* PlexRewindSwift */;
+			target = 87231B6B2E4108330061FFDD /* Review */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		87231B6E2E4108330061FFDD /* PlexRewindSwift */ = {
+		87231B6E2E4108330061FFDD /* Review */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				87231BA62E4113920061FFDD /* Exceptions for "PlexRewindSwift" folder in "PlexRewindSwift" target */,
+				87231BA62E4113920061FFDD /* Exceptions for "Review" folder in "Review" target */,
 			);
-			path = PlexRewindSwift;
+			path = Review;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -51,7 +51,7 @@
 			isa = PBXGroup;
 			children = (
 				87338DE02E469397007B6403 /* Localizable.xcstrings */,
-				87231B6E2E4108330061FFDD /* PlexRewindSwift */,
+				87231B6E2E4108330061FFDD /* Review */,
 				87231B6D2E4108330061FFDD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,7 +59,7 @@
 		87231B6D2E4108330061FFDD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				87231B6C2E4108330061FFDD /* PlexRewindSwift.app */,
+				87231B6C2E4108330061FFDD /* Review.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,9 +67,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		87231B6B2E4108330061FFDD /* PlexRewindSwift */ = {
+		87231B6B2E4108330061FFDD /* Review */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 87231B772E4108350061FFDD /* Build configuration list for PBXNativeTarget "PlexRewindSwift" */;
+			buildConfigurationList = 87231B772E4108350061FFDD /* Build configuration list for PBXNativeTarget "Review" */;
 			buildPhases = (
 				87231B682E4108330061FFDD /* Sources */,
 				87231B692E4108330061FFDD /* Frameworks */,
@@ -80,13 +80,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				87231B6E2E4108330061FFDD /* PlexRewindSwift */,
+				87231B6E2E4108330061FFDD /* Review */,
 			);
-			name = PlexRewindSwift;
+			name = Review;
 			packageProductDependencies = (
 			);
 			productName = PlexRewindSwift;
-			productReference = 87231B6C2E4108330061FFDD /* PlexRewindSwift.app */;
+			productReference = 87231B6C2E4108330061FFDD /* Review.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -97,14 +97,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					87231B6B2E4108330061FFDD = {
 						CreatedOnToolsVersion = 16.4;
 					};
 				};
 			};
-			buildConfigurationList = 87231B672E4108330061FFDD /* Build configuration list for PBXProject "PlexRewindSwift" */;
+			buildConfigurationList = 87231B672E4108330061FFDD /* Build configuration list for PBXProject "Review" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -119,7 +119,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				87231B6B2E4108330061FFDD /* PlexRewindSwift */,
+				87231B6B2E4108330061FFDD /* Review */,
 			);
 		};
 /* End PBXProject section */
@@ -151,6 +151,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -205,6 +206,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -216,6 +218,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -263,6 +266,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
@@ -279,8 +283,8 @@
 				DEVELOPMENT_TEAM = VZFD28P342;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PlexRewindSwift/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Plex Rewind";
+				INFOPLIST_FILE = Review/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Review - Plex Dashboard";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -292,7 +296,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nohitdev.PlexRewindSwift;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nohitdev.review;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -310,8 +314,8 @@
 				DEVELOPMENT_TEAM = VZFD28P342;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PlexRewindSwift/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Plex Rewind";
+				INFOPLIST_FILE = Review/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Review - Plex Dashboard";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -323,7 +327,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nohitdev.PlexRewindSwift;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nohitdev.review;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -334,7 +338,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		87231B672E4108330061FFDD /* Build configuration list for PBXProject "PlexRewindSwift" */ = {
+		87231B672E4108330061FFDD /* Build configuration list for PBXProject "Review" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				87231B752E4108350061FFDD /* Debug */,
@@ -343,7 +347,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		87231B772E4108350061FFDD /* Build configuration list for PBXNativeTarget "PlexRewindSwift" */ = {
+		87231B772E4108350061FFDD /* Build configuration list for PBXNativeTarget "Review" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				87231B782E4108350061FFDD /* Debug */,

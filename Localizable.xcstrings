@@ -3421,18 +3421,35 @@
         }
       }
     },
-    "onboarding.title" : {
+    "onboarding.tagline" : {
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to Plex Rewind"
+            "value" : "Plex Dashboard"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenue sur Plex Rewind"
+            "value" : "Plex Dashboard"
+          }
+        }
+      }
+    },
+    "onboarding.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
           }
         }
       }

@@ -4,7 +4,7 @@ import Security
 class KeychainHelper {
     
     static let standard = KeychainHelper()
-    private let service = "com.nohitdev.PlexRewindSwift.authtoken"
+    private let service = "com.nohitdev.review.authtoken"
 
     private init() {}
 

@@ -111,7 +111,7 @@ class ActivityViewModel: ObservableObject {
         guard let details = getServerDetails() else { return }
         showHUD(message: HUDMessage(iconName: "stop.circle", text: "hud.stopping.playback"))
         do {
-            try await actionsService.stopPlayback(sessionId: session.session.id, reason: reason.isEmpty ? "Arrêt depuis Plex Rewind" : reason, serverURL: details.url, token: details.token)
+            try await actionsService.stopPlayback(sessionId: session.session.id, reason: reason.isEmpty ? "Arrêt depuis Review" : reason, serverURL: details.url, token: details.token)
             showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.stopping.playback"))
         } catch {
             showHUD(message: HUDMessage(iconName: "xmark", text: "hud.error.playback"))

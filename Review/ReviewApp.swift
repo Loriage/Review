@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct PlexRewindSwiftApp: App {
+struct Review: App {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
 
     var body: some Scene {
