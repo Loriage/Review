@@ -52,8 +52,8 @@ struct ActivityHeaderView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
-                        
-                        Text(TimeFormatter.formatRemainingSeconds(session.remainingTimeInSeconds))
+
+                        (Text(TimeFormatter.formatSeconds(session.remainingTimeInSeconds)) + Text("common.remaining"))
                             .font(.subheadline.monospacedDigit())
                             .foregroundColor(.secondary)
                             .padding(.top, 2)

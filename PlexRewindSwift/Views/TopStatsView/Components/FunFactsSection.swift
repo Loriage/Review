@@ -20,7 +20,7 @@ struct FunFactsSection: View {
                         StatPill(title: "fun.facts.total.plays", value: "\(totalPlays)", icon: "play.tv.fill", color: .blue)
                     }
                     if let time = viewModel.funFactFormattedWatchTime {
-                        StatPill(title: "fun.facts.total.time", value: "\(time)", icon: "hourglass", color: .purple)
+                        StatPill(title: "fun.facts.total.time", value: time, icon: "hourglass", color: .purple)
                     }
                     if let day = viewModel.funFactMostActiveDay {
                         StatPill(title: "fun.facts.favorite.day", value: "\(day)", icon: "calendar", color: .red)

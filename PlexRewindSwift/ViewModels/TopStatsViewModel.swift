@@ -6,7 +6,7 @@ class TopStatsViewModel: ObservableObject {
     @Published var topMovies: [TopMedia] = []
     @Published var topShows: [TopMedia] = []
     @Published var isLoading = false
-    @Published var loadingMessage = String(localized: "common.loading")
+    @Published var loadingMessage = "common.loading"
     @Published var errorMessage: String?
     @Published var hasFetchedOnce = false
 
@@ -16,7 +16,7 @@ class TopStatsViewModel: ObservableObject {
 
     @Published var funFactTotalPlays: Int?
     @Published var funFactMostActiveDay: String?
-    @Published var funFactFormattedWatchTime: String?
+    @Published var funFactFormattedWatchTime: LocalizedStringKey?
     @Published var funFactTopUser: String?
     @Published var funFactBusiestTimeOfDay: TimeOfDay?
     @Published var funFactActiveUsers: Int?
@@ -52,7 +52,7 @@ class TopStatsViewModel: ObservableObject {
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = authManager.getPlexAuthToken()
         else {
-            errorMessage = "Serveur non sélectionné."
+            errorMessage = "no.server.selected.title"
             return
         }
 
@@ -62,7 +62,7 @@ class TopStatsViewModel: ObservableObject {
         let serverURL = connection.uri
         let resourceToken = server.accessToken ?? token
 
-        self.loadingMessage = "Analyse de l'historique du serveur..."
+        self.loadingMessage = "loading.state.history.analysis"
         do {
             let fullHistory = try await activityService.fetchWatchHistory(serverURL: serverURL, token: token, year: 0, userID: nil) { count in
                 await MainActor.run { self.loadingMessage = "Analyse de \(count) visionnages..." }
@@ -90,7 +90,7 @@ class TopStatsViewModel: ObservableObject {
         }
         
         isLoading = true
-        self.loadingMessage = "\(String(localized: "loading.state.applying.filters"))"
+        self.loadingMessage = "loading.state.applying.filters"
         await Task.yield()
 
         var filteredHistory = filterHistory(serverWideHistory, by: selectedTimeFilter)
@@ -101,7 +101,7 @@ class TopStatsViewModel: ObservableObject {
 
         calculateFunFacts(from: filteredHistory)
 
-        await MainActor.run { self.loadingMessage = "\(String(localized: "loading.state.calculating.rankings"))" }
+        await MainActor.run { self.loadingMessage = "loading.state.calculating.rankings" }
         
         let historyMovieGroups = Dictionary(grouping: filteredHistory.filter { $0.type == "movie" }, by: { $0.ratingKey ?? "" })
         let historyShowGroups = Dictionary(grouping: filteredHistory.filter { $0.type == "episode" }, by: { $0.computedGrandparentRatingKey ?? "" })
@@ -291,7 +291,7 @@ class TopStatsViewModel: ObservableObject {
         sessionsWithDurations.append(contentsOf: sessionsWithDurationAlready)
         
         if !sessionsNeedingDuration.isEmpty {
-            await MainActor.run { self.loadingMessage = "\(String(localized: "loading.state.preparing.metadata"))" }
+            await MainActor.run { self.loadingMessage = "loading.state.preparing.metadata" }
             try? await Task.sleep(nanoseconds: 500_000_000)
         }
 
@@ -313,13 +313,13 @@ class TopStatsViewModel: ObservableObject {
                 processedCount += 1
                 
                 if processedCount == total / 2 {
-                    await MainActor.run { self.loadingMessage = "\(String(localized: "loading.state.hold.on"))" }
+                    await MainActor.run { self.loadingMessage = "loading.state.hold.on" }
                 }
             }
         }
         
         if !sessionsNeedingDuration.isEmpty {
-            await MainActor.run { self.loadingMessage = "\(String(localized: "loading.state.finalizing.update"))" }
+            await MainActor.run { self.loadingMessage = "loading.state.finalizing.update" }
             try? await Task.sleep(nanoseconds: 500_000_000)
         }
         

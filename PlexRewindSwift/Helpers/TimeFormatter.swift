@@ -2,8 +2,11 @@ import Foundation
 
 struct TimeFormatter {
     static func formatSeconds(_ seconds: Int) -> String {
-        if seconds <= 0 {
-            return "0m"
+        if seconds < 60 {
+            return "\(seconds)s"
+        }
+        if seconds == 0 {
+            return "common.finished"
         }
         let hours = seconds / 3600
         let minutes = (seconds % 3600) / 60
@@ -28,15 +31,6 @@ struct TimeFormatter {
         } else {
             return "\(minutes)m \(secondsLeft)s"
         }
-    }
-    
-    static func formatRemainingSeconds(_ seconds: Int) -> String {
-        if seconds <= 0 {
-            return String(localized: "common.finished")
-        }
-
-        let format = NSLocalizedString("common.remaining", comment: "Texte affichant la durée restante")
-        return String(format: format, formatSeconds(seconds))
     }
 
     static func formatTimestamp(_ timestamp: Int) -> String {
