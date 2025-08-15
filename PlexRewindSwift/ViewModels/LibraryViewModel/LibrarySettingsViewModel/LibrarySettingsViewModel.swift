@@ -84,7 +84,7 @@ class LibrarySettingsViewModel: ObservableObject {
 
     func saveChanges() async {
         guard let details = getServerDetails() else {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles."))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.server.details.unavailable"))
             return
         }
 
@@ -98,14 +98,14 @@ class LibrarySettingsViewModel: ObservableObject {
 
         do {
             try await actionsService.updateLibraryPreferences(for: library.library.key, preferences: preferencesToUpdate, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Paramètres mis à jour !"))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.settings.updated"))
 
             self.preferenceItems.forEach { $0.reset() }
             self.objectWillChange.send()
 
             NotificationCenter.default.post(name: .didUpdateLibraryPreferences, object: nil)
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de la mise à jour."))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.error.updating"))
         }
     }
     

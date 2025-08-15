@@ -5,42 +5,42 @@ struct PlexMediaTypeHelper {
     static func formattedTypeNameSingular(for type: String) -> String {
         switch type {
         case "movie":
-            return "film"
+            return String(localized: "media.type.singular.movie")
         case "show":
-            return "série"
+            return String(localized: "media.type.singular.show")
         case "artist":
-            return "artiste"
+            return String(localized: "media.type.singular.artist")
         case "album":
-            return "album"
+            return String(localized: "media.type.singular.album")
         case "track":
-            return "musique"
+            return String(localized: "media.type.singular.track")
         case "photo":
-            return "photo"
+            return String(localized: "media.type.singular.photo")
         case "episode":
-            return "épisode"
+            return String(localized: "media.type.singular.episode")
         default:
-            return "élément"
+            return String(localized: "media.type.singular.default")
         }
     }
 
     static func formattedTypeNamePlural(for type: String) -> String {
         switch type {
         case "movie":
-            return "films"
+            return String(localized: "media.type.plural.movie")
         case "show":
-            return "séries"
+            return String(localized: "media.type.plural.show")
         case "artist":
-            return "artistes"
+            return String(localized: "media.type.plural.artist")
         case "album":
-            return "albums"
+            return String(localized: "media.type.plural.album")
         case "track":
-            return "musiques"
+            return String(localized: "media.type.plural.track")
         case "photo":
-            return "photos"
+            return String(localized: "media.type.plural.photo")
         case "episode":
-            return "épisodes"
+            return String(localized: "media.type.plural.episode")
         default:
-            return "éléments"
+            return String(localized: "media.type.plural.default")
         }
     }
 

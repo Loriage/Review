@@ -76,9 +76,9 @@ enum KeychainError: Error, LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .saveError(let status): return "Erreur de sauvegarde dans le trousseau: \(status)"
-        case .readError(let status): return "Erreur de lecture dans le trousseau: \(status)"
-        case .deleteError(let status): return "Erreur de suppression dans le trousseau: \(status)"
+        case .saveError(let status): return "\(String(localized: "error.keychain.save")) \(status)"
+        case .readError(let status): return "\(String(localized: "error.keychain.read")) \(status)"
+        case .deleteError(let status): return "\(String(localized: "error.keychain.delete")) \(status)"
         }
     }
 }

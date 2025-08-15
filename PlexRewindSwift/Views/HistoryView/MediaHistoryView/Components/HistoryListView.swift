@@ -21,7 +21,7 @@ struct HistoryListView: View {
                 ForEach(historyItems) { item in
                     NavigationLink(destination: UserHistoryView(
                         userID: item.session.accountID ?? 0,
-                        userName: item.userName ?? "Utilisateur inconnu",
+                        userName: item.userName ?? "common.unknown.user",
                         statsViewModel: statsViewModel,
                         serverViewModel: serverViewModel,
                         authManager: authManager
@@ -51,18 +51,18 @@ struct HistoryListView: View {
                     Text(item.session.showTitle)
                         .font(.headline)
                 } else {
-                    Text(item.session.title ?? "Titre inconnu")
+                    Text(item.session.title ?? "common.unknown.title")
                         .font(.headline)
                 }
                 
                 if item.session.type == "episode" {
-                    Text("S\(item.session.parentIndex ?? 0) - E\(item.session.index ?? 0) - \(item.session.title ?? "Titre inconnu")")
+                    Text("S\(item.session.parentIndex ?? 0) - E\(item.session.index ?? 0) - \(item.session.title ?? "common.unknown.title")")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 
                 if let viewedAt = item.session.viewedAt {
-                    Text("\(item.userName ?? "Utilisateur inconnu") - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
+                    Text("\(item.userName ?? String(localized: "common.unknown.user")) - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -85,9 +85,9 @@ struct HistoryListView: View {
             Image(systemName: "film.stack")
                 .font(.system(size: 20))
                 .foregroundColor(.secondary)
-            Text("Aucun historique trouvé")
+            Text("empty.state.no.history.item.title")
                 .font(.title3.bold())
-            Text("L'historique pour ce média est vide.")
+            Text("empty.state.no.history.item.message")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

@@ -13,29 +13,29 @@ struct PrefsView: View {
                 ProgressView()
             } else {
                 Section {
-                    Toggle("Paramètres avancés du serveur", isOn: $viewModel.showAdvanced)
+                    Toggle("prefs.advanced.toggle", isOn: $viewModel.showAdvanced)
                         .padding(.vertical, 2)
                 } footer: {
-                    Text("Paramètres supplémentaires pour administrateur de serveur expérimenté uniquement.")
+                    Text("prefs.advanced.footer")
                 }
                 
                 Section {
-                    navigationLink(for: "general", title: "Général")
-                    navigationLink(for: "library", title: "Bibliothèque")
-                    navigationLink(for: "network", title: "Réseau")
-                    navigationLink(for: "transcoder", title: "Transcodeur")
-                    navigationLink(for: "dlna", title: "DLNA")
-                    navigationLink(for: "butler", title: "Tâches planifiées")
-                    navigationLink(for: "extras", title: "Bonus")
+                    navigationLink(for: "general", title: "prefs.group.general")
+                    navigationLink(for: "library", title: "prefs.group.library")
+                    navigationLink(for: "network", title: "prefs.group.network")
+                    navigationLink(for: "transcoder", title: "prefs.group.transcoder")
+                    navigationLink(for: "dlna", title: "prefs.group.dlna")
+                    navigationLink(for: "butler", title: "prefs.group.butler")
+                    navigationLink(for: "extras", title: "prefs.group.extras")
                 }
             }
         }
-        .navigationTitle("Préférences")
+        .navigationTitle("prefs.view.title")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if viewModel.hasChanges {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Sauvegarder") {
+                    Button("common.save") {
                         Task {
                             await viewModel.saveChanges(serverViewModel: serverViewModel, authManager: authManager)
                         }
@@ -46,21 +46,21 @@ struct PrefsView: View {
         .task {
             await viewModel.loadPrefs(serverViewModel: serverViewModel, authManager: authManager)
         }
-        .alert("Quitter sans sauvegarder ?", isPresented: $showingExitAlert) {
-            Button("Quitter", role: .destructive) { dismiss() }
-            Button("Rester", role: .cancel) {}
+        .alert("prefs.unsaved.changes.alert.title", isPresented: $showingExitAlert) {
+            Button("prefs.unsaved.changes.alert.leave", role: .destructive) { dismiss() }
+            Button("prefs.unsaved.changes.alert.stay", role: .cancel) {}
         } message: {
-            Text("Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter ?")
+            Text("prefs.unsaved.changes.alert.message")
         }
     }
     
-    private func navigationLink(for group: String, title: String) -> some View {
+    private func navigationLink(for group: String, title: LocalizedStringKey) -> some View {
         NavigationLink(title) {
             PrefsSectionView(viewModel: viewModel, group: group, title: title)
                 .toolbar {
                     if viewModel.hasChanges {
                         ToolbarItem(placement: .confirmationAction) {
-                            Button("Sauvegarder") {
+                            Button("common.save") {
                                 Task {
                                     await viewModel.saveChanges(serverViewModel: serverViewModel, authManager: authManager)
                                 }
@@ -80,7 +80,7 @@ struct PrefsView: View {
 struct PrefsSectionView: View {
     @ObservedObject var viewModel: PrefsViewModel
     let group: String
-    let title: String
+    let title: LocalizedStringKey
     
     var body: some View {
         Form {
@@ -125,7 +125,7 @@ struct PrefsSettingRowView: View {
                 HStack {
                     Text(vm.setting.label)
                     Spacer()
-                    TextField("Non défini", text: $vm.value)
+                    TextField("common.undefined", text: $vm.value)
                         .multilineTextAlignment(.trailing)
                         .textFieldStyle(.automatic)
                         .foregroundColor(.secondary)
@@ -133,7 +133,7 @@ struct PrefsSettingRowView: View {
             }
         
         default:
-            Text("Type de champ inconnu : \(vm.setting.type)")
+            Text("prefs.unknown.field \(vm.setting.type)")
         }
     }
 }

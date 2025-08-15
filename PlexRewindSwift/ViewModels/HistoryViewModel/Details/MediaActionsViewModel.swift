@@ -41,7 +41,7 @@ class MediaActionsViewModel: ObservableObject {
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = authManager.getPlexAuthToken()
         else {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles."))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.server.details.unavailable"))
             return nil
         }
         let resourceToken = server.accessToken ?? token
@@ -53,9 +53,9 @@ class MediaActionsViewModel: ObservableObject {
         isWorking = true
         do {
             try await actionsService.refreshMetadata(for: mediaRatingKey, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.refresh.started", maxWidth: 180))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.error.updating", maxWidth: 180))
         }
         isWorking = false
     }
@@ -65,9 +65,9 @@ class MediaActionsViewModel: ObservableObject {
         isWorking = true
         do {
             try await actionsService.analyzeMedia(for: mediaRatingKey, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Analyse démarrée.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.running.analyze.started", maxWidth: 180))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'analyse.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.analyze.error", maxWidth: 180))
         }
         isWorking = false
     }

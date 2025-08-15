@@ -16,7 +16,7 @@ struct PinCodeView: View {
                 ProgressView()
             }
             
-            ProgressView("En attente de validation...")
+            ProgressView("pin.code.waiting.for.validation")
                 .padding(.top)
         }
     }

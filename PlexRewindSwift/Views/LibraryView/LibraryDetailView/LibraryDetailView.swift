@@ -101,23 +101,23 @@ private extension View {
         viewModel: LibraryDetailViewModel
     ) -> some View {
         self
-        .alert("Êtes-vous sûr ?", isPresented: showingRefreshAlert) {
-            Button("Annuler", role: .cancel) {}
-            Button("Actualiser", role: .destructive) { Task { await viewModel.refreshMetadata() } }
+        .alert("library.detail.refresh.alert.title", isPresented: showingRefreshAlert) {
+            Button("common.cancel", role: .cancel) {}
+            Button("library.settings.sheet.refresh", role: .destructive) { Task { await viewModel.refreshMetadata() } }
         } message: {
-            Text("Cette opération peut prendre du temps et consommer des ressources sur votre serveur Plex.")
+            Text("library.detail.refresh.alert.message")
         }
-        .alert("Lancer une analyse complète ?", isPresented: showingAnalyzeAlert) {
-            Button("Annuler", role: .cancel) {}
-            Button("Analyser", role: .destructive) { Task { await viewModel.analyzeLibrary() } }
+        .alert("library.detail.analyze.alert.title", isPresented: showingAnalyzeAlert) {
+            Button("common.cancel", role: .cancel) {}
+            Button("activity.settings.analyze", role: .destructive) { Task { await viewModel.analyzeLibrary() } }
         } message: {
-            Text("Analyse tous les médias de la bibliothèque.\n\nL'analyse permet à Plex de collecter des informations pour optimiser la lecture de chaque média.")
+            Text("library.detail.analyze.alert.message")
         }
-        .alert("Vider la corbeille ?", isPresented: showingEmptyTrashAlert) {
-            Button("Annuler", role: .cancel) {}
-            Button("Vider", role: .destructive) { Task { await viewModel.emptyTrash() } }
+        .alert("library.detail.empty.trash.alert.title", isPresented: showingEmptyTrashAlert) {
+            Button("common.cancel", role: .cancel) {}
+            Button("library.settings.sheet.empty.trash", role: .destructive) { Task { await viewModel.emptyTrash() } }
         } message: {
-            Text("Par défaut, le serveur de médias ne détruit pas immédiatement les informations concernant les médias.\n\nCela est utile quand un lecteur est temporairement déconnecté.\n\nLorsque vous videz la corbeille pour une section, toutes les informations sur les médias manquants sont supprimées.")
+            Text("library.detail.empty.trash.alert.message")
         }
     }
 }

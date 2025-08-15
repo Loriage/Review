@@ -18,7 +18,7 @@ struct FixMatchView: View {
         NavigationStack {
             ZStack {
                 if viewModel.isLoading {
-                    ProgressView("Recherche de correspondances...")
+                    ProgressView("fixMatchView.loading.message")
                 } else {
                     List(viewModel.matches) { match in
                         Button(action: {
@@ -52,11 +52,11 @@ struct FixMatchView: View {
                     HUDView(hudMessage: hudMessage)
                 }
             }
-            .navigationTitle("Corriger l'association")
+            .navigationTitle("fixMatchView.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Annuler") { dismiss() }
+                    Button("common.cancel") { dismiss() }
                 }
             }
             .task {

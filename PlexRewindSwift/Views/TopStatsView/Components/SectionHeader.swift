@@ -7,11 +7,11 @@ struct SectionHeader: View {
 
     var body: some View {
         HStack {
-            Text(title).font(.headline)
+            Text(LocalizedStringKey(title)).font(.headline)
             Spacer()
             if fullList.count > items.count {
                 NavigationLink(destination: TopMediaDetailView(title: title, items: fullList)) {
-                    Text("Voir plus").font(.subheadline)
+                    Text("common.see.more").font(.subheadline)
                 }
             }
         }

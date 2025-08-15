@@ -19,7 +19,7 @@ struct SettingsView: View {
                 if viewModel.isLoading {
                     ProgressView()
                 } else if let account = viewModel.account {
-                    Section(header: Text("Compte")) {
+                    Section(header: Text("settings.account.section.title")) {
                         HStack(spacing: 10) {
                             AsyncImageView(url: URL(string: account.thumb ?? ""))
                                 .frame(width: 50, height: 50)
@@ -41,30 +41,30 @@ struct SettingsView: View {
                     }
                 }
 
-                Section(header: Text("Serveur")) {
+                Section(header: Text("settings.server.section.title")) {
                     if let server = selectedServer {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(server.name)
                                 .font(.headline)
-                            Text("Version \(server.productVersion)")
+                            Text("settings.server.version \(server.productVersion)")
                                 .foregroundColor(.secondary)
                                 .font(.subheadline)
                         }
-                        NavigationLink("Détails du serveur") {
+                        NavigationLink("settings.server.details.button") {
                             ServerDetailsView(server: server)
                         }
                     } else {
-                        Text("Aucun serveur trouvé.")
+                        Text("settings.server.no.server.found")
                             .foregroundColor(.secondary)
                     }
                 }
 
                 Section {
-                    Button("Se déconnecter", role: .destructive, action: authManager.logout)
+                    Button("settings.button.logout", role: .destructive, action: authManager.logout)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            .navigationTitle("Réglages")
+            .navigationTitle("settings.title")
             .navigationBarTitleDisplayMode(.inline)
             .task {
                 await viewModel.loadAccountDetails()

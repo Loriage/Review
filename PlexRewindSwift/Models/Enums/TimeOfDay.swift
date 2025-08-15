@@ -1,8 +1,8 @@
-import Foundation
+import SwiftUI
 
-enum TimeOfDay: String {
-    case morning = "Matin"
-    case afternoon = "Après-midi"
-    case evening = "Soirée"
-    case night = "Nuit"
+enum TimeOfDay: String, CaseIterable {
+    case morning = "time.of.day.morning"
+    case afternoon = "time.of.day.afternoon"
+    case evening = "time.of.day.evening"
+    case night = "time.of.day.night"
 }

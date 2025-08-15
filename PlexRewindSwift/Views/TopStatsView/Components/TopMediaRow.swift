@@ -14,8 +14,8 @@ struct TopMediaRow: View {
                     .font(.headline)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Lectures: \(media.viewCount)")
-                    Text("Durée: \(media.formattedWatchTime)")
+                    Text("top.media.row.plays \(media.viewCount)")
+                    Text("top.media.row.duration \(media.formattedWatchTime)")
                 }
                 .font(.subheadline)
                 .foregroundColor(.secondary)
@@ -39,10 +39,10 @@ struct TopMediaRowWithDetails: View {
                     .font(.headline)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Nombre de lectures : \(media.viewCount)")
-                    Text("Durée de visionnage : \(media.formattedWatchTime)")
+                    Text("top.media.detail.plays \(media.viewCount)")
+                    Text("top.media.row.duration \(media.formattedWatchTime)")
                     if let lastViewed = media.lastViewedAt {
-                        Text("Dernière lecture : \(lastViewed.formatted(.relative(presentation: .named)))")
+                        Text("top.media.detail.last.viewed \(lastViewed.formatted(.relative(presentation: .named)))")
                     }
                 }
                 .font(.subheadline)

@@ -48,7 +48,7 @@ class SearchViewModel: ObservableObject {
             self.searchableMediaCache = allMedia
             self.state = .idle
         } catch {
-            self.state = .error("Impossible de charger le catalogue pour la recherche.")
+            self.state = .error("\(String(localized: "search.view.error"))")
         }
         isCacheLoading = false
     }

@@ -24,28 +24,22 @@ enum PlexError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .invalidURL: return "L'URL du serveur est invalide."
+        case .invalidURL: return "\(String(localized: "error.invalidURL"))"
         case .networkError(let error):
-            return "Erreur réseau: \(error.localizedDescription)"
+            return "\(String(localized: "error.network ")) \(error.localizedDescription)"
         case .decodingError(let error):
             if let decodingError = error as? DecodingError {
                 switch decodingError {
-                case .typeMismatch(let type, let context):
-                    return "Erreur de décodage: Le type ne correspond pas pour \(type) à \(context.codingPath.map { $0.stringValue }.joined(separator: ".")). Raison: \(context.debugDescription)"
-                case .valueNotFound(let type, let context):
-                    return "Erreur de décodage: Valeur manquante pour \(type) à \(context.codingPath.map { $0.stringValue }.joined(separator: ".")). Raison: \(context.debugDescription)"
-                case .keyNotFound(let key, let context):
-                    return "Erreur de décodage: Clé '\(key.stringValue)' non trouvée à \(context.codingPath.map { $0.stringValue }.joined(separator: ".")). Raison: \(context.debugDescription)"
-                case .dataCorrupted(let context):
-                    return "Erreur de décodage: Données corrompues. Raison: \(context.debugDescription)"
+                case .typeMismatch, .valueNotFound, .keyNotFound, .dataCorrupted:
+                    return "\(String(localized: "error.decoding")) \(error.localizedDescription)"
                 @unknown default:
-                    return "Erreur de décodage inconnue: \(error.localizedDescription)"
+                    return "\(String(localized: "error.decoding")) \(error.localizedDescription)"
                 }
             }
-            return "Erreur de décodage: \(error.localizedDescription)"
-        case .noData: return "Aucune donnée reçue du serveur."
+            return "\(String(localized: "error.decoding")) \(error.localizedDescription)"
+        case .noData: return String(localized: "error.noData")
         case .serverError(let statusCode):
-            return "Erreur du serveur (code: \(statusCode))."
+            return "\(String(localized: "error.server")) \(statusCode)"
         }
     }
 }
@@ -80,41 +74,6 @@ class DisplayLibrary: Identifiable, ObservableObject {
     }
 }
 
-enum LibraryVisibility: Int, CaseIterable, Identifiable {
-    case includeInHomeAndSearch = 0
-    case excludeFromHome = 1
-    case excludeFromHomeAndSearch = 2
-
-    var id: Int { self.rawValue }
-
-    var description: String {
-        switch self {
-        case .includeInHomeAndSearch:
-            return "Inclure partout"
-        case .excludeFromHome:
-            return "Exclure de l'accueil"
-        case .excludeFromHomeAndSearch:
-            return "Exclure partout"
-        }
-    }
-}
-
 extension Notification.Name {
     static let didUpdateLibraryPreferences = Notification.Name("didUpdateLibraryPreferences")
-}
-
-enum CollectionMode: Int, CaseIterable, Identifiable {
-    case hide = 0
-    case hideItems = 1
-    case showAll = 2
-
-    var id: Int { self.rawValue }
-
-    var description: String {
-        switch self {
-        case .hide: return "Cacher les collections"
-        case .hideItems: return "Cacher les objets des collections"
-        case .showAll: return "Afficher les collections et leurs objets"
-        }
-    }
 }

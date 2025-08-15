@@ -48,7 +48,7 @@ struct LibraryCardView: View {
                     VStack(alignment: .leading, spacing: 5) {
                         Label {
                             HStack {
-                                Text("Nombre de \(PlexMediaTypeHelper.formattedTypeNamePlural(for: displayLibrary.library.type)) :")
+                                Text("library.number.of \(PlexMediaTypeHelper.formattedTypeNamePlural(for: displayLibrary.library.type))")
                                     .fontWeight(.semibold)
                                 Spacer()
                                 if let count = displayLibrary.fileCount {
@@ -67,7 +67,7 @@ struct LibraryCardView: View {
                         
                         Label {
                             HStack {
-                                Text("Taille :")
+                                Text("library.detail.header.size")
                                     .fontWeight(.semibold)
                                 Spacer()
                                 if let size = displayLibrary.size {
@@ -83,7 +83,7 @@ struct LibraryCardView: View {
                         }
 
                         Label {
-                            Text("Créée le :")
+                            Text("library.detail.header.created.at")
                                 .fontWeight(.semibold)
                             Spacer()
                             Text(formatDate(displayLibrary.library.createdAt))
@@ -94,7 +94,7 @@ struct LibraryCardView: View {
                         }
 
                         Label {
-                            Text("Dernier scan :")
+                            Text("library.detail.last.scan")
                                 .fontWeight(.semibold)
                             Spacer()
                             Text(formatDate(displayLibrary.library.scannedAt))
@@ -127,7 +127,7 @@ struct LibraryCardView: View {
     private func formatDate(_ timestamp: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "fr_FR")
+
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         return formatter.string(from: date)

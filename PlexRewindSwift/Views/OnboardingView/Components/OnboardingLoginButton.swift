@@ -13,7 +13,7 @@ struct OnboardingLoginButton: View {
                         await authManager.startLoginProcess()
                     }
                 }) {
-                    Text("Se connecter avec Plex")
+                    Text("onboarding.button.login")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()

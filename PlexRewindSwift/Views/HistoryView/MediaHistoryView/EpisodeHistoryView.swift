@@ -36,7 +36,7 @@ struct EpisodeHistoryView: View {
     var body: some View {
         ZStack {
             if viewModel.isLoading {
-                ProgressView("Chargement...")
+                ProgressView("common.loading")
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
@@ -46,9 +46,9 @@ struct EpisodeHistoryView: View {
                             .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
                             .padding(.horizontal)
                         
-                        Picker("Menu", selection: $selectedTab) {
-                            Text("Informations").tag(EpisodeHistoryTab.information)
-                            Text("Historique").tag(EpisodeHistoryTab.history)
+                        Picker("tab.picker.label", selection: $selectedTab) {
+                            Text("tab.information").tag(EpisodeHistoryTab.information)
+                            Text("tab.history").tag(EpisodeHistoryTab.history)
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal)
@@ -68,7 +68,7 @@ struct EpisodeHistoryView: View {
                     .transition(.scale.combined(with: .opacity))
             }
         }
-        .navigationTitle(viewModel.displayTitle)
+        .navigationTitle(LocalizedStringKey(viewModel.displayTitle))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
         .sheet(isPresented: $showingSettings, content: settingsSheet)

@@ -2,8 +2,8 @@ import SwiftUI
 
 struct EmptyDataView: View {
     let systemImageName: String
-    let title: String
-    let message: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {

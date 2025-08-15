@@ -21,7 +21,7 @@ struct ImageSelectorView: View {
                     ProgressView()
                 } else {
                     ScrollView {
-                        artworkSection(title: "Affiches", artworks: viewModel.posters)
+                        artworkSection(title: "image.selector.posters", artworks: viewModel.posters)
                     }
                 }
                 
@@ -31,11 +31,11 @@ struct ImageSelectorView: View {
                 }
             }
             .animation(.spring(), value: viewModel.hudMessage)
-            .navigationTitle("Changer d'image")
+            .navigationTitle("image.selector.change.image")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Fermer") { dismiss() }
+                    Button("common.close") { dismiss() }
                 }
             }
             .task {
@@ -45,7 +45,7 @@ struct ImageSelectorView: View {
     }
     
     @ViewBuilder
-    private func artworkSection(title: String, artworks: [PlexArtwork]) -> some View {
+    private func artworkSection(title: LocalizedStringKey, artworks: [PlexArtwork]) -> some View {
         if !artworks.isEmpty {
             VStack(alignment: .leading) {
                 Text(title)

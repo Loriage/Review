@@ -9,11 +9,11 @@ struct OnboardingContentView: View {
                 .font(.system(size: 80))
                 .foregroundColor(.accentColor)
             
-            Text("Bienvenue sur Plex Rewind")
+            Text("onboarding.title")
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("Revivez votre année de visionnage avec des statistiques personnalisées sur vos films et séries préférés.")
+            Text("onboarding.subtitle")
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)

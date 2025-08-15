@@ -25,13 +25,13 @@ struct SearchResultRow: View {
                             .foregroundColor(.secondary)
                     }
                 } else {
-                    HStack(spacing: 0) {
+                    HStack(spacing: 4) {
                         Text(PlexMediaTypeHelper.formattedTypeNameSingular(for: result.type).capitalized)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                         
                         if let year = result.year {
-                            Text(" (\(String(year)))")
+                            Text("(\(String(year)))")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }

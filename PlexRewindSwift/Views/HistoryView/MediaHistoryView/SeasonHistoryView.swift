@@ -26,16 +26,16 @@ struct SeasonHistoryView: View {
     var body: some View {
         ZStack {
             if viewModel.isLoading {
-                ProgressView("Chargement des épisodes...")
+                ProgressView("season.view.loading.message")
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
                         SeasonsHeaderView(viewModel: viewModel)
 
-                        Picker("Menu", selection: $selectedTab) {
-                            Text("Informations").tag(SeasonHistoryTab.information)
-                            Text("Historique").tag(SeasonHistoryTab.history)
-                            Text("Épisodes").tag(SeasonHistoryTab.episodes)
+                        Picker("tab.picker.label", selection: $selectedTab) {
+                            Text("tab.information").tag(SeasonHistoryTab.information)
+                            Text("tab.history").tag(SeasonHistoryTab.history)
+                            Text("tab.episodes").tag(SeasonHistoryTab.episodes)
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal)
@@ -94,7 +94,7 @@ struct SeasonHistoryView: View {
                 .cornerRadius(8)
             
             VStack(alignment: .leading) {
-                Text("Épisode \(episode.index ?? 0)")
+                Text("episode.history.view.title\(episode.index ?? 0)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 Text(episode.title)

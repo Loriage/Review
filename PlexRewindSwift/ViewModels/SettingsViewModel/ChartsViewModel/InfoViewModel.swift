@@ -95,7 +95,7 @@ class InfoViewModel: ObservableObject {
             }
 
         } catch {
-            print("Erreur de récupération des statistiques: \(error.localizedDescription)")
+            print(LocalizedStringKey("common.error"), "\(error.localizedDescription)")
         }
         
         isLoading = false

@@ -12,23 +12,23 @@ struct LibrarySettingsSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             Button(action: { handleNavigation { self.navigateToLibrarySettings = true } }) {
-                Label("Paramètres de la bibliothèque", systemImage: "gearshape.fill")
+                Label("library.settings.sheet.library.settings", systemImage: "gearshape.fill")
             }
 
             Button(action: { handleAction { await self.viewModel.scanLibrary() } }) {
-                Label("Scanner la bibliothèque", systemImage: "waveform.path.ecg")
+                Label("library.settings.sheet.scan", systemImage: "waveform.path.ecg")
             }
             
             Button(action: { handleAction { self.showingRefreshAlert = true } }) {
-                Label("Actualiser les métadonnées", systemImage: "arrow.trianglehead.counterclockwise")
+                Label("activity.settings.refresh.metadata", systemImage: "arrow.trianglehead.counterclockwise")
             }
             
             Button(action: { handleAction { self.showingAnalyzeAlert = true } }) {
-                Label("Analyser", systemImage: "wand.and.rays")
+                Label("activity.settings.analyze", systemImage: "wand.and.rays")
             }
             
             Button(action: { handleAction { self.showingEmptyTrashAlert = true } }) {
-                Label("Vider la corbeille", systemImage: "trash")
+                Label("library.settings.sheet.empty.trash", systemImage: "trash")
             }
         }
         .font(.body)

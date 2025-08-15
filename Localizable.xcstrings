@@ -1,12 +1,19 @@
 {
-  "sourceLanguage" : "en",
+  "sourceLanguage" : "fr",
   "strings" : {
-    " (%@)" : {
-
+    "(%@)" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%@)"
+          }
+        }
+      }
     },
     "%.0f%@" : {
       "localizations" : {
-        "en" : {
+        "fr" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$.0f%2$@"
@@ -15,11 +22,18 @@
       }
     },
     "%@" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
     },
     "%@ - %@" : {
       "localizations" : {
-        "en" : {
+        "fr" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ - %2$@"
@@ -27,347 +41,3255 @@
         }
       }
     },
-    "%lld" : {
-
-    },
-    "%lld épisodes" : {
-
-    },
-    "Accès non autorisé" : {
-
-    },
-    "Activité" : {
-
-    },
-    "Activité en cours" : {
-
-    },
-    "Actualiser" : {
-
-    },
-    "Actualiser les métadonnées" : {
-
-    },
-    "Actualiser les métadonnées de l'épisode" : {
-
-    },
-    "Afficher l'historique de l'élément" : {
-
-    },
-    "Afficher l'historique de l'utilisateur" : {
-
-    },
-    "Allez dans l'onglet \"Réglages\" pour choisir un serveur Plex." : {
-
-    },
-    "Analyse tous les médias de la bibliothèque.\n\nL'analyse permet à Plex de collecter des informations pour optimiser la lecture de chaque média." : {
-
-    },
-    "Analyser" : {
-
-    },
-    "Analyser l'épisode" : {
-
-    },
-    "Annuler" : {
-
-    },
-    "Aucun historique trouvé" : {
-
-    },
-    "Aucun serveur sélectionné" : {
-
-    },
-    "Aucun serveur trouvé." : {
-
-    },
-    "Aucune activité" : {
-
-    },
-    "Aucune médiathèque" : {
-
-    },
-    "Aucune médiathèque n'a été trouvée sur ce serveur." : {
-
-    },
-    "Aucune saison trouvée pour cette série." : {
-
-    },
-    "Bibliothèques" : {
-
-    },
-    "Bienvenue sur Plex Rewind" : {
-
-    },
-    "Cette opération peut prendre du temps et consommer des ressources sur votre serveur Plex." : {
-
-    },
-    "Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur." : {
-
-    },
-    "Champ non supporté : %@" : {
-
-    },
-    "Changer d'image" : {
-
-    },
-    "Changer de serveur" : {
-
-    },
-    "Chargement de l'historique..." : {
-
-    },
-    "Chargement des données..." : {
-
-    },
-    "Chargement des épisodes..." : {
-
-    },
-    "Chargement..." : {
-
-    },
-    "CHEMIN" : {
-
-    },
-    "Choisissez un serveur..." : {
-
-    },
-    "Compte" : {
-
-    },
-    "Configure ton serveur, tu en as le pouvoir !" : {
-
-    },
-    "Corriger l'association" : {
-
-    },
-    "Corriger l'association..." : {
-
-    },
-    "Créée le :" : {
-
-    },
-    "Croissance de la bibliothèque" : {
-
-    },
-    "Date" : {
-
-    },
-    "Découvre ce qui peut rendre ton serveur poussif." : {
-
-    },
-    "Dernier scan :" : {
-
-    },
-    "Dernière lecture : %@" : {
-
-    },
-    "Détails du média" : {
-
-    },
-    "Détails du serveur" : {
-
-    },
-    "Distant" : {
-
-    },
-    "Données" : {
-
-    },
-    "Durée de visionnage : %@" : {
-
-    },
-    "Durée: %@" : {
-
-    },
-    "En attente de validation..." : {
-
-    },
-    "En bref" : {
-
-    },
-    "Épisode %lld" : {
-
-    },
-    "Épisodes" : {
-
-    },
-    "Êtes-vous sûr ?" : {
-
-    },
-    "Fermer" : {
-
-    },
-    "Fichiers journaux" : {
-
-    },
-    "Films" : {
-
-    },
-    "Filtres" : {
-
-    },
-    "Filtres et Tri" : {
-
-    },
-    "Finalisez la connexion" : {
-
-    },
-    "Graphes" : {
-
-    },
-    "Historique" : {
-
-    },
-    "Historique des écoutes" : {
-
-    },
-    "Historique des visionnages" : {
-
-    },
-    "https://plex.tv/link" : {
-
-    },
-    "Impossible de charger les informations." : {
-
-    },
-    "Informations" : {
-
-    },
-    "Informations de la bibliothèque" : {
-
-    },
-    "Informations générales" : {
-
-    },
-    "Informations non disponibles." : {
-
-    },
-    "Informations Système" : {
-
-    },
-    "Interrompre" : {
-
-    },
-    "Interrompre l'écoute" : {
-
-    },
-    "Interrompre la lecture" : {
-
-    },
-    "L'historique pour ce média est vide." : {
-
-    },
-    "Lancer une analyse complète ?" : {
-
-    },
-    "Lectures: %lld" : {
-
-    },
-    "Local" : {
-
-    },
-    "Menu" : {
-
-    },
-    "Message (optionnel)" : {
-
-    },
-    "Mise à jour le: %@" : {
-      "extractionState" : "stale",
+    "%@ %@" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mise à jour le : %@"
+            "state" : "new",
+            "value" : "%1$@ %2$@"
           }
         }
       }
     },
-    "Modifier l'affiche de l'épisode" : {
-
+    "%lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
     },
-    "Modifier l'image" : {
-
+    "%lld épisodes" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld épisodes"
+          }
+        }
+      }
     },
-    "Nombre de %@ :" : {
-
+    "activity.settings.analyze" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyze"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyser"
+          }
+        }
+      }
     },
-    "Nombre de lectures : %lld" : {
-
+    "activity.settings.analyze.episode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyze Episode"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyser l'épisode"
+          }
+        }
+      }
     },
-    "Nombre de médias" : {
-
+    "activity.settings.interrupt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Playback"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interrompre l'écoute"
+          }
+        }
+      }
     },
-    "Non défini" : {
-
+    "activity.settings.interrupt.alert.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can send a message to the user to inform them of the reason for the interruption."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez envoyer un message à l'utilisateur pour l'informer de la raison de l'interruption."
+          }
+        }
+      }
     },
-    "Par défaut, le serveur de médias ne détruit pas immédiatement les informations concernant les médias.\n\nCela est utile quand un lecteur est temporairement déconnecté.\n\nLorsque vous videz la corbeille pour une section, toutes les informations sur les médias manquants sont supprimées." : {
-
+    "activity.settings.interrupt.alert.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Playback"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interrompre la lecture"
+          }
+        }
+      }
     },
-    "Paramètres" : {
-
+    "activity.settings.media.details" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media Details"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détails du média"
+          }
+        }
+      }
     },
-    "Paramètres avancés du serveur" : {
-
+    "activity.settings.media.history" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Item History"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l'historique de l'élément"
+          }
+        }
+      }
     },
-    "Paramètres de la bibliothèque" : {
-
+    "activity.settings.refresh.metadata" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh Metadata"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiser les métadonnées"
+          }
+        }
+      }
     },
-    "Paramètres Plex" : {
-
+    "activity.settings.refresh.metadata.episode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh Episode Metadata"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiser les métadonnées de l'épisode"
+          }
+        }
+      }
     },
-    "Paramètres supplémentaires pour administrateur de serveur expérimenté uniquement." : {
-
+    "activity.settings.user.history" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View User History"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l'historique de l'utilisateur"
+          }
+        }
+      }
     },
-    "Parfois, il faut savoir défricher." : {
-
+    "activityView.settings.label" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages"
+          }
+        }
+      }
     },
-    "Période" : {
-
+    "activityView.title" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activité en cours"
+          }
+        }
+      }
     },
-    "Plex" : {
-
+    "badge.audio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUDIO"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUDIO"
+          }
+        }
+      }
+    },
+    "badge.hw" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HW"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HW"
+          }
+        }
+      }
+    },
+    "badge.sw" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SW"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SW"
+          }
+        }
+      }
+    },
+    "charts.common.date" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        }
+      }
+    },
+    "charts.common.now" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenant"
+          }
+        }
+      }
+    },
+    "charts.common.type" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        }
+      }
+    },
+    "charts.common.usage" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usage"
+          }
+        }
+      }
+    },
+    "charts.plex.label" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plex Media Server"
+          }
+        }
+      }
+    },
+    "charts.system.label" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Système"
+          }
+        }
+      }
+    },
+    "common.cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        }
+      }
+    },
+    "common.close" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer"
+          }
+        }
+      }
+    },
+    "common.error" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur"
+          }
+        }
+      }
+    },
+    "common.finished" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finished"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminé"
+          }
+        }
+      }
+    },
+    "common.loading" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement..."
+          }
+        }
+      }
+    },
+    "common.remaining" : {
+      "comment" : "Texte affichant la durée restante",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ remaining"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ restantes"
+          }
+        }
+      }
+    },
+    "common.save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarder"
+          }
+        }
+      }
+    },
+    "common.see.more" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See More"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir plus"
+          }
+        }
+      }
+    },
+    "common.undefined" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non défini"
+          }
+        }
+      }
+    },
+    "common.unknown.episode" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épisode inconnu"
+          }
+        }
+      }
+    },
+    "common.unknown.movie" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Film inconnu"
+          }
+        }
+      }
+    },
+    "common.unknown.show" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série inconnue"
+          }
+        }
+      }
+    },
+    "common.unknown.user" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown User"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisateur inconnu"
+          }
+        }
+      }
+    },
+    "Date" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        }
+      }
+    },
+    "empty.state.no.activity.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing is currently playing on the selected server."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien n'est en cours de lecture sur le serveur sélectionné."
+          }
+        }
+      }
+    },
+    "empty.state.no.activity.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Activity"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune activité"
+          }
+        }
+      }
+    },
+    "empty.state.no.data.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No watch history found for this selection."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun historique de visionnage trouvé pour cette sélection."
+          }
+        }
+      }
+    },
+    "empty.state.no.data.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Data"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune donnée"
+          }
+        }
+      }
+    },
+    "empty.state.no.history.item.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The history for this item is empty."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'historique pour ce média est vide."
+          }
+        }
+      }
+    },
+    "empty.state.no.history.item.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No History Found"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun historique trouvé"
+          }
+        }
+      }
+    },
+    "empty.state.no.history.user.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The history for this user is empty."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'historique pour cet utilisateur est vide."
+          }
+        }
+      }
+    },
+    "empty.state.no.libraries.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No libraries were found on this server."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune médiathèque n'a été trouvée sur ce serveur."
+          }
+        }
+      }
+    },
+    "empty.state.no.libraries.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Libraries"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune médiathèque"
+          }
+        }
+      }
+    },
+    "empty.state.no.results.message %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun résultat trouvé pour \"%@\"."
+          }
+        }
+      }
+    },
+    "empty.state.no.results.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Results"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun résultat"
+          }
+        }
+      }
+    },
+    "empty.state.no.seasons.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No seasons found for this show."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune saison trouvée pour cette série."
+          }
+        }
+      }
+    },
+    "episode.history.view.title%lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épisode %lld"
+          }
+        }
+      }
+    },
+    "error.decoding" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decoding Error"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de décodage"
+          }
+        }
+      }
+    },
+    "error.invalidURL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid URL"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL invalide"
+          }
+        }
+      }
+    },
+    "error.keychain.delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keychain delete error: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de suppression dans le trousseau: %@"
+          }
+        }
+      }
+    },
+    "error.keychain.read" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keychain read error: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de lecture dans le trousseau: %@"
+          }
+        }
+      }
+    },
+    "error.keychain.save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keychain save error: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de sauvegarde dans le trousseau: %@"
+          }
+        }
+      }
+    },
+    "error.network " : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur réseau"
+          }
+        }
+      }
+    },
+    "error.noData" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Data"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune donnée"
+          }
+        }
+      }
+    },
+    "error.server" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Server Error (code: %lld)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur du serveur"
+          }
+        }
+      }
+    },
+    "filter.sheet.filters" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtres"
+          }
+        }
+      }
+    },
+    "filter.sheet.period" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Period"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Période"
+          }
+        }
+      }
+    },
+    "filter.sheet.sort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tri"
+          }
+        }
+      }
+    },
+    "filter.sheet.sort.by" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort by"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier par"
+          }
+        }
+      }
+    },
+    "filter.sheet.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filters and Sort"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtres et Tri"
+          }
+        }
+      }
+    },
+    "filter.sheet.user" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisateur"
+          }
+        }
+      }
+    },
+    "filter.time.allTime" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Time"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout le temps"
+          }
+        }
+      }
+    },
+    "filter.time.month" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Month"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce mois"
+          }
+        }
+      }
+    },
+    "filter.time.week" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Week"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette semaine"
+          }
+        }
+      }
+    },
+    "filter.time.year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Year"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette année"
+          }
+        }
+      }
+    },
+    "filter.user.all" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Users"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les utilisateurs"
+          }
+        }
+      }
+    },
+    "fixMatchView.loading.message" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche de correspondances..."
+          }
+        }
+      }
+    },
+    "fixMatchView.title" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corriger l'association"
+          }
+        }
+      }
+    },
+    "fun.facts.active.users" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active Profiles"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profils actifs"
+          }
+        }
+      }
+    },
+    "fun.facts.busiest.time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peak Moment"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moment phare"
+          }
+        }
+      }
+    },
+    "fun.facts.favorite.day" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorite Day"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jour favori"
+          }
+        }
+      }
+    },
+    "fun.facts.section.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Brief"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En bref"
+          }
+        }
+      }
+    },
+    "fun.facts.top.user" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Profile"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Profil"
+          }
+        }
+      }
+    },
+    "fun.facts.total.plays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plays"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lectures"
+          }
+        }
+      }
+    },
+    "fun.facts.total.time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total Time"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps total"
+          }
+        }
+      }
+    },
+    "history.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch History"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique des visionnages"
+          }
+        }
+      }
+    },
+    "https://plex.tv/link" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://plex.tv/link"
+          }
+        }
+      }
+    },
+    "hud.analyze.error" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors de l’analyse."
+          }
+        }
+      }
+    },
+    "hud.analyze.started" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancement de l’analyse…"
+          }
+        }
+      }
+    },
+    "hud.analyzing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyzing..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse..."
+          }
+        }
+      }
+    },
+    "hud.cleanup.done" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corbeille vidée."
+          }
+        }
+      }
+    },
+    "hud.cleanup.error" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors du nettoyage de la corbeille."
+          }
+        }
+      }
+    },
+    "hud.copied" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copié !"
+          }
+        }
+      }
+    },
+    "hud.error.loading.matches" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error loading matches."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de chargement des correspondances."
+          }
+        }
+      }
+    },
+    "hud.error.playback" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors de l’arrêt."
+          }
+        }
+      }
+    },
+    "hud.error.refresh" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors de l'actualisation."
+          }
+        }
+      }
+    },
+    "hud.error.updating" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error while updating."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors de la mise à jour."
+          }
+        }
+      }
+    },
+    "hud.fixing.match" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fixing match..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correction en cours..."
+          }
+        }
+      }
+    },
+    "hud.image.changed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image changed!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image modifiée !"
+          }
+        }
+      }
+    },
+    "hud.library.scan.started" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan démarré."
+          }
+        }
+      }
+    },
+    "hud.loading.error" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading error."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de chargement."
+          }
+        }
+      }
+    },
+    "hud.match.error" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors de l’association."
+          }
+        }
+      }
+    },
+    "hud.match.fixed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Match corrected!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Association corrigée !"
+          }
+        }
+      }
+    },
+    "hud.modifying" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifying..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modification..."
+          }
+        }
+      }
+    },
+    "hud.no.image.found" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image found."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune image trouvée."
+          }
+        }
+      }
+    },
+    "hud.refresh.started" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh started."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualisation démarrée."
+          }
+        }
+      }
+    },
+    "hud.refreshing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refreshing..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualisation..."
+          }
+        }
+      }
+    },
+    "hud.running.analyze.started" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse démarrée."
+          }
+        }
+      }
+    },
+    "hud.running.cleanup" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancement du nettoyage…"
+          }
+        }
+      }
+    },
+    "hud.running.refresh.started" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualisation démarrée."
+          }
+        }
+      }
+    },
+    "hud.scan.error" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors du scan."
+          }
+        }
+      }
+    },
+    "hud.scan.started" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancement du scan…"
+          }
+        }
+      }
+    },
+    "hud.server.details.unavailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server details unavailable."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détails du serveur indisponibles."
+          }
+        }
+      }
+    },
+    "hud.settings.updated" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings updated!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres mis à jour !"
+          }
+        }
+      }
+    },
+    "hud.stopping.playback" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopping playback..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêt en cours..."
+          }
+        }
+      }
+    },
+    "image.selector.change.image" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Image"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer d'image"
+          }
+        }
+      }
+    },
+    "image.selector.change.poster.episode" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier l'affiche de l'épisode"
+          }
+        }
+      }
+    },
+    "image.selector.posters" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posters"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiches"
+          }
+        }
+      }
+    },
+    "info.view.cpu.chart.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU Usage"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisation CPU"
+          }
+        }
+      }
+    },
+    "info.view.data" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données"
+          }
+        }
+      }
+    },
+    "info.view.loading" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading data..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement des données..."
+          }
+        }
+      }
+    },
+    "info.view.network.chart.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network Throughput"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débit réseau"
+          }
+        }
+      }
+    },
+    "info.view.ram.chart.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RAM Usage"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisation RAM"
+          }
+        }
+      }
+    },
+    "info.view.resync" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-synchroniser l'historique"
+          }
+        }
+      }
+    },
+    "info.view.sync.history" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser l'historique complet"
+          }
+        }
+      }
+    },
+    "info.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System Information"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations Système"
+          }
+        }
+      }
+    },
+    "library.detail.analyze.alert.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Analyzes all media in the library.\\n\\nAnalysis allows Plex to gather information to optimize playback for each media."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse tous les médias de la bibliothèque.\n\nL'analyse permet à Plex de collecter des informations pour optimiser la lecture de chaque média."
+          }
+        }
+      }
+    },
+    "library.detail.analyze.alert.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start a full analysis?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancer une analyse complète ?"
+          }
+        }
+      }
+    },
+    "library.detail.empty.trash.alert.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "By default, the media server does not immediately destroy information about missing media.\\n\\nThis is useful when a drive is temporarily disconnected.\\n\\nWhen you empty the trash for a section, all information about missing media is deleted."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Par défaut, le serveur de médias ne détruit pas immédiatement les informations concernant les médias manquants.\n\nCela est utile quand un lecteur est temporairement déconnecté.\n\nLorsque vous videz la corbeille pour une section, toutes les informations sur les médias manquants sont supprimées."
+          }
+        }
+      }
+    },
+    "library.detail.empty.trash.alert.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Trash?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vider la corbeille ?"
+          }
+        }
+      }
+    },
+    "library.detail.error.loading" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not load content: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger le contenu: %@"
+          }
+        }
+      }
+    },
+    "library.detail.growth.chart.number" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de médias"
+          }
+        }
+      }
+    },
+    "library.detail.growth.chart.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library Growth"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Croissance de la bibliothèque"
+          }
+        }
+      }
+    },
+    "library.detail.header.created.at" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créée le :"
+          }
+        }
+      }
+    },
+    "library.detail.header.episodes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Episodes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épisodes"
+          }
+        }
+      }
+    },
+    "library.detail.header.movies" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movies"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Films"
+          }
+        }
+      }
+    },
+    "library.detail.header.shows" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shows"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Séries"
+          }
+        }
+      }
+    },
+    "library.detail.header.size" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Size"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille"
+          }
+        }
+      }
+    },
+    "library.detail.last.scan" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernier scan :"
+          }
+        }
+      }
+    },
+    "library.detail.refresh.alert.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This operation can take some time and consume resources on your Plex server."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette opération peut prendre du temps et consommer des ressources sur votre serveur Plex."
+          }
+        }
+      }
+    },
+    "library.detail.refresh.alert.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr ?"
+          }
+        }
+      }
+    },
+    "library.number.of %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de %@"
+          }
+        }
+      }
+    },
+    "library.settings.sheet.empty.trash" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Trash"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vider la corbeille"
+          }
+        }
+      }
+    },
+    "library.settings.sheet.library.settings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library Settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres de la bibliothèque"
+          }
+        }
+      }
+    },
+    "library.settings.sheet.refresh" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiser"
+          }
+        }
+      }
+    },
+    "library.settings.sheet.scan" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan Library Files"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scanner la bibliothèque"
+          }
+        }
+      }
+    },
+    "library.settings.view.info.section.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library Information"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations de la bibliothèque"
+          }
+        }
+      }
+    },
+    "library.view.error.loading" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not load libraries: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger les médiathèques : %@"
+          }
+        }
+      }
+    },
+    "library.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Libraries"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliothèques"
+          }
+        }
+      }
+    },
+    "loading.state.analyzing.count" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyzing %lld views..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse de %lld visionnages..."
+          }
+        }
+      }
+    },
+    "loading.state.analyzing.history" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyzing your full history..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse de votre historique complet..."
+          }
+        }
+      }
+    },
+    "loading.state.applying.filters" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applying filters..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Application des filtres..."
+          }
+        }
+      }
+    },
+    "loading.state.calculating.rankings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculating rankings..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calcul des classements..."
+          }
+        }
+      }
+    },
+    "loading.state.finalizing.update" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finalizing update..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finalisation de la mise à jour..."
+          }
+        }
+      }
+    },
+    "loading.state.getting.history" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading history..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement de l'historique..."
+          }
+        }
+      }
+    },
+    "loading.state.hold.on" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyzing, just a moment..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse en cours, encore un instant..."
+          }
+        }
+      }
+    },
+    "loading.state.preparing.metadata" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing metadata..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préparation des métadonnées..."
+          }
+        }
+      }
+    },
+    "location.local" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local"
+          }
+        }
+      }
+    },
+    "location.remote" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distant"
+          }
+        }
+      }
+    },
+    "logs.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log Files"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichiers journaux"
+          }
+        }
+      }
+    },
+    "logs.view.todo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log files view to be implemented."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vue des fichiers journaux à implémenter."
+          }
+        }
+      }
+    },
+    "media.data.unavailable" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger les informations."
+          }
+        }
+      }
+    },
+    "media.detail.aspectratio" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ASPECT RATIO"
+          }
+        }
+      }
+    },
+    "media.detail.audio.channels" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CANAUX AUDIO"
+          }
+        }
+      }
+    },
+    "media.detail.audio.codec" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CODEC AUDIO"
+          }
+        }
+      }
+    },
+    "media.detail.container" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTENEUR"
+          }
+        }
+      }
+    },
+    "media.detail.date.added" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AJOUTÉ LE"
+          }
+        }
+      }
+    },
+    "media.detail.date.updated" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MIS À JOUR LE"
+          }
+        }
+      }
+    },
+    "media.detail.debit" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DÉBIT BINAIRE"
+          }
+        }
+      }
+    },
+    "media.detail.duration" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DURÉE"
+          }
+        }
+      }
+    },
+    "media.detail.fps" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IMAGES PAR SECONDE"
+          }
+        }
+      }
+    },
+    "media.detail.height" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HAUTEUR"
+          }
+        }
+      }
+    },
+    "media.detail.id" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID"
+          }
+        }
+      }
+    },
+    "media.detail.language" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LANGUE"
+          }
+        }
+      }
+    },
+    "media.detail.name" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NOM"
+          }
+        }
+      }
+    },
+    "media.detail.path" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CHEMIN"
+          }
+        }
+      }
+    },
+    "media.detail.type" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TYPE"
+          }
+        }
+      }
+    },
+    "media.detail.video.codec" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CODEC VIDEO"
+          }
+        }
+      }
+    },
+    "media.detail.video.profile" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PROFIL VIDEO"
+          }
+        }
+      }
+    },
+    "media.detail.video.resolution" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RÉSOLUTION"
+          }
+        }
+      }
+    },
+    "media.detail.width" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LARGEUR"
+          }
+        }
+      }
+    },
+    "media.info.directed.by" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Directed by"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réalisé par"
+          }
+        }
+      }
+    },
+    "media.info.genres" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genres"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genres"
+          }
+        }
+      }
+    },
+    "media.info.not.available" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information not available."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations non disponibles."
+          }
+        }
+      }
+    },
+    "media.info.not.available." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations non disponibles."
+          }
+        }
+      }
+    },
+    "media.info.release.year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Release Year"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Année de sortie"
+          }
+        }
+      }
+    },
+    "media.info.studio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Studio"
+          }
+        }
+      }
+    },
+    "media.info.summary" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Summary"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résumé"
+          }
+        }
+      }
+    },
+    "media.info.with" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avec"
+          }
+        }
+      }
+    },
+    "media.info.written.by" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Written by"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écrit par"
+          }
+        }
+      }
+    },
+    "media.settings.change.image" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Image"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier l'image"
+          }
+        }
+      }
+    },
+    "media.settings.fix.match" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Match..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corriger l'association..."
+          }
+        }
+      }
+    },
+    "media.type.plural.album" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "albums"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "albums"
+          }
+        }
+      }
+    },
+    "media.type.plural.artist" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "artists"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "artistes"
+          }
+        }
+      }
+    },
+    "media.type.plural.default" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "items"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "éléments"
+          }
+        }
+      }
+    },
+    "media.type.plural.episode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "episodes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "épisodes"
+          }
+        }
+      }
+    },
+    "media.type.plural.movie" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "movies"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "films"
+          }
+        }
+      }
+    },
+    "media.type.plural.photo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "photos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "photos"
+          }
+        }
+      }
+    },
+    "media.type.plural.show" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "shows"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "séries"
+          }
+        }
+      }
+    },
+    "media.type.plural.track" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tracks"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "musiques"
+          }
+        }
+      }
+    },
+    "media.type.singular.album" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "album"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "album"
+          }
+        }
+      }
+    },
+    "media.type.singular.artist" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "artist"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "artiste"
+          }
+        }
+      }
+    },
+    "media.type.singular.default" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "item"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "élément"
+          }
+        }
+      }
+    },
+    "media.type.singular.episode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "episode"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "épisode"
+          }
+        }
+      }
+    },
+    "media.type.singular.movie" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "movie"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "film"
+          }
+        }
+      }
+    },
+    "media.type.singular.photo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "photo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "photo"
+          }
+        }
+      }
+    },
+    "media.type.singular.show" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "show"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "série"
+          }
+        }
+      }
+    },
+    "media.type.singular.track" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "track"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "musique"
+          }
+        }
+      }
+    },
+    "no.server.selected.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to the \"Settings\" tab to choose a Plex server."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allez dans l'onglet \"Réglages\" pour choisir un serveur Plex."
+          }
+        }
+      }
+    },
+    "no.server.selected.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Server Selected"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun serveur sélectionné"
+          }
+        }
+      }
+    },
+    "onboarding.button.login" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with Plex"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se connecter avec Plex"
+          }
+        }
+      }
+    },
+    "onboarding.subtitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relive your year of viewing with personalized statistics on your favorite movies and series."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revivez votre année de visionnage avec des statistiques personnalisées sur vos films et séries préférés."
+          }
+        }
+      }
+    },
+    "onboarding.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to Plex Rewind"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue sur Plex Rewind"
+          }
+        }
+      }
+    },
+    "optional.message.alert" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message (optionnel)"
+          }
+        }
+      }
+    },
+    "permission.denied.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Plex account does not have the necessary permissions to view server activity."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur."
+          }
+        }
+      }
+    },
+    "permission.denied.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unauthorized Access"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accès non autorisé"
+          }
+        }
+      }
+    },
+    "pin.code.waiting.for.validation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for validation..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En attente de validation..."
+          }
+        }
+      }
+    },
+    "pin.instructions.link.text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to the following website and enter the code below:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendez-vous sur le site web suivant et entrez le code ci-dessous :"
+          }
+        }
+      }
+    },
+    "pin.instructions.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finalize Connection"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finalisez la connexion"
+          }
+        }
+      }
     },
     "Plex Pass" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plex Pass"
+          }
+        }
+      }
     },
-    "Préférences" : {
-
+    "prefs.advanced.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additional settings for experienced server administrators only."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres supplémentaires pour administrateur de serveur expérimenté uniquement."
+          }
+        }
+      }
     },
-    "Quitter" : {
-
+    "prefs.advanced.toggle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced Server Settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres avancés du serveur"
+          }
+        }
+      }
     },
-    "Quitter sans sauvegarder ?" : {
-
+    "prefs.group.butler" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scheduled Tasks"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tâches planifiées"
+          }
+        }
+      }
     },
-    "Re-synchroniser l'historique" : {
-
+    "prefs.group.dlna" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DLNA"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DLNA"
+          }
+        }
+      }
     },
-    "Recherche" : {
-
+    "prefs.group.extras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extras"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonus"
+          }
+        }
+      }
     },
-    "Recherche de correspondances..." : {
-
+    "prefs.group.general" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
+          }
+        }
+      }
     },
-    "Réglages" : {
-
+    "prefs.group.library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliothèque"
+          }
+        }
+      }
     },
-    "Rendez-vous sur le site web suivant et entrez le code ci-dessous :" : {
-
+    "prefs.group.network" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réseau"
+          }
+        }
+      }
     },
-    "Rester" : {
-
+    "prefs.group.transcoder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcoder"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcodeur"
+          }
+        }
+      }
     },
-    "Revivez votre année de visionnage avec des statistiques personnalisées sur vos films et séries préférés." : {
-
+    "prefs.unknown.field %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Champ inconnu : %@"
+          }
+        }
+      }
     },
-    "Rien n'est en cours de lecture sur le serveur sélectionné." : {
-
+    "prefs.unsaved.changes.alert.leave" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitter"
+          }
+        }
+      }
+    },
+    "prefs.unsaved.changes.alert.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have unsaved changes. Are you sure you want to exit?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter ?"
+          }
+        }
+      }
+    },
+    "prefs.unsaved.changes.alert.stay" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rester"
+          }
+        }
+      }
+    },
+    "prefs.unsaved.changes.alert.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit without saving?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitter sans sauvegarder ?"
+          }
+        }
+      }
+    },
+    "prefs.unsupported.field" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsupported field: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Champ non supporté : %@"
+          }
+        }
+      }
+    },
+    "prefs.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preferences"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préférences"
+          }
+        }
+      }
     },
     "S%lld - E%lld" : {
       "localizations" : {
-        "en" : {
+        "fr" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "S%1$lld - E%2$lld"
@@ -377,7 +3299,7 @@
     },
     "S%lld - E%lld - %@" : {
       "localizations" : {
-        "en" : {
+        "fr" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "S%1$lld - E%2$lld - %3$@"
@@ -385,95 +3307,811 @@
         }
       }
     },
-    "Saisons" : {
-
+    "search.view.empty.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for movies, series, and more on your Plex server."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherchez des films, séries et plus encore sur votre serveur Plex."
+          }
+        }
+      }
     },
-    "Sauvegarder" : {
-
+    "search.view.empty.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher"
+          }
+        }
+      }
     },
-    "Scanner la bibliothèque" : {
-
+    "search.view.error" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not load the catalog for searching."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger le catalogue pour la recherche."
+          }
+        }
+      }
     },
-    "Se connecter avec Plex" : {
-
+    "search.view.movies.section" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movies"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Films"
+          }
+        }
+      }
     },
-    "Se déconnecter" : {
-
+    "search.view.shows.section" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shows"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Séries"
+          }
+        }
+      }
     },
-    "Séries" : {
-
+    "search.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche"
+          }
+        }
+      }
     },
-    "Serveur" : {
-
-    },
-    "Serveur Plex" : {
-
+    "season.view.loading.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading episodes..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement des épisodes..."
+          }
+        }
+      }
     },
     "Serveurs disponibles" : {
-
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveurs disponibles"
+          }
+        }
+      }
     },
-    "Stats" : {
-
+    "settings.account.section.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compte"
+          }
+        }
+      }
     },
-    "Synchroniser l'historique complet" : {
-
+    "settings.button.logout" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log Out"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se déconnecter"
+          }
+        }
+      }
     },
-    "Système" : {
-
+    "settings.server.change.title" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer de serveur"
+          }
+        }
+      }
     },
-    "Taille :" : {
-
+    "settings.server.details.button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server Details"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détails du serveur"
+          }
+        }
+      }
     },
-    "Top Stats" : {
-
+    "settings.server.details.charts.description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find out what might be slowing down your server."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Découvre ce qui peut rendre ton serveur poussif."
+          }
+        }
+      }
     },
-    "Tous les utilisateurs" : {
-
+    "settings.server.details.charts.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graphs"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graphes"
+          }
+        }
+      }
     },
-    "Tri" : {
-
+    "settings.server.details.created.at" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created on"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créé le"
+          }
+        }
+      }
     },
-    "Trier par" : {
-
+    "settings.server.details.general.sectio" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations générales"
+          }
+        }
+      }
     },
-    "Type" : {
-
+    "settings.server.details.logs.description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sometimes, you need to clear the way."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parfois, il faut savoir défricher."
+          }
+        }
+      }
     },
-    "Type de champ inconnu : %@" : {
-
+    "settings.server.details.logs.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log Files"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichiers journaux"
+          }
+        }
+      }
     },
-    "Usage" : {
-
+    "settings.server.details.platform" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platform"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plateforme"
+          }
+        }
+      }
     },
-    "Utilisateur" : {
-
+    "settings.server.details.platform.version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platform Version"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version de la plateforme"
+          }
+        }
+      }
     },
-    "Version %@" : {
-
+    "settings.server.details.preferences.description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure your server, you have the power!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure ton serveur, tu en as le pouvoir !"
+          }
+        }
+      }
     },
-    "Vider" : {
-
+    "settings.server.details.preferences.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preferences"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préférences"
+          }
+        }
+      }
     },
-    "Vider la corbeille" : {
-
+    "settings.server.details.public.ip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public IP Address"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adresse IP publique"
+          }
+        }
+      }
     },
-    "Vider la corbeille ?" : {
-
+    "settings.server.details.settings.section" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
+          }
+        }
+      }
     },
-    "Voir plus" : {
-
+    "settings.server.no.server.found" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No server found."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun serveur trouvé."
+          }
+        }
+      }
     },
-    "Votre compte Plex ne dispose pas des permissions nécessaires pour voir l'activité du serveur." : {
-
+    "settings.server.picker.default.text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a server..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez un serveur..."
+          }
+        }
+      }
     },
-    "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter ?" : {
-
+    "settings.server.picker.label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plex Server"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveur Plex"
+          }
+        }
+      }
     },
-    "Vous pouvez envoyer un message à l'utilisateur pour l'informer de la raison de l'interruption." : {
-
+    "settings.server.section.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveur"
+          }
+        }
+      }
     },
-    "Vue des fichiers journaux à implémenter." : {
-
+    "settings.server.selection.section.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plex Settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres Plex"
+          }
+        }
+      }
+    },
+    "settings.server.version %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
+          }
+        }
+      }
+    },
+    "settings.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages"
+          }
+        }
+      }
+    },
+    "sort.option.by.duration" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée"
+          }
+        }
+      }
+    },
+    "sort.option.by.plays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plays"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lectures"
+          }
+        }
+      }
+    },
+    "tab.episodes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Episodes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épisodes"
+          }
+        }
+      }
+    },
+    "tab.history" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique"
+          }
+        }
+      }
+    },
+    "tab.information" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informations"
+          }
+        }
+      }
+    },
+    "tab.picker.label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        }
+      }
+    },
+    "tab.seasons" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seasons"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisons"
+          }
+        }
+      }
+    },
+    "TabItem.activity" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activité"
+          }
+        }
+      }
+    },
+    "TabItem.libraries" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliothèques"
+          }
+        }
+      }
+    },
+    "TabItem.search" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche"
+          }
+        }
+      }
+    },
+    "TabItem.stats" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stats"
+          }
+        }
+      }
+    },
+    "time.of.day.afternoon" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afternoon"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Après-midi"
+          }
+        }
+      }
+    },
+    "time.of.day.evening" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evening"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soirée"
+          }
+        }
+      }
+    },
+    "time.of.day.morning" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morning"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matin"
+          }
+        }
+      }
+    },
+    "time.of.day.night" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Night"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuit"
+          }
+        }
+      }
+    },
+    "top.media.detail.last.viewed %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière lecture : %@"
+          }
+        }
+      }
+    },
+    "top.media.detail.plays %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de lectures : %lld"
+          }
+        }
+      }
+    },
+    "top.media.row.duration %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée : %@"
+          }
+        }
+      }
+    },
+    "top.media.row.plays %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lectures : %lld"
+          }
+        }
+      }
+    },
+    "top.stats.movies.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most Popular Movies"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Films les plus populaires"
+          }
+        }
+      }
+    },
+    "top.stats.shows.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most Popular Shows"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Séries les plus populaires"
+          }
+        }
+      }
+    },
+    "top.stats.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Stats"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Stats"
+          }
+        }
+      }
+    },
+    "unknown.server" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveur inconnu"
+          }
+        }
+      }
+    },
+    "user.history.view.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch History"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique des écoutes"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

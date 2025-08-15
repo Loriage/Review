@@ -28,22 +28,22 @@ struct MainTabView: View {
 
     var body: some View {
         TabView {
-            Tab("Activité", systemImage: "play.circle") {
+            Tab(String(localized: "TabItem.activity"), systemImage: "play.circle") {
                 ActivityView()
                     .environmentObject(activityViewModel)
                     .environmentObject(statsViewModel)
             }
             .badge(activityViewModel.activityCount)
 
-            Tab("Bibliothèques", systemImage: "books.vertical.fill") {
+            Tab(String(localized: "TabItem.libraries"), systemImage: "books.vertical.fill") {
                 LibraryView(serverViewModel: serverViewModel, authManager: authManager)
             }
 
-            Tab("Recherche", systemImage: "magnifyingglass", role: .search) {
+            Tab(String(localized: "TabItem.search"), systemImage: "magnifyingglass", role: .search) {
                 SearchView(serverViewModel: serverViewModel, authManager: authManager, statsViewModel: statsViewModel)
             }
 
-            Tab("Stats", systemImage: "list.number") {
+            Tab(String(localized: "TabItem.stats"), systemImage: "list.number") {
                 TopStatsView()
                     .environmentObject(topStatsViewModel)
             }

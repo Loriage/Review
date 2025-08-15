@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct StatPill: View {
-    let title: String
+    let title: LocalizedStringKey
     let value: String
     let icon: String
     let color: Color
@@ -15,7 +15,7 @@ struct StatPill: View {
                 .foregroundColor(color)
             
             VStack {
-                Text(value)
+                Text(LocalizedStringKey(value))
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)

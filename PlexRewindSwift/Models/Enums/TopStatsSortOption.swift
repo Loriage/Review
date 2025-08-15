@@ -9,9 +9,9 @@ enum TopStatsSortOption: String, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .byPlays:
-            return "Lectures"
+            return "\(String(localized: "sort.option.by.plays"))"
         case .byDuration:
-            return "Durée"
+            return "\(String(localized: "sort.option.by.duration"))"
         }
     }
 }

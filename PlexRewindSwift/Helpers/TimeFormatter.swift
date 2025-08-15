@@ -32,9 +32,11 @@ struct TimeFormatter {
     
     static func formatRemainingSeconds(_ seconds: Int) -> String {
         if seconds <= 0 {
-            return "Terminé"
+            return String(localized: "common.finished")
         }
-        return "\(formatSeconds(seconds)) restantes"
+
+        let format = NSLocalizedString("common.remaining", comment: "Texte affichant la durée restante")
+        return String(format: format, formatSeconds(seconds))
     }
 
     static func formatTimestamp(_ timestamp: Int) -> String {

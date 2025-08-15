@@ -15,20 +15,20 @@ struct LibrarySettingsView: View {
         NavigationStack {
             ZStack {
                 Form {
-                    Section(header: Text("Informations de la bibliothèque")) {
+                    Section(header: Text("library.settings.view.info.section.title")) {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 12) {
-                                InfoPill(title: "ID", value: viewModel.library.library.key)
-                                InfoPill(title: "NOM", value: viewModel.library.library.title)
+                                InfoPill(title: "media.detail.id", value: viewModel.library.library.key)
+                                InfoPill(title: "media.detail.name", value: viewModel.library.library.title)
                             }
                             HStack(spacing: 12) {
-                                InfoPill(title: "TYPE", value: viewModel.library.library.type.capitalized)
-                                InfoPill(title: "LANGUE", value: viewModel.library.library.language)
+                                InfoPill(title: "media.detail.type", value: viewModel.library.library.type.capitalized)
+                                InfoPill(title: "media.detail.language", value: viewModel.library.library.language)
                             }
 
                             ForEach(viewModel.library.library.locations) { location in
                                 HStack(spacing: 10) {
-                                    InfoPill(title: "CHEMIN", value: location.path)
+                                    InfoPill(title: "media.detail.path", value: location.path)
                                     Button(action: {
                                         UIPasteboard.general.string = location.path
                                         withAnimation {
@@ -52,7 +52,7 @@ struct LibrarySettingsView: View {
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .listRowBackground(Color.clear)
 
-                    Section(header: Text("Paramètres de la bibliothèque")) {
+                    Section(header: Text("library.settings.sheet.library.settings")) {
                         ForEach(viewModel.preferenceItems) { item in
                             PreferenceRowView(viewModel: item)
                         }
@@ -62,17 +62,17 @@ struct LibrarySettingsView: View {
                     HUDView(hudMessage: hudMessage)
                 }
                 if showCopyHUD {
-                    HUDView(hudMessage: HUDMessage(iconName: "doc.on.doc.fill", text: "Copié !", maxWidth: 180))
+                    HUDView(hudMessage: HUDMessage(iconName: "doc.on.doc.fill", text: "hud.copied", maxWidth: 180))
                         .transition(.scale.combined(with: .opacity))
                         .zIndex(1)
                 }
             }
-            .navigationTitle("Réglages")
+            .navigationTitle("settings.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if viewModel.hasChanges {
-                        Button("Sauvegarder") {
+                        Button("common.save") {
                             Task {
                                 await viewModel.saveChanges()
                             }
@@ -114,10 +114,10 @@ struct PreferenceRowView: View {
                     }
                 }
             } else {
-                Text("Champ non supporté : \(viewModel.id)")
+                Text("\(String(localized: "prefs.unsupported.field")) \(viewModel.id)")
             }
         default:
-            Text("Type de champ inconnu : \(viewModel.type)")
+            Text("prefs.unknown.field \(viewModel.type)")
         }
     }
 }

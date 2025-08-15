@@ -4,7 +4,7 @@ struct UserHistoryListView: View {
     @ObservedObject var viewModel: UserHistoryViewModel
 
     var body: some View {
-        Section(header: Text("Historique des visionnages")) {
+        Section(header: Text("history.view.title")) {
             ForEach(viewModel.sessions) { session in
                 NavigationLink(destination: mediaHistoryDestination(for: session)) {
                     UserHistoryRow(session: session, viewModel: viewModel)
@@ -51,12 +51,12 @@ private struct UserHistoryRow: View {
     @ViewBuilder
     private var mediaTitles: some View {
         if session.type == "movie" {
-            Text(session.title ?? "Titre inconnu")
+            Text(session.title ?? "common.unknown.title")
                 .font(.headline)
         } else if session.type == "episode" {
-            Text(session.grandparentTitle ?? "Série inconnue")
+            Text(session.grandparentTitle ?? "common.unknown.show")
                 .font(.headline)
-            Text(session.title ?? "Épisode inconnu")
+            Text(session.title ?? "common.unknown.episode")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             Text("S\(session.parentIndex ?? 0) - E\(session.index ?? 0)")

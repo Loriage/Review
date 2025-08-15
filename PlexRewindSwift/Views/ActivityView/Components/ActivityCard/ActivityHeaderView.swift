@@ -86,16 +86,16 @@ struct ActivityHeaderView: View {
             .presentationDetents([.height(280)])
             .presentationDragIndicator(.visible)
         }
-        .alert("Interrompre la lecture", isPresented: $isShowingStopAlert) {
-            TextField("Message (optionnel)", text: $stopReason)
-            Button("Annuler", role: .cancel) { }
-            Button("Interrompre", role: .destructive) {
+        .alert("activity.settings.interrupt.alert.title", isPresented: $isShowingStopAlert) {
+            TextField("optional.message.alert", text: $stopReason)
+            Button("common.cancel", role: .cancel) { }
+            Button("activity.settings.interrupt", role: .destructive) {
                 Task {
                     await activityViewModel.stopPlayback(for: session, reason: stopReason)
                 }
             }
         } message: {
-            Text("Vous pouvez envoyer un message à l'utilisateur pour l'informer de la raison de l'interruption.")
+            Text("activity.settings.interrupt.alert.message")
         }
         .navigationDestination(isPresented: $navigateToMediaHistory) {
             MediaHistoryView(
