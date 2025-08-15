@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 struct PlexMediaTypeHelper {
 
@@ -24,24 +25,27 @@ struct PlexMediaTypeHelper {
     }
 
     static func formattedTypeNamePlural(for type: String) -> String {
+        let key: String
         switch type {
         case "movie":
-            return String(localized: "media.type.plural.movie")
+            key = "media.type.plural.movie"
         case "show":
-            return String(localized: "media.type.plural.show")
+            key = "media.type.plural.show"
         case "artist":
-            return String(localized: "media.type.plural.artist")
+            key = "media.type.plural.artist"
         case "album":
-            return String(localized: "media.type.plural.album")
+            key = "media.type.plural.album"
         case "track":
-            return String(localized: "media.type.plural.track")
+            key = "media.type.plural.track"
         case "photo":
-            return String(localized: "media.type.plural.photo")
+            key = "media.type.plural.photo"
         case "episode":
-            return String(localized: "media.type.plural.episode")
+            key = "media.type.plural.episode"
         default:
-            return String(localized: "media.type.plural.default")
+            key = "media.type.plural.default"
         }
+
+        return NSLocalizedString(key, comment: "Nom pluriel du type de média")
     }
 
     static func iconName(for type: String) -> String {

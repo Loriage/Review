@@ -353,6 +353,23 @@
         }
       }
     },
+    "char.colon" : {
+      "comment" : "Colon",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ":"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " :"
+          }
+        }
+      }
+    },
     "charts.common.date" : {
       "localizations" : {
         "en" : {
@@ -1818,7 +1835,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change Image"
+            "value" : "Change poster"
           }
         },
         "fr" : {
@@ -1993,7 +2010,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Language"
           }
         },
@@ -2245,18 +2262,18 @@
         }
       }
     },
-    "library.number.of %@" : {
+    "library.number.of" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Number of %@"
+            "value" : "Number of "
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nombre de %@"
+            "value" : "Nombre de "
           }
         }
       }
@@ -3018,7 +3035,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change Image"
+            "value" : "Change poster"
           }
         },
         "fr" : {
@@ -3073,22 +3090,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "artistes"
-          }
-        }
-      }
-    },
-    "media.type.plural.default" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "items"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "éléments"
           }
         }
       }

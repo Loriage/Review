@@ -8,8 +8,13 @@ struct SeasonInfoView: View {
             if let details = viewModel.seasonDetails {
                 if let summary = details.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(details.tagline ?? String(localized: "media.info.summary"))
-                            .font(.headline)
+                        if let details = details.tagline {
+                            Text(details)
+                                .font(.headline)
+                        } else {
+                            Text("media.info.summary")
+                                .font(.headline)
+                        }
                         Text(summary)
                             .font(.subheadline)
                             .foregroundColor(.secondary)

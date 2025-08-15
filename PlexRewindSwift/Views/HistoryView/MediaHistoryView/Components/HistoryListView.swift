@@ -7,6 +7,8 @@ struct HistoryListView: View {
     @EnvironmentObject var serverViewModel: ServerViewModel
     @EnvironmentObject var authManager: PlexAuthManager
 
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
+
     var body: some View {
         if historyItems.isEmpty {
             emptyHistoryView
@@ -42,7 +44,14 @@ struct HistoryListView: View {
     }
     
     private func historyRow(for item: MediaHistoryItem) -> some View {
-        HStack(spacing: 15) {
+        let currentAppLocale: Locale
+        if selectedLanguage == "system" {
+            currentAppLocale = .autoupdatingCurrent
+        } else {
+            currentAppLocale = Locale(identifier: selectedLanguage)
+        }
+
+        return HStack(spacing: 15) {
             AsyncImageView(url: item.userThumbURL)
                 .frame(width: 50, height: 50)
                 .clipShape(Circle())
@@ -62,7 +71,7 @@ struct HistoryListView: View {
                 }
                 
                 if let viewedAt = item.session.viewedAt {
-                    Text("\(item.userName ?? String(localized: "common.unknown.user")) - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
+                    Text("\(item.userName ?? String(localized: "common.unknown.user")) - \(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named).locale(currentAppLocale)))")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }

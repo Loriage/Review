@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 @MainActor
 class TopStatsViewModel: ObservableObject {
@@ -20,6 +21,8 @@ class TopStatsViewModel: ObservableObject {
     @Published var funFactBusiestTimeOfDay: TimeOfDay?
     @Published var funFactActiveUsers: Int?
 
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
+
     private var serverWideHistory: [WatchSession] = []
     private var unsortedMovies: [TopMedia] = []
     private var unsortedShows: [TopMedia] = []
@@ -28,9 +31,8 @@ class TopStatsViewModel: ObservableObject {
     private let authManager: PlexAuthManager
     private let activityService: PlexActivityService
     private let metadataService: PlexMetadataService
-    private let languageManager: LanguageManager
 
-    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, activityService: PlexActivityService = PlexActivityService(), metadataService: PlexMetadataService = PlexMetadataService(), languageManager: LanguageManager) {
+    init(serverViewModel: ServerViewModel, authManager: PlexAuthManager, activityService: PlexActivityService = PlexActivityService(), metadataService: PlexMetadataService = PlexMetadataService()) {
         self.serverViewModel = serverViewModel
         self.authManager = authManager
         self.activityService = activityService
@@ -169,13 +171,17 @@ class TopStatsViewModel: ObservableObject {
         }).mapValues { $0.count }
 
         if let (weekday, _) = dayCounts.max(by: { $0.value < $1.value }) {
-            let formatter = DateFormatter()
+        let formatter = DateFormatter()
 
-            let currentAppLocale = Locale(identifier: languageManager.availableLanguages)
-
-            formatter.locale = currentAppLocale
-            
-            self.funFactMostActiveDay = formatter.weekdaySymbols[weekday - 1].capitalized
+        let currentAppLocale: Locale
+        if selectedLanguage == "system" {
+            currentAppLocale = .autoupdatingCurrent
+        } else {
+            currentAppLocale = Locale(identifier: selectedLanguage)
+        }
+        formatter.locale = currentAppLocale
+                    
+        self.funFactMostActiveDay = formatter.weekdaySymbols[weekday - 1].capitalized
         } else {
             self.funFactMostActiveDay = nil
         }
