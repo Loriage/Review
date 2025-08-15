@@ -31,7 +31,7 @@ struct FunFactsSection: View {
                         StatPill(title: "fun.facts.top.user", value: user, icon: "person.fill", color: .orange)
                     }
                     if let timeOfDay = viewModel.funFactBusiestTimeOfDay {
-                        StatPill(title: "fun.facts.busiest.time", value: timeOfDay.rawValue, icon: timeOfDayIcon(for: timeOfDay), color: .indigo)
+                        StatPill(title: "fun.facts.busiest.time", value: timeOfDay.displayName, icon: timeOfDayIcon(for: timeOfDay), color: .indigo)
                     }
                     if let users = viewModel.funFactActiveUsers, users > 0 {
                         StatPill(title: "fun.facts.active.users", value: "\(users)", icon: "person.3.fill", color: .cyan)
