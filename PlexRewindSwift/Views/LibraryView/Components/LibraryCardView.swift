@@ -3,6 +3,7 @@ import SwiftUI
 struct LibraryCardView: View {
     @ObservedObject var displayLibrary: DisplayLibrary
     @State private var dominantColor: Color = .clear
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -48,8 +49,10 @@ struct LibraryCardView: View {
                     VStack(alignment: .leading, spacing: 5) {
                         Label {
                             HStack {
-                                Text("Nombre de \(PlexMediaTypeHelper.formattedTypeNamePlural(for: displayLibrary.library.type)) :")
-                                    .fontWeight(.semibold)
+                                if let pluralType = TypeNamePlural(rawValue: displayLibrary.library.type) {
+                                    (Text("library.number.of") + Text(pluralType.displayName) + Text("char.colon"))
+                                            .fontWeight(.semibold)
+                                }
                                 Spacer()
                                 if let count = displayLibrary.fileCount {
                                     Text("\(count)")
@@ -67,7 +70,7 @@ struct LibraryCardView: View {
                         
                         Label {
                             HStack {
-                                Text("Taille :")
+                                Text("library.detail.header.size")
                                     .fontWeight(.semibold)
                                 Spacer()
                                 if let size = displayLibrary.size {
@@ -83,7 +86,7 @@ struct LibraryCardView: View {
                         }
 
                         Label {
-                            Text("Créée le :")
+                            Text("library.detail.header.created.at")
                                 .fontWeight(.semibold)
                             Spacer()
                             Text(formatDate(displayLibrary.library.createdAt))
@@ -94,7 +97,7 @@ struct LibraryCardView: View {
                         }
 
                         Label {
-                            Text("Dernier scan :")
+                            Text("library.detail.last.scan")
                                 .fontWeight(.semibold)
                             Spacer()
                             Text(formatDate(displayLibrary.library.scannedAt))
@@ -127,9 +130,17 @@ struct LibraryCardView: View {
     private func formatDate(_ timestamp: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "fr_FR")
+
+        let currentAppLocale: Locale
+        if selectedLanguage == "system" {
+            currentAppLocale = .autoupdatingCurrent
+        } else {
+            currentAppLocale = Locale(identifier: selectedLanguage)
+        }
+
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
+        formatter.locale = currentAppLocale
         return formatter.string(from: date)
     }
     

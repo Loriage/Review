@@ -2,7 +2,7 @@ import Foundation
 
 class PlexPrefsService {
     func fetchPrefs(serverURL: String, token: String) async throws -> [PlexServerSetting] {
-        guard let url = URL(string: "\(serverURL)/:/prefs?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/:/prefs?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             throw PlexError.invalidURL
         }
         
@@ -30,7 +30,8 @@ class PlexPrefsService {
         
         components.queryItems = [
             URLQueryItem(name: key, value: value),
-            URLQueryItem(name: "X-Plex-Token", value: token)
+            URLQueryItem(name: "X-Plex-Token", value: token),
+            URLQueryItem(name: "X-Plex-Language", value: LanguageHelper.getCurrentLanguageCode()),
         ]
 
         guard let url = components.url else { throw PlexError.invalidURL }

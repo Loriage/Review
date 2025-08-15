@@ -61,7 +61,7 @@ class LibraryViewModel: ObservableObject {
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = authManager.getPlexAuthToken()
         else {
-            if displayLibraries.isEmpty { errorMessage = "Serveur non sélectionné ou informations manquantes." }
+            if displayLibraries.isEmpty { errorMessage = "no.server.selected.or.missing.infos" }
             return
         }
         
@@ -91,7 +91,7 @@ class LibraryViewModel: ObservableObject {
         } catch {
             let nsError = error as NSError
             if !(nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled) {
-                self.errorMessage = "Impossible de charger les médiathèques : \(error.localizedDescription)"
+                self.errorMessage = "\(String(localized: "library.view.error.loading")) \(error.localizedDescription)"
             }
         }
         

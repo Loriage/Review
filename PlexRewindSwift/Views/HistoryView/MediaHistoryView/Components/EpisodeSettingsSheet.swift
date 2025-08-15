@@ -10,19 +10,19 @@ struct EpisodeSettingsSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             Button(action: { handleAction { self.showMediaDetails = true } }) {
-                Label("Détails du média", systemImage: "info.circle")
+                Label("activity.settings.media.details", systemImage: "info.circle")
             }
             
             Button(action: { handleAction { self.showImageSelector = true } }) {
-                Label("Modifier l'affiche de l'épisode", systemImage: "photo")
+                Label("image.selector.change.poster.episode", systemImage: "photo")
             }
             
             Button(action: { handleActionAsync { await self.actionsViewModel.refreshMetadata() } }) {
-                Label("Actualiser les métadonnées de l'épisode", systemImage: "arrow.trianglehead.counterclockwise")
+                Label("activity.settings.refresh.metadata.episode", systemImage: "arrow.trianglehead.counterclockwise")
             }
             
             Button(action: { handleActionAsync { await self.actionsViewModel.analyzeMedia() } }) {
-                Label("Analyser l'épisode", systemImage: "wand.and.rays")
+                Label("activity.settings.analyze.episode", systemImage: "wand.and.rays")
             }
         }
         .font(.body)

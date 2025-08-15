@@ -3,11 +3,11 @@ import SwiftUI
 struct PinInstructionsView: View {
     var body: some View {
         VStack(spacing: 25) {
-            Text("Finalisez la connexion")
+            Text("pin.instructions.title")
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("Rendez-vous sur le site web suivant et entrez le code ci-dessous :")
+            Text("pin.instructions.link.text")
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
             

@@ -16,7 +16,7 @@ struct UserHistoryView: View {
     var body: some View {
         content
             .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Historique des écoutes")
+            .navigationTitle("user.history.view.title")
             .refreshable { await viewModel.refreshData() }
             .task { await viewModel.loadInitialData() }
     }
@@ -24,7 +24,7 @@ struct UserHistoryView: View {
     @ViewBuilder
     private var content: some View {
         if viewModel.isLoading {
-            ProgressView("Chargement de l'historique...")
+            ProgressView("loading.state.getting.history")
         } else {
             List {
                 UserHeaderView(viewModel: viewModel)
@@ -32,8 +32,8 @@ struct UserHistoryView: View {
                 if viewModel.sessions.isEmpty {
                     EmptyDataView(
                         systemImageName: "person.fill",
-                        title: "Aucun historique trouvé",
-                        message: "L'historique pour cet utilisateur est vide."
+                        title: "empty.state.no.history.item.title",
+                        message: "empty.state.no.history.user.message"
                     )
                 } else {
                     UserHistoryListView(viewModel: viewModel)

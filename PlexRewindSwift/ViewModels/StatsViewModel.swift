@@ -41,7 +41,7 @@ class StatsViewModel: ObservableObject {
         
         isLoading = true
         isHistorySynced = false
-        loadingStatusMessage = "Analyse de votre historique complet..."
+        loadingStatusMessage = "\(String(localized: "loading.state.analyzing.history"))"
 
         do {
             let serverURL = connection.uri
@@ -49,7 +49,7 @@ class StatsViewModel: ObservableObject {
             
             self.fullHistory = try await activityService.fetchWatchHistory(serverURL: serverURL, token: resourceToken, year: 0, userID: nil) { count in
                 await MainActor.run {
-                    self.loadingStatusMessage = "Analyse de \(count) visionnages..."
+                    self.loadingStatusMessage = "\(String(localized: "loading.state.analyzing.count")) \(count)"
                 }
             }
             
@@ -60,7 +60,7 @@ class StatsViewModel: ObservableObject {
             }
             
         } catch {
-            errorMessage = "Impossible de récupérer l'historique. \(error.localizedDescription)"
+            errorMessage = "plex.error.missing.history \(error.localizedDescription)"
         }
         isLoading = false
         loadingStatusMessage = ""

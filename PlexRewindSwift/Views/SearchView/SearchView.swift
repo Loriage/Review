@@ -28,21 +28,21 @@ struct SearchView: View {
                 case .idle:
                     EmptyDataView(
                         systemImageName: "magnifyingglass",
-                        title: "Rechercher",
-                        message: "Recherchez des films, séries et plus encore sur votre serveur Plex."
+                        title: "search.view.empty.title",
+                        message: "search.view.empty.message"
                     )
                 case .loading:
                     ProgressView()
                 case .empty:
                     EmptyDataView(
                         systemImageName: "questionmark.folder",
-                        title: "Aucun résultat",
-                        message: "Aucun résultat trouvé pour \"\(viewModel.searchText)\"."
+                        title: "empty.state.no.results.title",
+                        message: "empty.state.no.results.message \(viewModel.searchText)"
                     )
                 case .loaded:
                     List {
                         if !movies.isEmpty {
-                            Section(header: Text("Films")) {
+                            Section(header: Text("search.view.movies.section")) {
                                 ForEach(movies) { result in
                                     NavigationLink(destination: mediaHistoryDestination(for: result)) {
                                         SearchResultRow(result: result, posterURL: viewModel.posterURL(for: result))
@@ -52,7 +52,7 @@ struct SearchView: View {
                         }
 
                         if !shows.isEmpty {
-                            Section(header: Text("Séries")) {
+                            Section(header: Text("search.view.shows.section")) {
                                 ForEach(shows) { result in
                                     NavigationLink(destination: mediaHistoryDestination(for: result)) {
                                         SearchResultRow(result: result, posterURL: viewModel.posterURL(for: result))
@@ -71,7 +71,7 @@ struct SearchView: View {
                     }
                 }
             }
-            .navigationTitle("Recherche")
+            .navigationTitle("search.view.title")
             .navigationBarTitleDisplayMode(.inline)
         }
         .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always))

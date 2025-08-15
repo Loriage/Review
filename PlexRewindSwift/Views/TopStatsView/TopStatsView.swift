@@ -9,7 +9,7 @@ struct TopStatsView: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle("Top Stats")
+                .navigationTitle("top.stats.view.title")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { toolbarContent }
                 .sheet(isPresented: $isShowingFilterSheet, content: filterSheet)
@@ -23,7 +23,7 @@ struct TopStatsView: View {
     @ViewBuilder
     private var content: some View {
         if viewModel.isLoading && !viewModel.hasFetchedOnce {
-            LoadingStateView(message: viewModel.loadingMessage)
+            LoadingStateView(message: LocalizedStringKey(viewModel.loadingMessage))
         } else if let errorMessage = viewModel.errorMessage {
             Text(errorMessage).foregroundColor(.red).padding()
         } else {
@@ -36,18 +36,18 @@ struct TopStatsView: View {
             if viewModel.topMovies.isEmpty && viewModel.topShows.isEmpty && viewModel.hasFetchedOnce {
                 EmptyDataView(
                     systemImageName: "chart.bar.xaxis.ascending",
-                    title: "Aucune donnée",
-                    message: "Aucun historique de visionnage trouvé pour cette sélection."
+                    title: "empty.state.no.data.title",
+                    message: "empty.state.no.data.message"
                 )
             } else {
                 if viewModel.hasFetchedOnce {
                     FunFactsSection(viewModel: viewModel)
                 }
                 if !viewModel.topMovies.isEmpty {
-                    TopMediaSection(title: "Films les plus populaires", items: Array(viewModel.topMovies.prefix(4)), fullList: viewModel.topMovies)
+                    TopMediaSection(title: "top.stats.movies.title", items: Array(viewModel.topMovies.prefix(4)), fullList: viewModel.topMovies)
                 }
                 if !viewModel.topShows.isEmpty {
-                    TopMediaSection(title: "Séries les plus populaires", items: Array(viewModel.topShows.prefix(4)), fullList: viewModel.topShows)
+                    TopMediaSection(title: "top.stats.shows.title", items: Array(viewModel.topShows.prefix(4)), fullList: viewModel.topShows)
                 }
             }
         }
@@ -57,7 +57,7 @@ struct TopStatsView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: { isShowingFilterSheet = true }) {
-                Label("Filtres", systemImage: "line.3.horizontal.decrease.circle")
+                Label("filter.sheet.filters", systemImage: "line.3.horizontal.decrease.circle")
             }
         }
     }

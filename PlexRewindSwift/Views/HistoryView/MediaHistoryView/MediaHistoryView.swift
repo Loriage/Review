@@ -36,7 +36,7 @@ struct MediaHistoryView: View {
     var body: some View {
         ZStack {
             if viewModel.isLoading {
-                ProgressView("Chargement...")
+                ProgressView("common.loading")
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
@@ -44,11 +44,11 @@ struct MediaHistoryView: View {
                             MediaHeaderView(viewModel: viewModel)
                         }
                         
-                        Picker("Menu", selection: $selectedTab) {
-                            Text("Informations").tag(MediaHistoryTab.information)
-                            Text("Historique").tag(MediaHistoryTab.history)
+                        Picker("tab.picker.label", selection: $selectedTab) {
+                            Text("tab.information").tag(MediaHistoryTab.information)
+                            Text("tab.history").tag(MediaHistoryTab.history)
                             if viewModel.mediaType == "show" || viewModel.mediaType == "episode" {
-                                Text("Saisons").tag(MediaHistoryTab.seasons)
+                                Text("tab.seasons").tag(MediaHistoryTab.seasons)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -74,14 +74,14 @@ struct MediaHistoryView: View {
                     .transition(.scale.combined(with: .opacity))
             }
         }
-        .navigationTitle(viewModel.displayTitle)
+        .navigationTitle(LocalizedStringKey(viewModel.displayTitle))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
         .sheet(isPresented: $showingSettings, content: settingsSheet)
         .sheet(isPresented: $showImageSelector, onDismiss: refreshDetails, content: imageSelectorView)
         .sheet(isPresented: $showMediaDetails, content: mediaDetailsView)
         .sheet(isPresented: $showFixMatchView, onDismiss: refreshDetails, content: fixMatchView)
-        .alert("Êtes-vous sûr ?", isPresented: $showingAnalysisAlert, actions: analysisAlertActions, message: analysisAlertMessage)
+        .alert("library.detail.refresh.alert.title", isPresented: $showingAnalysisAlert, actions: analysisAlertActions, message: analysisAlertMessage)
         .task {
             await viewModel.loadData()
             actionsViewModel.update(ratingKey: viewModel.ratingKeyForActions)
@@ -126,13 +126,13 @@ struct MediaHistoryView: View {
     
     @ViewBuilder
     private func analysisAlertActions() -> some View {
-        Button("Annuler", role: .cancel) {}
-        Button("Analyser", role: .destructive) {
+        Button("common.cancel", role: .cancel) {}
+        Button("activity.settings.analyze", role: .destructive) {
             Task { await actionsViewModel.analyzeMedia() }
         }
     }
     
     private func analysisAlertMessage() -> some View {
-        Text("Cette opération peut prendre quelques minutes et consommer des ressources sur votre serveur.")
+        Text("library.detail.refresh.alert.message")
     }
 }

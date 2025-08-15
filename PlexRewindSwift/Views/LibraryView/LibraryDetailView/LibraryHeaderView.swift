@@ -17,12 +17,12 @@ struct LibraryHeaderView: View {
     private var statsSection: some View {
         HStack(spacing: 10) {
             if viewModel.library.library.type == "movie" {
-                InfoPill(title: "Films", value: library.fileCount != nil ? "\(library.fileCount!)" : "...", customBackgroundColor: Color(.secondarySystemBackground))
-                InfoPill(title: "Taille", value: library.size != nil ? formatBytes(library.size!) : "...", customBackgroundColor: Color(.secondarySystemBackground))
+                InfoPill(title: "library.detail.header.movies", value: library.fileCount != nil ? "\(library.fileCount!)" : "...", customBackgroundColor: Color(.secondarySystemBackground))
+                InfoPill(title: "library.detail.header.size", value: library.size != nil ? formatBytes(library.size!) : "...", customBackgroundColor: Color(.secondarySystemBackground))
             } else if viewModel.library.library.type == "show" {
-                InfoPill(title: "Séries", value: library.fileCount != nil ? "\(library.fileCount!)" : "...", customBackgroundColor: Color(.secondarySystemBackground))
-                InfoPill(title: "Épisodes", value: library.episodesCount != nil ? "\(library.episodesCount!)" : "...", customBackgroundColor: Color(.secondarySystemBackground))
-                InfoPill(title: "Taille", value: library.size != nil ? formatBytes(library.size!) : "...", customBackgroundColor: Color(.secondarySystemBackground))
+                InfoPill(title: "library.detail.header.shows", value: library.fileCount != nil ? "\(library.fileCount!)" : "...", customBackgroundColor: Color(.secondarySystemBackground))
+                InfoPill(title: "library.detail.header.episodes", value: library.episodesCount != nil ? "\(library.episodesCount!)" : "...", customBackgroundColor: Color(.secondarySystemBackground))
+                InfoPill(title: "library.detail.header.size", value: library.size != nil ? formatBytes(library.size!) : "...", customBackgroundColor: Color(.secondarySystemBackground))
             }
         }
     }
@@ -40,17 +40,17 @@ private struct MediaGrowthChartView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Croissance de la bibliothèque")
+            Text("library.detail.growth.chart.title")
                 .font(.headline.bold())
                 .padding(.bottom, 10)
             
             Chart {
                 ForEach(data, id: \.0) { date, count in
-                    LineMark(x: .value("Date", date), y: .value("Nombre de médias", count))
+                    LineMark(x: .value("Date", date), y: .value("library.detail.growth.chart.number", count))
                         .interpolationMethod(.linear)
                         .foregroundStyle(Color.accentColor)
 
-                    AreaMark(x: .value("Date", date), y: .value("Nombre de médias", count))
+                    AreaMark(x: .value("Date", date), y: .value("library.detail.growth.chart.number", count))
                         .interpolationMethod(.linear)
                         .foregroundStyle(
                             LinearGradient(

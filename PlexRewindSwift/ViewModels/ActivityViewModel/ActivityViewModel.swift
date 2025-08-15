@@ -33,8 +33,7 @@ class ActivityViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
-    // ... la fonction refreshActivity() reste identique ...
+
     func refreshActivity() async {
         guard let serverID = serverViewModel.selectedServerID,
               let server = serverViewModel.availableServers.first(where: { $0.id == serverID }),
@@ -88,34 +87,34 @@ class ActivityViewModel: ObservableObject {
 
     func refreshMetadata(for session: PlexActivitySession) async {
         guard let details = getServerDetails() else { return }
-        showHUD(message: HUDMessage(iconName: "arrow.triangle.2.circlepath", text: "Actualisation..."))
+        showHUD(message: HUDMessage(iconName: "arrow.triangle.2.circlepath", text: "hud.refreshing"))
         do {
             try await actionsService.refreshMetadata(for: session.ratingKey, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée !"))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.refresh.started"))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur."))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "common.error"))
         }
     }
 
     func analyzeMedia(for session: PlexActivitySession) async {
         guard let details = getServerDetails() else { return }
-        showHUD(message: HUDMessage(iconName: "wand.and.rays", text: "Analyse..."))
+        showHUD(message: HUDMessage(iconName: "wand.and.rays", text: "hud.analyzing"))
         do {
             try await actionsService.analyzeMedia(for: session.ratingKey, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Analyse démarrée !"))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.analyze.started"))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur."))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "common.error"))
         }
     }
     
     func stopPlayback(for session: PlexActivitySession, reason: String) async {
         guard let details = getServerDetails() else { return }
-        showHUD(message: HUDMessage(iconName: "stop.circle", text: "Arrêt en cours..."))
+        showHUD(message: HUDMessage(iconName: "stop.circle", text: "hud.stopping.playback"))
         do {
             try await actionsService.stopPlayback(sessionId: session.session.id, reason: reason.isEmpty ? "Arrêt depuis Plex Rewind" : reason, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Lecture arrêtée !"))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.stopping.playback"))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'arrêt."))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.error.playback"))
         }
     }
 
@@ -125,7 +124,7 @@ class ActivityViewModel: ObservableObject {
               let connection = server.connections.first(where: { !$0.local }) ?? server.connections.first,
               let token = authManager.getPlexAuthToken()
         else {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles."))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.server.details.unavailable"))
             return nil
         }
         let resourceToken = server.accessToken ?? token

@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct StatPill: View {
-    let title: String
-    let value: String
+    let title: LocalizedStringKey
+    let value: LocalizedStringKey
     let icon: String
     let color: Color
 

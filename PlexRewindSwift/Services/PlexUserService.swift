@@ -63,7 +63,7 @@ class PlexUserService {
     }
 
     func fetchUsers(serverURL: String, token: String) async throws -> [PlexUser] {
-        guard let url = URL(string: "\(serverURL)/accounts?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "\(serverURL)/accounts?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             throw PlexError.invalidURL
         }
         
@@ -88,7 +88,7 @@ class PlexUserService {
     }
 
     func fetchHomeUsers(token: String) async throws -> [PlexUser] {
-        guard let url = URL(string: "https://clients.plex.tv/api/home/users?X-Plex-Token=\(token)") else {
+        guard let url = URL(string: "https://clients.plex.tv/api/home/users?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())") else {
             throw PlexError.invalidURL
         }
 

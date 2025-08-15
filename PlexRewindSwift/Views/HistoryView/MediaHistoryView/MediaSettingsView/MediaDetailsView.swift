@@ -40,9 +40,9 @@ struct MediaDetailsView: View {
                             VStack(alignment: .leading, spacing: 20) {
                                 HStack(spacing: 10) {
                                     VStack(alignment: .leading) {
-                                        Text("CHEMIN").font(.caption).foregroundColor(.secondary)
+                                        Text("media.detail.path").font(.caption).foregroundColor(.secondary)
                                         HStack {
-                                            Text(part.file ?? "Chemin non disponible")
+                                            Text(part.file ?? "media.detail.path.unavailable")
                                                 .font(.headline.weight(.semibold))
                                                 .lineLimit(1)
                                                 .truncationMode(.middle)
@@ -70,39 +70,39 @@ struct MediaDetailsView: View {
                                 
                                 let columns = [GridItem(.adaptive(minimum: 120))]
                                 LazyVGrid(columns: columns, spacing: 12) {
-                                    InfoPill(title: "DURÉE", value: TimeFormatter.formatFullTime((info.duration ?? 0) / 1000), customBackgroundMaterial: .thin)
-                                    InfoPill(title: "DÉBIT BINAIRE", value: "\((info.bitrate ?? 0) / 1000) Mbit/s", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "LARGEUR", value: "\(info.width ?? 0)", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "HAUTEUR", value: "\(info.height ?? 0)", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "RATIO D'ASPECT", value: String(format: "%.2f", info.aspectRatio ?? 0), customBackgroundMaterial: .thin)
-                                    InfoPill(title: "CANAUX AUDIO", value: "\(viewModel.audioStream?.channels ?? 0)", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "CODEC AUDIO", value: viewModel.mediaInfo?.audioCodec?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "CODEC VIDÉO", value: viewModel.videoStream?.codec?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "RÉSOLUTION VIDÉO", value: info.videoResolution ?? "N/A", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "CONTENEUR", value: info.container?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "IMAGES PAR SECONDES", value: info.videoFrameRate ?? "N/A", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "PROFIL VIDÉO", value: info.videoProfile?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
-                                    InfoPill(title: "DATE D'AJOUT", value: addedAtDateString, customBackgroundMaterial: .thin)
-                                    InfoPill(title: "DERNIÈRE MISE À JOUR", value: updatedAtDateString, customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.duration", value: TimeFormatter.formatFullTime((info.duration ?? 0) / 1000), customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.debit", value: "\((info.bitrate ?? 0) / 1000) Mbit/s", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.width", value: "\(info.width ?? 0)", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.height", value: "\(info.height ?? 0)", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.aspectratio", value: String(format: "%.2f", info.aspectRatio ?? 0), customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.audio.channels", value: "\(viewModel.audioStream?.channels ?? 0)", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.audio.codec", value: viewModel.mediaInfo?.audioCodec?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.video.codec", value: viewModel.videoStream?.codec?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.video.resolution", value: info.videoResolution ?? "N/A", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.container", value: info.container?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.fps", value: info.videoFrameRate ?? "N/A", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.video.profile", value: info.videoProfile?.uppercased() ?? "N/A", customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.date.added", value: addedAtDateString, customBackgroundMaterial: .thin)
+                                    InfoPill(title: "media.detail.date.updated", value: updatedAtDateString, customBackgroundMaterial: .thin)
                                 }
                             }
                             .padding()
                         }
                     } else {
-                        Text("Impossible de charger les informations.")
+                        Text("media.data.unavailable")
                     }
                 }
                 if showCopyHUD {
-                    HUDView(hudMessage: HUDMessage(iconName: "doc.on.doc.fill", text: "Copié !", maxWidth: 180))
+                    HUDView(hudMessage: HUDMessage(iconName: "doc.on.doc.fill", text: "hud.copied", maxWidth: 180))
                         .transition(.scale.combined(with: .opacity))
                         .zIndex(1)
                 }
             }
-            .navigationTitle("Détails du média")
+            .navigationTitle("activity.settings.media.details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Fermer") { dismiss() }
+                    Button("common.close") { dismiss() }
                 }
             }
             .task {

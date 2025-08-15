@@ -1,47 +1,51 @@
 import Foundation
+import SwiftUI
 
 struct PlexMediaTypeHelper {
 
     static func formattedTypeNameSingular(for type: String) -> String {
         switch type {
         case "movie":
-            return "film"
+            return String(localized: "media.type.singular.movie")
         case "show":
-            return "série"
+            return String(localized: "media.type.singular.show")
         case "artist":
-            return "artiste"
+            return String(localized: "media.type.singular.artist")
         case "album":
-            return "album"
+            return String(localized: "media.type.singular.album")
         case "track":
-            return "musique"
+            return String(localized: "media.type.singular.track")
         case "photo":
-            return "photo"
+            return String(localized: "media.type.singular.photo")
         case "episode":
-            return "épisode"
+            return String(localized: "media.type.singular.episode")
         default:
-            return "élément"
+            return String(localized: "media.type.singular.default")
         }
     }
 
     static func formattedTypeNamePlural(for type: String) -> String {
+        let key: String
         switch type {
         case "movie":
-            return "films"
+            key = "media.type.plural.movie"
         case "show":
-            return "séries"
+            key = "media.type.plural.show"
         case "artist":
-            return "artistes"
+            key = "media.type.plural.artist"
         case "album":
-            return "albums"
+            key = "media.type.plural.album"
         case "track":
-            return "musiques"
+            key = "media.type.plural.track"
         case "photo":
-            return "photos"
+            key = "media.type.plural.photo"
         case "episode":
-            return "épisodes"
+            key = "media.type.plural.episode"
         default:
-            return "éléments"
+            key = "media.type.plural.default"
         }
+
+        return NSLocalizedString(key, comment: "Nom pluriel du type de média")
     }
 
     static func iconName(for type: String) -> String {

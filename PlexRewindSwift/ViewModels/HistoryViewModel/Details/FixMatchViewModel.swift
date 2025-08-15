@@ -31,7 +31,7 @@ class FixMatchViewModel: ObservableObject {
             let fetchedMatches = try await metadataService.fetchMatches(for: mediaRatingKey, serverURL: details.url, token: details.token)
             self.matches = fetchedMatches
         } catch {
-            hudMessage = HUDMessage(iconName: "xmark", text: "Erreur de chargement des correspondances.")
+            hudMessage = HUDMessage(iconName: "xmark", text: "hud.error.loading.matches")
         }
         isLoading = false
     }
@@ -39,7 +39,7 @@ class FixMatchViewModel: ObservableObject {
     func selectMatch(_ match: PlexMatch) async {
         guard let details = getServerDetails() else { return }
         
-        hudMessage = HUDMessage(iconName: "pencil", text: "Correction en cours...")
+        hudMessage = HUDMessage(iconName: "pencil", text: "hud.fixing.match")
         
         do {
             try await actionsService.applyMatch(
@@ -50,9 +50,9 @@ class FixMatchViewModel: ObservableObject {
                 serverURL: details.url,
                 token: details.token
             )
-            hudMessage = HUDMessage(iconName: "checkmark", text: "Association corrigée !")
+            hudMessage = HUDMessage(iconName: "checkmark", text: "hud.match.fixed")
         } catch {
-            hudMessage = HUDMessage(iconName: "xmark", text: "Erreur lors de la correction.")
+            hudMessage = HUDMessage(iconName: "xmark", text: "hud.match.error")
         }
     }
     

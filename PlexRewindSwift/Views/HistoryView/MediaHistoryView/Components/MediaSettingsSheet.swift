@@ -14,24 +14,24 @@ struct MediaSettingsSheet: View {
         VStack(alignment: .leading, spacing: 24) {
             if viewModel.mediaType == "movie" {
                 Button(action: { handleAction { self.showMediaDetails = true } }) {
-                    Label("Détails du média", systemImage: "info.circle")
+                    Label("activity.settings.media.details", systemImage: "info.circle")
                 }
             }
             
             Button(action: { handleAction { self.showImageSelector = true } }) {
-                Label("Modifier l'image", systemImage: "photo")
+                Label("media.settings.change.image", systemImage: "photo")
             }
             
             Button(action: { handleActionAsync { await self.actionsViewModel.refreshMetadata() } }) {
-                Label("Actualiser les métadonnées", systemImage: "arrow.trianglehead.counterclockwise")
+                Label("activity.settings.refresh.metadata", systemImage: "arrow.trianglehead.counterclockwise")
             }
             
             Button(action: { handleAction { self.showingAnalysisAlert = true } }) {
-                Label("Analyser", systemImage: "wand.and.rays")
+                Label("activity.settings.analyze", systemImage: "wand.and.rays")
             }
             
             Button(action: { handleAction { self.showFixMatchView = true } }) {
-                Label("Corriger l'association...", systemImage: "pencil")
+                Label("media.settings.fix.match", systemImage: "pencil")
             }
         }
         .font(.body)

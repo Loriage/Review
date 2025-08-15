@@ -8,8 +8,13 @@ struct SeasonInfoView: View {
             if let details = viewModel.seasonDetails {
                 if let summary = details.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(details.tagline ?? "Résumé")
-                            .font(.headline)
+                        if let details = details.tagline {
+                            Text(details)
+                                .font(.headline)
+                        } else {
+                            Text("media.info.summary")
+                                .font(.headline)
+                        }
                         Text(summary)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
@@ -21,22 +26,22 @@ struct SeasonInfoView: View {
                 }
 
                 if let studio = details.studio, !studio.isEmpty {
-                    InfoRow(label: "Studio", value: studio)
+                    InfoRow(label: "media.info.studio", value: studio)
                 }
                 if let genres = details.genre, !genres.isEmpty {
-                    InfoRow(label: "Genres", value: formatList(genres))
+                    InfoRow(label: "media.info.genres", value: formatList(genres))
                 }
                 if let directors = details.director, !directors.isEmpty {
-                    InfoRow(label: "Réalisé par", value: formatList(directors))
+                    InfoRow(label: "media.info.directed.by", value: formatList(directors))
                 }
                 if let writers = details.writer, !writers.isEmpty {
-                    InfoRow(label: "Écrit par", value: formatList(writers))
+                    InfoRow(label: "media.info.written.by", value: formatList(writers))
                 }
                 if let cast = details.role, !cast.isEmpty {
-                    InfoRow(label: "Avec", value: formatList(cast))
+                    InfoRow(label: "media.info.with", value: formatList(cast))
                 }
             } else {
-                Text("Informations non disponibles.")
+                Text("media.info.not.available")
                     .foregroundColor(.secondary)
             }
         }

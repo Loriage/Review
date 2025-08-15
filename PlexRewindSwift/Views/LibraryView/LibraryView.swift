@@ -18,7 +18,7 @@ struct LibraryView: View {
         NavigationStack {
             Group {
                 if viewModel.isLoading {
-                    ProgressView("Chargement...")
+                    ProgressView("common.loading")
                 } else if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
@@ -28,9 +28,9 @@ struct LibraryView: View {
                         Image(systemName: "books.vertical.fill")
                             .font(.system(size: 60))
                             .foregroundColor(.secondary)
-                        Text("Aucune médiathèque")
+                        Text("empty.state.no.libraries.title")
                             .font(.title2.bold())
-                        Text("Aucune médiathèque n'a été trouvée sur ce serveur.")
+                        Text("empty.state.no.libraries.message")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -56,7 +56,7 @@ struct LibraryView: View {
                     }
                 }
             }
-            .navigationTitle("Bibliothèques")
+            .navigationTitle("library.view.title")
             .navigationBarTitleDisplayMode(.inline)
             .task {
                 if !viewModel.isLoading {

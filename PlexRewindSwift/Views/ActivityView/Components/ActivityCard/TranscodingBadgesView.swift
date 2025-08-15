@@ -20,9 +20,9 @@ struct TranscodingBadgesView: View {
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 4) {
-            if isAudioTranscoding { BadgeView(text: "AUDIO") }
-            if isSoftwareTranscoding { BadgeView(text: "SW") }
-            if isHardwareTranscoding { BadgeView(text: "HW") }
+            if isAudioTranscoding { BadgeView(text: "badge.audio") }
+            if isSoftwareTranscoding { BadgeView(text: "badge.sw") }
+            if isHardwareTranscoding { BadgeView(text: "badge.hw") }
         }
     }
 }

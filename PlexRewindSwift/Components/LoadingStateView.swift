@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LoadingStateView: View {
-    let message: String
+    let message: LocalizedStringKey
     @State private var isAnimating = false
 
     var body: some View {

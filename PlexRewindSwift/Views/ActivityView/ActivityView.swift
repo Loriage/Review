@@ -49,12 +49,12 @@ struct ActivityView: View {
                         .animation(.spring(), value: activityViewModel.hudMessage)
                 }
             }
-            .navigationTitle("Activité en cours")
+            .navigationTitle(LocalizedStringKey("activityView.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(destination: SettingsView(authManager: authManager)) {
-                        Label("Réglages", systemImage: "gearshape.fill")
+                        Label(LocalizedStringKey("activityView.settings.label"), systemImage: "gearshape.fill")
                     }
                 }
             }

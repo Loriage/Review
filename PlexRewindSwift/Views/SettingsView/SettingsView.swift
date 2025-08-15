@@ -4,6 +4,10 @@ struct SettingsView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var serverViewModel: ServerViewModel
     @StateObject private var viewModel: SettingsViewModel
+    @StateObject private var themeManager = ThemeManager()
+
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
+    private let availableLanguages = LanguageManager.shared.availableLanguages
 
     init(authManager: PlexAuthManager) {
         _viewModel = StateObject(wrappedValue: SettingsViewModel(authManager: authManager))
@@ -19,7 +23,7 @@ struct SettingsView: View {
                 if viewModel.isLoading {
                     ProgressView()
                 } else if let account = viewModel.account {
-                    Section(header: Text("Compte")) {
+                    Section(header: Text("settings.account.section.title")) {
                         HStack(spacing: 10) {
                             AsyncImageView(url: URL(string: account.thumb ?? ""))
                                 .frame(width: 50, height: 50)
@@ -41,30 +45,46 @@ struct SettingsView: View {
                     }
                 }
 
-                Section(header: Text("Serveur")) {
+                Section(header: Text("settings.server.section.title")) {
                     if let server = selectedServer {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(server.name)
                                 .font(.headline)
-                            Text("Version \(server.productVersion)")
+                            Text("settings.server.version \(server.productVersion)")
                                 .foregroundColor(.secondary)
                                 .font(.subheadline)
                         }
-                        NavigationLink("Détails du serveur") {
+                        NavigationLink("settings.server.details.button") {
                             ServerDetailsView(server: server)
                         }
                     } else {
-                        Text("Aucun serveur trouvé.")
+                        Text("settings.server.no.server.found")
                             .foregroundColor(.secondary)
                     }
                 }
 
+                Section(header: Text("settings.application.section.title")) {
+                    Picker("settings.theme", selection: $themeManager.selectedTheme) {
+                        ForEach(Theme.allCases) { theme in
+                            Text(theme.title).tag(theme.rawValue)
+                        }
+                    }
+                    .pickerStyle(.menu)
+
+                    Picker("Langue", selection: $selectedLanguage) {
+                        ForEach(availableLanguages) { language in
+                            Text(language.name).tag(language.id)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+
                 Section {
-                    Button("Se déconnecter", role: .destructive, action: authManager.logout)
+                    Button("settings.button.logout", role: .destructive, action: authManager.logout)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            .navigationTitle("Réglages")
+            .navigationTitle("settings.title")
             .navigationBarTitleDisplayMode(.inline)
             .task {
                 await viewModel.loadAccountDetails()

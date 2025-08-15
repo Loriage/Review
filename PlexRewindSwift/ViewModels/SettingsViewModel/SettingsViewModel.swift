@@ -20,7 +20,7 @@ class SettingsViewModel: ObservableObject {
         do {
             self.account = try await userService.fetchAccount(token: token)
         } catch {
-            print("Failed to fetch account details: \(error)")
+            print(String(localized: "common.error"), "\(error.localizedDescription)")
         }
         self.isLoading = false
     }

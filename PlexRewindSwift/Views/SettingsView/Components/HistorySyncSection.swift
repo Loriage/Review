@@ -14,17 +14,17 @@ struct HistorySyncSection: View {
                 HStack {
                     if statsViewModel.isLoading {
                         ProgressView()
-                        Text(statsViewModel.loadingStatusMessage.isEmpty ? "Synchronisation..." : statsViewModel.loadingStatusMessage)
+                        Text(statsViewModel.loadingStatusMessage.isEmpty ? "info.view.sync" : statsViewModel.loadingStatusMessage)
                             .font(.footnote)
                             .foregroundColor(.secondary)
                     } else {
-                        Text(statsViewModel.isHistorySynced ? "Re-synchroniser l'historique" : "Synchroniser l'historique complet")
+                        Text(statsViewModel.isHistorySynced ? "info.view.resync" : "info.view.sync.history")
                     }
                 }
             }
             .disabled(serverViewModel.selectedServerID == nil || statsViewModel.isLoading)
         } header: {
-            Text("Données")
+            Text("info.view.data")
         } footer: {
             if let formattedDateText = statsViewModel.formattedLastSyncDate {
                 Text(formattedDateText)

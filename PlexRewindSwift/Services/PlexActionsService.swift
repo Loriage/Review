@@ -9,7 +9,8 @@ class PlexActionsService {
         components.queryItems = [
             URLQueryItem(name: "sessionId", value: sessionId),
             URLQueryItem(name: "reason", value: reason),
-            URLQueryItem(name: "X-Plex-Token", value: token)
+            URLQueryItem(name: "X-Plex-Token", value: token),
+            URLQueryItem(name: "X-Plex-Language", value: LanguageHelper.getCurrentLanguageCode()),
         ]
         
         guard let url = components.url else { throw PlexError.invalidURL }
@@ -28,12 +29,12 @@ class PlexActionsService {
     }
     
     func refreshMetadata(for ratingKey: String, serverURL: String, token: String) async throws {
-        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/refresh?X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/refresh?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         try await performPutRequest(for: urlString)
     }
 
     func analyzeMedia(for ratingKey: String, serverURL: String, token: String) async throws {
-        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/analyze?X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/analyze?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         try await performPutRequest(for: urlString)
     }
 
@@ -41,7 +42,7 @@ class PlexActionsService {
         guard let encodedArtworkURL = artworkKey.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             throw PlexError.invalidURL
         }
-        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/poster?url=\(encodedArtworkURL)&X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/metadata/\(ratingKey)/poster?url=\(encodedArtworkURL)&X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         try await performPutRequest(for: urlString)
     }
 
@@ -56,16 +57,17 @@ class PlexActionsService {
             urlString += "&year=\(year)"
         }
         urlString += "&X-Plex-Token=\(token)"
+        urlString += "&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         try await performPutRequest(for: urlString)
     }
 
     func analyzeLibrarySection(libraryKey: String, serverURL: String, token: String) async throws {
-        let urlString = "\(serverURL)/library/sections/\(libraryKey)/analyze?X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/analyze?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         try await performPutRequest(for: urlString)
     }
 
     func emptyLibraryTrash(libraryKey: String, serverURL: String, token: String) async throws {
-        let urlString = "\(serverURL)/library/sections/\(libraryKey)/emptyTrash?X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/emptyTrash?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         try await performPutRequest(for: urlString)
     }
 
@@ -93,6 +95,7 @@ class PlexActionsService {
 
         queryItems.append(URLQueryItem(name: "agent", value: "tv.plex.agents.movie"))
         queryItems.append(URLQueryItem(name: "X-Plex-Token", value: token))
+        queryItems.append(URLQueryItem(name: "X-Plex-Language", value: LanguageHelper.getCurrentLanguageCode()))
         
         urlComponents.queryItems = queryItems
         

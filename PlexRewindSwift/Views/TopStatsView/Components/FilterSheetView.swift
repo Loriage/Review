@@ -11,23 +11,23 @@ struct FilterSheetView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Filtres")) {
-                    Picker("Utilisateur", selection: $selectedUserID) {
-                        Text("Tous les utilisateurs").tag(Int?.none)
+                Section(header: Text("filter.sheet.filters")) {
+                    Picker("filter.sheet.user", selection: $selectedUserID) {
+                        Text("filter.user.all").tag(Int?.none)
                         ForEach(serverViewModel.availableUsers) { user in
                             Text(user.title).tag(user.id as Int?)
                         }
                     }
                     
-                    Picker("Période", selection: $selectedTimeFilter) {
+                    Picker("filter.sheet.period", selection: $selectedTimeFilter) {
                         ForEach(TimeFilter.allCases) { filter in
                             Text(filter.displayName).tag(filter)
                         }
                     }
                 }
                 
-                Section(header: Text("Tri")) {
-                    Picker("Trier par", selection: $sortOption) {
+                Section(header: Text("filter.sheet.sort")) {
+                    Picker("filter.sheet.sort.by", selection: $sortOption) {
                         ForEach(TopStatsSortOption.allCases) { option in
                             Text(option.displayName).tag(option)
                         }
@@ -36,7 +36,7 @@ struct FilterSheetView: View {
                     .labelsHidden()
                 }
             }
-            .navigationTitle("Filtres et Tri")
+            .navigationTitle("filter.sheet.title")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

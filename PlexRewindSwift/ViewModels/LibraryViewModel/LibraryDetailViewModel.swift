@@ -94,7 +94,7 @@ class LibraryDetailViewModel: ObservableObject {
 
     private func fetchMediaPage() async {
         guard let serverDetails = getServerDetails() else {
-            state = .error("Serveur non sélectionné ou informations manquantes.")
+            state = .error("no.server.selected.or.missing.infos")
             return
         }
         
@@ -123,7 +123,7 @@ class LibraryDetailViewModel: ObservableObject {
             self.state = .content
 
         } catch {
-            state = .error("Impossible de charger le contenu: \(error.localizedDescription)")
+            state = .error("\(String(localized: "library.detail.error.loading")) \(error.localizedDescription)")
             self.canLoadMoreMedia = false
         }
     }
@@ -152,65 +152,65 @@ class LibraryDetailViewModel: ObservableObject {
 
     func scanLibrary() async {
         guard let details = getServerDetails() else {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.server.details.unavailable", maxWidth: 180))
             return
         }
         
-        showHUD(message: HUDMessage(iconName: "waveform.path.ecg", text: "Lancement du scan...", maxWidth: 180))
+        showHUD(message: HUDMessage(iconName: "waveform.path.ecg", text: "hud.scan.started", maxWidth: 180))
         
         do {
             try await libraryService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Scan de la bibliothèque démarré.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.library.scan.started", maxWidth: 180))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du lancement du scan.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.scan.error", maxWidth: 180))
         }
     }
 
     func refreshMetadata() async {
         guard let details = getServerDetails() else {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.server.details.unavailable", maxWidth: 180))
             return
         }
         
-        showHUD(message: HUDMessage(iconName: "arrow.trianglehead.counterclockwise", text: "Lancement de l'actualisation...", maxWidth: 180))
+        showHUD(message: HUDMessage(iconName: "arrow.trianglehead.counterclockwise", text: "hud.running.refresh.started", maxWidth: 180))
         
         do {
             try await libraryService.scanLibrary(serverURL: details.url, token: details.token, libraryKey: library.library.key, force: true)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Actualisation démarrée.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.refresh.started", maxWidth: 180))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de l'actualisation.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.error.refresh", maxWidth: 180))
         }
     }
 
     func analyzeLibrary() async {
         guard let details = getServerDetails() else {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.server.details.unavailable", maxWidth: 180))
             return
         }
         
-        showHUD(message: HUDMessage(iconName: "wand.and.rays", text: "Lancement de l'analyse...", maxWidth: 180))
+        showHUD(message: HUDMessage(iconName: "wand.and.rays", text: "hud.running.analyze.started", maxWidth: 180))
         
         do {
             try await actionsService.analyzeLibrarySection(libraryKey: library.library.key, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Analyse de la bibliothèque démarrée.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.library.scan.started", maxWidth: 180))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du lancement de l'analyse.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.scan.error", maxWidth: 180))
         }
     }
 
     func emptyTrash() async {
         guard let details = getServerDetails() else {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Détails du serveur indisponibles.", maxWidth: 180))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.server.details.unavailable", maxWidth: 180))
             return
         }
         
-        showHUD(message: HUDMessage(iconName: "trash", text: "Lancement du nettoyage...", maxWidth: 180))
+        showHUD(message: HUDMessage(iconName: "trash", text: "hud.running.cleanup", maxWidth: 180))
         
         do {
             try await actionsService.emptyLibraryTrash(libraryKey: library.library.key, serverURL: details.url, token: details.token)
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Corbeille de la bibliothèque vidée."))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.cleanup.done"))
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors du nettoyage de la corbeille."))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.cleanup.error"))
         }
     }
 

@@ -23,7 +23,7 @@ struct ActivitySettingsSheet: View {
                     navigateToMediaHistory = true
                 }
             }) {
-                Label("Afficher l'historique de l'élément", systemImage: "tv")
+                Label("activity.settings.media.history", systemImage: "tv")
                     .symbolRenderingMode(.monochrome)
             }
             Button(action: {
@@ -32,18 +32,18 @@ struct ActivitySettingsSheet: View {
                     navigateToUserHistory = true
                 }
             }) {
-                Label("Afficher l'historique de l'utilisateur", systemImage: "person.crop.circle")
+                Label("activity.settings.user.history", systemImage: "person.crop.circle")
             }
             Button(action: { showMediaDetails = true }) {
-                Label("Détails du média", systemImage: "info.circle")
+                Label("activity.settings.media.details", systemImage: "info.circle")
             }
             
             Button(action: { handleActionAsync { await activityViewModel.refreshMetadata(for: session) } }) {
-                Label("Actualiser les métadonnées", systemImage: "arrow.triangle.2.circlepath")
+                Label("activity.settings.refresh.metadata", systemImage: "arrow.triangle.2.circlepath")
             }
             
             Button(action: { handleActionAsync { await activityViewModel.analyzeMedia(for: session) } }) {
-                Label("Analyser", systemImage: "wand.and.rays")
+                Label("activity.settings.analyze", systemImage: "wand.and.rays")
             }
             
             Button(action: {
@@ -52,7 +52,7 @@ struct ActivitySettingsSheet: View {
                     showStopAlert = true
                 }
             }) {
-                Label("Interrompre l'écoute", systemImage: "stop.circle.fill")
+                Label("activity.settings.interrupt", systemImage: "stop.circle.fill")
             }
             .foregroundColor(.red)
         }

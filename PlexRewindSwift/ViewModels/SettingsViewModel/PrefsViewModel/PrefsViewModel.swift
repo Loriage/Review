@@ -42,7 +42,7 @@ class PrefsViewModel: ObservableObject {
             }
             
         } catch {
-            print("Failed to fetch preferences: \(error)")
+            print(LocalizedStringKey("common.error"), "\(error.localizedDescription)")
         }
         self.isLoading = false
     }
@@ -68,7 +68,7 @@ class PrefsViewModel: ObservableObject {
                             vm.updateInitialValue()
                         }
                     } catch {
-                        print("Failed to update setting \(vm.setting.id): \(error)")
+                        print(LocalizedStringKey("common.error"), "\(vm.setting.id): \(error)")
                     }
                 }
             }

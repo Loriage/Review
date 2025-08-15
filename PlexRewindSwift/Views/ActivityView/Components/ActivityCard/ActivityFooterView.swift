@@ -8,7 +8,7 @@ struct ActivityFooterView: View {
     let session: PlexActivitySession
 
     private var streamDescription: String {
-        let serverName = serverViewModel.availableServers.first { $0.id == serverViewModel.selectedServerID }?.name ?? "Serveur inconnu"
+        let serverName = serverViewModel.availableServers.first { $0.id == serverViewModel.selectedServerID }?.name ?? NSLocalizedString("unknown.server", comment: "")
         return "\(serverName) → \(session.player.product) (\(session.player.platform))"
     }
 
@@ -54,11 +54,11 @@ struct ActivityFooterView: View {
                     
                     HStack {
                         if session.player.local {
-                            Text("Local")
+                            Text("location.local")
                         } else if let location = session.location {
                             Text(location)
                         } else {
-                            Text("Distant")
+                            Text("location.remote")
                         }
                     }
                     .font(.caption)

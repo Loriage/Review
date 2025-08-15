@@ -10,29 +10,29 @@ struct InfoView: View {
         NavigationStack {
             if viewModel.isLoading {
                 VStack {
-                    ProgressView("Chargement des données...")
+                    ProgressView("info.view.loading")
                 }
-                .navigationTitle("Informations Système")
+                .navigationTitle("info.view.title")
                 .navigationBarTitleDisplayMode(.inline)
             } else {
                 ScrollView {
                     VStack(spacing: 20) {
                         NetworkChartView(
-                            title: "Débit réseau",
+                            title: "info.view.network.chart.title",
                             localData: viewModel.localNetworkData,
                             remoteData: viewModel.remoteNetworkData,
                             unit: viewModel.networkUnit
                         )
                         
                         CpuChartView(
-                            title: "Utilisation CPU",
+                            title: "info.view.cpu.chart.title",
                             plexData: viewModel.plexCpuData,
                             systemData: viewModel.systemCpuData,
                             unit: "%"
                         )
 
                         RamChartView(
-                            title: "Utilisation RAM",
+                            title: "info.view.ram.chart.title",
                             plexData: viewModel.plexRamData,
                             systemData: viewModel.systemRamData,
                             unit: "%"
@@ -40,7 +40,7 @@ struct InfoView: View {
                     }
                     .padding()
                 }
-                .navigationTitle("Informations Système")
+                .navigationTitle("info.view.title")
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
@@ -54,7 +54,7 @@ struct InfoView: View {
 }
 
 struct RamChartView: View {
-    let title: String
+    let title: LocalizedStringKey
     let plexData: [(Date, Double)]
     let systemData: [(Date, Double)]
     let unit: String
@@ -70,6 +70,11 @@ struct RamChartView: View {
     }
 
     var body: some View {
+        let plexLabel = String(localized: "charts.plex.label")
+        let systemLabel = String(localized: "charts.system.label")
+        let usageLabel = String(localized: "charts.common.usage")
+        let dateLabel = String(localized: "charts.common.date")
+
         VStack(alignment: .leading) {
             Text(title)
                 .font(.headline.bold())
@@ -77,20 +82,26 @@ struct RamChartView: View {
 
             Chart {
                 ForEach(plexData, id: \.0) { date, value in
-                    LineMark(x: .value("Date", date), y: .value("Plex", value))
-                        .foregroundStyle(by: .value("Usage", "Plex Media Server"))
-                        .interpolationMethod(.monotone)
+                    LineMark(
+                        x: .value(dateLabel, date),
+                        y: .value(plexLabel, value)
+                    )
+                    .foregroundStyle(by: .value(usageLabel, plexLabel))
+                    .interpolationMethod(.monotone)
                 }
                 
                 ForEach(systemData, id: \.0) { date, value in
-                    LineMark(x: .value("Date", date), y: .value("Système", value))
-                        .foregroundStyle(by: .value("Usage", "Système"))
-                        .interpolationMethod(.monotone)
+                    LineMark(
+                        x: .value(dateLabel, date),
+                        y: .value(systemLabel, value)
+                    )
+                    .foregroundStyle(by: .value(usageLabel, systemLabel))
+                    .interpolationMethod(.monotone)
                 }
             }
             .chartForegroundStyleScale([
-                "Plex Media Server": Color.cyan,
-                "Système": Color.pink
+                plexLabel: Color.cyan,
+                systemLabel: Color.pink
             ])
             .chartYAxis {
                 AxisMarks(position: .leading) { value in
@@ -122,7 +133,7 @@ struct RamChartView: View {
         let difference = latestDate.timeIntervalSince(date)
         
         if difference <= 1 {
-            return "Maintenant"
+            return String(localized: "charts.common.now")
         }
         
         let formatter = DateComponentsFormatter()
@@ -135,7 +146,7 @@ struct RamChartView: View {
 }
 
 struct NetworkChartView: View {
-    let title: String
+    let title: LocalizedStringKey
     let localData: [(Date, Double)]
     let remoteData: [(Date, Double)]
     let unit: String
@@ -159,6 +170,11 @@ struct NetworkChartView: View {
     }
 
     var body: some View {
+        let localLabel = String(localized: "location.local")
+        let remoteLabel = String(localized: "location.remote")
+        let typeLabel = String(localized: "charts.common.type")
+        let dateLabel = String(localized: "charts.common.date")
+
         VStack(alignment: .leading) {
             Text(title)
                 .font(.headline.bold())
@@ -166,20 +182,26 @@ struct NetworkChartView: View {
 
             Chart {
                 ForEach(localData, id: \.0) { date, value in
-                    LineMark(x: .value("Date", date), y: .value("Local", scaleValue(value)))
-                        .foregroundStyle(by: .value("Type", "Local"))
-                        .interpolationMethod(.monotone)
+                    LineMark(
+                        x: .value(dateLabel, date),
+                        y: .value(localLabel, scaleValue(value))
+                    )
+                    .foregroundStyle(by: .value(typeLabel, localLabel))
+                    .interpolationMethod(.monotone)
                 }
                 
                 ForEach(remoteData, id: \.0) { date, value in
-                    LineMark(x: .value("Date", date), y: .value("Distant", scaleValue(value)))
-                        .foregroundStyle(by: .value("Type", "Distant"))
-                        .interpolationMethod(.monotone)
+                    LineMark(
+                        x: .value(dateLabel, date),
+                        y: .value(remoteLabel, scaleValue(value))
+                    )
+                    .foregroundStyle(by: .value(typeLabel, remoteLabel))
+                    .interpolationMethod(.monotone)
                 }
             }
             .chartForegroundStyleScale([
-                "Local": Color.yellow,
-                "Distant": Color.blue
+                localLabel: Color.yellow,
+                remoteLabel: Color.blue
             ])
             .chartYAxis {
                 AxisMarks(position: .leading) { value in
@@ -211,7 +233,7 @@ struct NetworkChartView: View {
         let difference = latestDate.timeIntervalSince(date)
         
         if difference <= 1 {
-            return "Maintenant"
+            return String(localized: "charts.common.now")
         }
         
         let formatter = DateComponentsFormatter()
@@ -224,7 +246,7 @@ struct NetworkChartView: View {
 }
 
 struct CpuChartView: View {
-    let title: String
+    let title: LocalizedStringKey
     let plexData: [(Date, Double)]
     let systemData: [(Date, Double)]
     let unit: String
@@ -240,6 +262,11 @@ struct CpuChartView: View {
     }
 
     var body: some View {
+        let plexLabel = String(localized: "charts.plex.label")
+        let systemLabel = String(localized: "charts.system.label")
+        let usageLabel = String(localized: "charts.common.usage")
+        let dateLabel = String(localized: "charts.common.date")
+
         VStack(alignment: .leading) {
             Text(title)
                 .font(.headline.bold())
@@ -247,20 +274,26 @@ struct CpuChartView: View {
 
             Chart {
                 ForEach(plexData, id: \.0) { date, value in
-                    LineMark(x: .value("Date", date), y: .value("Plex", value))
-                        .foregroundStyle(by: .value("Usage", "Plex Media Server"))
-                        .interpolationMethod(.monotone)
+                    LineMark(
+                        x: .value(dateLabel, date),
+                        y: .value(plexLabel, value)
+                    )
+                    .foregroundStyle(by: .value(usageLabel, plexLabel))
+                    .interpolationMethod(.monotone)
                 }
                 
                 ForEach(systemData, id: \.0) { date, value in
-                    LineMark(x: .value("Date", date), y: .value("Système", value))
-                        .foregroundStyle(by: .value("Usage", "Système"))
-                        .interpolationMethod(.monotone)
+                    LineMark(
+                        x: .value(dateLabel, date),
+                        y: .value(systemLabel, value)
+                    )
+                    .foregroundStyle(by: .value(usageLabel, systemLabel))
+                    .interpolationMethod(.monotone)
                 }
             }
             .chartForegroundStyleScale([
-                "Plex Media Server": Color.green,
-                "Système": Color.pink
+                plexLabel: Color.green,
+                systemLabel: Color.pink
             ])
             .chartYAxis {
                 AxisMarks(position: .leading) { value in
@@ -292,7 +325,7 @@ struct CpuChartView: View {
         let difference = latestDate.timeIntervalSince(date)
         
         if difference <= 1 {
-            return "Maintenant"
+            return String(localized: "charts.common.now")
         }
         
         let formatter = DateComponentsFormatter()

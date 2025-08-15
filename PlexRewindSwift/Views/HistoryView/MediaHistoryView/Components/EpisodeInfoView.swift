@@ -8,8 +8,13 @@ struct EpisodeInfoView: View {
             if let details = viewModel.episodeDetails {
                 if let summary = viewModel.summary, !summary.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(details.tagline ?? "Resumé")
-                            .font(.headline)
+                        if let details = details.tagline {
+                            Text(details)
+                                .font(.headline)
+                        } else {
+                            Text("media.info.summary")
+                                .font(.headline)
+                        }
                         Text(summary)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
@@ -21,19 +26,19 @@ struct EpisodeInfoView: View {
                 }
 
                 if let year = details.year {
-                    InfoRow(label: "Année de sortie", value: String(year))
+                    InfoRow(label: "media.info.release.year", value: String(year))
                 }
                 if let directors = details.director, !directors.isEmpty {
-                    InfoRow(label: "Réalisé par", value: formatList(directors))
+                    InfoRow(label: "media.info.directed.by", value: formatList(directors))
                 }
                 if let writers = details.writer, !writers.isEmpty {
-                    InfoRow(label: "Écrit par", value: formatList(writers))
+                    InfoRow(label: "media.info.written.by", value: formatList(writers))
                 }
                 if let cast = details.role, !cast.isEmpty {
-                    InfoRow(label: "Avec", value: formatList(cast))
+                    InfoRow(label: "media.info.with", value: formatList(cast))
                 }
             } else {
-                Text("Informations non disponibles.")
+                Text("media.info.not.available")
                     .foregroundColor(.secondary)
             }
         }

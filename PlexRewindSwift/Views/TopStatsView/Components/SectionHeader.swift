@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SectionHeader: View {
-    let title: String
+    let title: LocalizedStringKey
     let fullList: [TopMedia]
     let items: [TopMedia]
 
@@ -11,7 +11,7 @@ struct SectionHeader: View {
             Spacer()
             if fullList.count > items.count {
                 NavigationLink(destination: TopMediaDetailView(title: title, items: fullList)) {
-                    Text("Voir plus").font(.subheadline)
+                    Text("common.see.more").font(.subheadline)
                 }
             }
         }

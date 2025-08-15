@@ -32,7 +32,7 @@ class ServerViewModel: ObservableObject {
 
     func loadServers() async {
         guard let token = authManager.getPlexAuthToken() else {
-            errorMessage = "Token d'authentification introuvable."
+            errorMessage = "plex.error.missing.token"
             return
         }
 
@@ -47,7 +47,7 @@ class ServerViewModel: ObservableObject {
                 self.selectedServerID = firstServer.id
             }
         } catch {
-            errorMessage = "Impossible de récupérer la liste des serveurs. \(error.localizedDescription)"
+            errorMessage = "plex.error.missing.server \(error.localizedDescription)"
         }
 
         isLoading = false
@@ -79,7 +79,7 @@ class ServerViewModel: ObservableObject {
 
             await matchAndSetProfilePictures()
         } catch {
-            errorMessage = "Impossible de récupérer les utilisateurs du serveur. \(error.localizedDescription)"
+            errorMessage = "plex.error.missing.users \(error.localizedDescription)"
         }
     }
 

@@ -72,7 +72,8 @@ class PlexLibraryService {
         var urlComponents = URLComponents(string: "\(serverURL)/library/sections")!
         urlComponents.queryItems = [
             URLQueryItem(name: "includePreferences", value: "1"),
-            URLQueryItem(name: "X-Plex-Token", value: token)
+            URLQueryItem(name: "X-Plex-Token", value: token),
+            URLQueryItem(name: "X-Plex-Language", value: LanguageHelper.getCurrentLanguageCode()),
         ]
         
         guard let url = urlComponents.url else {
@@ -87,7 +88,7 @@ class PlexLibraryService {
     }
 
     func fetchAllMediaInSection(serverURL: String, token: String, libraryKey: String, mediaType: Int) async throws -> [MediaMetadata] {
-        let baseURL = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Token=\(token)"
+        let baseURL = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
 
         return try await fetchPaginatedContent(baseURL: baseURL)
     }
@@ -99,7 +100,7 @@ class PlexLibraryService {
         var shouldContinueFetching = true
         
         while shouldContinueFetching {
-            let urlString = "\(baseURL)&X-Plex-Container-Start=\(currentIndex)&X-Plex-Container-Size=\(pageSize)"
+            let urlString = "\(baseURL)&X-Plex-Container-Start=\(currentIndex)&X-Plex-Container-Size=\(pageSize)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
             
             guard let url = URL(string: urlString) else { throw PlexError.invalidURL }
             
@@ -123,7 +124,7 @@ class PlexLibraryService {
     }
 
     func fetchRecentlyAdded(serverURL: String, token: String, libraryKey: String, mediaType: Int) async throws -> [PlexRecentItem] {
-        let urlString = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Container-Start=0&X-Plex-Container-Size=5&X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Container-Start=0&X-Plex-Container-Size=5&X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
 
         guard let url = URL(string: urlString) else { throw PlexError.invalidURL }
 
@@ -140,7 +141,7 @@ class PlexLibraryService {
 
     func fetchMediaFromSection(serverURL: String, token: String, libraryKey: String, mediaType: Int, page: Int, pageSize: Int = 30) async throws -> (media: [MediaMetadata], totalCount: Int) {
         let startIndex = page * pageSize
-        let urlString = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Container-Start=\(startIndex)&X-Plex-Container-Size=\(pageSize)&X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/sections/\(libraryKey)/all?type=\(mediaType)&X-Plex-Container-Start=\(startIndex)&X-Plex-Container-Size=\(pageSize)&X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         
         guard let url = URL(string: urlString) else { throw PlexError.invalidURL }
         
@@ -162,7 +163,7 @@ class PlexLibraryService {
     }
 
     func scanLibrary(serverURL: String, token: String, libraryKey: String, force: Bool = false) async throws {
-        var urlString = "\(serverURL)/library/sections/\(libraryKey)/refresh?X-Plex-Token=\(token)"
+        var urlString = "\(serverURL)/library/sections/\(libraryKey)/refresh?X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         if force {
             urlString += "&force=1"
         }
@@ -184,7 +185,7 @@ class PlexLibraryService {
     }
 
     func fetchTopMedia(serverURL: String, token: String, type: Int) async throws -> [MediaMetadata] {
-        let urlString = "\(serverURL)/library/all/top?type=\(type)&X-Plex-Token=\(token)"
+        let urlString = "\(serverURL)/library/all/top?type=\(type)&X-Plex-Token=\(token)&X-Plex-Language=\(LanguageHelper.getCurrentLanguageCode())"
         guard let url = URL(string: urlString) else {
             throw PlexError.invalidURL
         }
@@ -215,7 +216,8 @@ class PlexLibraryService {
             URLQueryItem(name: "limit", value: "30"),
             URLQueryItem(name: "searchTypes", value: searchTypes),
             URLQueryItem(name: "includeCollections", value: "1"),
-            URLQueryItem(name: "X-Plex-Token", value: token)
+            URLQueryItem(name: "X-Plex-Token", value: token),
+            URLQueryItem(name: "X-Plex-Language", value: LanguageHelper.getCurrentLanguageCode()),
         ]
         
         guard let url = components.url else {

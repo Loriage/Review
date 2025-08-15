@@ -29,7 +29,7 @@ class MediaHistoryViewModel: ObservableObject {
     }
 
     var displayTitle: String {
-        return mediaDetails?.title ?? (mediaType == "movie" ? "Film inconnu" : "Série inconnue")
+        return mediaDetails?.title ?? (mediaType == "movie" ? "common.unknown.movie" : "common.unknown.show")
     }
 
     var ratingKeyForActions: String {

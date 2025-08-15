@@ -68,10 +68,10 @@ class ImageSelectorViewModel: ObservableObject {
 
             self.posters = fetchedPosters
             if self.posters.isEmpty {
-                showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Aucune image trouvée.", maxWidth: 320))
+                showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.no.image.found", maxWidth: 320))
             }
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "Erreur de chargement.", maxWidth: 320))
+            showHUD(message: HUDMessage(iconName: "xmark.circle.fill", text: "hud.loading.error", maxWidth: 320))
         }
         
         isLoading = false
@@ -88,7 +88,7 @@ class ImageSelectorViewModel: ObservableObject {
         }
 
         hudDismissTask?.cancel()
-        hudMessage = HUDMessage(iconName: "photo", text: "Modification...")
+        hudMessage = HUDMessage(iconName: "photo", text: "hud.modifying")
         
         do {
             try await actionsService.setArtwork(for: mediaRatingKey, artworkKey: artworkIdentifier, serverURL: details.url, token: details.token)
@@ -104,10 +104,10 @@ class ImageSelectorViewModel: ObservableObject {
             }
 
             self.posters = updatedPosters
-            showHUD(message: HUDMessage(iconName: "checkmark", text: "Image modifiée !"))
+            showHUD(message: HUDMessage(iconName: "checkmark", text: "hud.image.changed"))
             
         } catch {
-            showHUD(message: HUDMessage(iconName: "xmark", text: "Erreur lors de la modification."))
+            showHUD(message: HUDMessage(iconName: "xmark", text: "hud.error.updating"))
         }
     }
     

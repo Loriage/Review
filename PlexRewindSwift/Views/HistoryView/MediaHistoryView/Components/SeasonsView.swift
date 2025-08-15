@@ -51,7 +51,7 @@ struct SeasonsView: View {
                 }
                 .padding(.horizontal)
             } else {
-                Text("Aucune saison trouvée pour cette série.")
+                Text("empty.state.no.seasons.message")
                     .foregroundColor(.secondary)
                     .padding()
                     .frame(maxWidth: .infinity)

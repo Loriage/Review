@@ -5,7 +5,7 @@ struct TopMediaSection: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var statsViewModel: StatsViewModel
     
-    let title: String
+    let title: LocalizedStringKey
     let items: [TopMedia]
     let fullList: [TopMedia]
 

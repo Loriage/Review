@@ -6,8 +6,8 @@ struct ServerSelectionView: View {
     var body: some View {
         Form {
             Section(header: Text("Serveurs disponibles")) {
-                Picker("Serveur Plex", selection: $serverViewModel.selectedServerID) {
-                    Text("Choisissez un serveur...").tag(String?.none)
+                Picker("settings.server.selection.section.title", selection: $serverViewModel.selectedServerID) {
+                    Text("settings.server.picker.default.text").tag(String?.none)
                     ForEach(serverViewModel.availableServers) { server in
                         Text(server.name).tag(server.id as String?)
                     }
@@ -16,7 +16,7 @@ struct ServerSelectionView: View {
                 .labelsHidden()
             }
         }
-        .navigationTitle("Changer de serveur")
+        .navigationTitle("settings.server.change.title")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

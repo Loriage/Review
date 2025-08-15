@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct InfoPill: View {
-    let title: String
+    let title: LocalizedStringKey
     let value: String
     var customBackgroundColor: Color? = nil
     var customBackgroundMaterial: Material? = nil

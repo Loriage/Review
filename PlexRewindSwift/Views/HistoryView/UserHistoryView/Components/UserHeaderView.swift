@@ -11,7 +11,7 @@ struct UserHeaderView: View {
                     .clipShape(Circle())
                     .shadow(color: .black.opacity(0.25), radius: 5, y: 5)
                 
-                Text(viewModel.userName)
+                Text(LocalizedStringKey(viewModel.userName))
                     .font(.title.bold())
             }
             .frame(maxWidth: .infinity)

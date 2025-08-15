@@ -4,7 +4,7 @@ struct UserHistoryListView: View {
     @ObservedObject var viewModel: UserHistoryViewModel
 
     var body: some View {
-        Section(header: Text("Historique des visionnages")) {
+        Section(header: Text("history.view.title")) {
             ForEach(viewModel.sessions) { session in
                 NavigationLink(destination: mediaHistoryDestination(for: session)) {
                     UserHistoryRow(session: session, viewModel: viewModel)
@@ -28,9 +28,18 @@ struct UserHistoryListView: View {
 private struct UserHistoryRow: View {
     let session: WatchSession
     @ObservedObject var viewModel: UserHistoryViewModel
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
     
     var body: some View {
-        HStack(spacing: 15) {
+
+        let currentAppLocale: Locale
+        if selectedLanguage == "system" {
+            currentAppLocale = .autoupdatingCurrent
+        } else {
+            currentAppLocale = Locale(identifier: selectedLanguage)
+        }
+
+        return HStack(spacing: 15) {
             AsyncImageView(url: viewModel.posterURL(for: session), contentMode: .fill)
                 .frame(width: 60, height: 90)
                 .cornerRadius(8)
@@ -39,7 +48,7 @@ private struct UserHistoryRow: View {
                 mediaTitles
                 
                 if let viewedAt = session.viewedAt {
-                    Text("\(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named)))")
+                    Text("\(Date(timeIntervalSince1970: viewedAt).formatted(.relative(presentation: .named).locale(currentAppLocale)))")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -51,12 +60,12 @@ private struct UserHistoryRow: View {
     @ViewBuilder
     private var mediaTitles: some View {
         if session.type == "movie" {
-            Text(session.title ?? "Titre inconnu")
+            Text(session.title ?? "common.unknown.title")
                 .font(.headline)
         } else if session.type == "episode" {
-            Text(session.grandparentTitle ?? "Série inconnue")
+            Text(session.grandparentTitle ?? "common.unknown.show")
                 .font(.headline)
-            Text(session.title ?? "Épisode inconnu")
+            Text(session.title ?? "common.unknown.episode")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             Text("S\(session.parentIndex ?? 0) - E\(session.index ?? 0)")
