@@ -3,6 +3,12 @@
   "strings" : {
     "(%@)" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%@)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13,6 +19,12 @@
     },
     "%.0f%@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$.0f%2$@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "new",
@@ -23,6 +35,12 @@
     },
     "%@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -33,6 +51,12 @@
     },
     "%@ - %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "new",
@@ -43,6 +67,12 @@
     },
     "%@ %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "new",
@@ -53,6 +83,12 @@
     },
     "%lld" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -63,6 +99,12 @@
     },
     "%lld épisodes" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld episodes"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -233,6 +275,12 @@
     },
     "activityView.settings.label" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -243,6 +291,12 @@
     },
     "activityView.title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -301,6 +355,12 @@
     },
     "charts.common.date" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -311,6 +371,12 @@
     },
     "charts.common.now" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -321,6 +387,12 @@
     },
     "charts.common.type" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -331,6 +403,12 @@
     },
     "charts.common.usage" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usage"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -341,6 +419,12 @@
     },
     "charts.plex.label" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plex Media Server"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -351,6 +435,12 @@
     },
     "charts.system.label" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -490,6 +580,12 @@
     },
     "common.undefined" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undefined"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -501,6 +597,12 @@
     "common.unknown.episode" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown episode"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -512,6 +614,12 @@
     "common.unknown.movie" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown movie"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -523,6 +631,12 @@
     "common.unknown.show" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown show"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -549,6 +663,12 @@
     },
     "Date" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -703,6 +823,12 @@
     },
     "empty.state.no.results.message %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results found for “%@”."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -745,6 +871,12 @@
     },
     "episode.history.view.title%lld" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Episode %lld"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -835,6 +967,12 @@
     },
     "error.network " : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network error"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -863,8 +1001,8 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Server Error (code: %lld)"
+            "state" : "translated",
+            "value" : "Server error"
           }
         },
         "fr" : {
@@ -877,6 +1015,12 @@
     },
     "filter.sheet.filters" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filters"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1047,6 +1191,12 @@
     },
     "fixMatchView.loading.message" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching for matches..."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1057,6 +1207,12 @@
     },
     "fixMatchView.title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix match"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1195,6 +1351,12 @@
     },
     "https://plex.tv/link" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://plex.tv/link"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1205,6 +1367,12 @@
     },
     "hud.analyze.error" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error during analysis."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1215,6 +1383,12 @@
     },
     "hud.analyze.started" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting analysis..."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1241,6 +1415,12 @@
     },
     "hud.cleanup.done" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trash emptied."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1251,6 +1431,12 @@
     },
     "hud.cleanup.error" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error while cleaning trash."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1293,6 +1479,12 @@
     },
     "hud.error.playback" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error while stopping playback."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1303,6 +1495,12 @@
     },
     "hud.error.refresh" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error while refreshing."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1361,6 +1559,12 @@
     },
     "hud.library.scan.started" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan started."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1387,6 +1591,12 @@
     },
     "hud.match.error" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error during matching."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1477,6 +1687,12 @@
     },
     "hud.running.analyze.started" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analysis started."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1487,6 +1703,12 @@
     },
     "hud.running.cleanup" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting cleanup..."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1497,6 +1719,12 @@
     },
     "hud.running.refresh.started" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh started."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1507,6 +1735,12 @@
     },
     "hud.scan.error" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error during scan."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1517,6 +1751,12 @@
     },
     "hud.scan.started" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting scan…"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1591,6 +1831,12 @@
     },
     "image.selector.change.poster.episode" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit episode poster"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1633,6 +1879,12 @@
     },
     "info.view.data" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1691,6 +1943,12 @@
     },
     "info.view.resync" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-synchronize history"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1701,6 +1959,12 @@
     },
     "info.view.sync.history" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronize entire history"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1725,12 +1989,22 @@
         }
       }
     },
+    "Langue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        }
+      }
+    },
     "library.detail.analyze.alert.message" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Analyzes all media in the library.\\n\\nAnalysis allows Plex to gather information to optimize playback for each media."
+            "state" : "translated",
+            "value" : "Analyzes all media in the library.\n\nAnalysis allows Plex to gather information to optimize playback for each media."
           }
         },
         "fr" : {
@@ -1761,8 +2035,8 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "By default, the media server does not immediately destroy information about missing media.\\n\\nThis is useful when a drive is temporarily disconnected.\\n\\nWhen you empty the trash for a section, all information about missing media is deleted."
+            "state" : "translated",
+            "value" : "By default, the media server does not immediately destroy information about missing media.\n\nThis is useful when a drive is temporarily disconnected.\n\nWhen you empty the trash for a section, all information about missing media is deleted."
           }
         },
         "fr" : {
@@ -1807,6 +2081,12 @@
     },
     "library.detail.growth.chart.number" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of media"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1833,6 +2113,12 @@
     },
     "library.detail.header.created.at" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created on:"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1907,6 +2193,12 @@
     },
     "library.detail.last.scan" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last scan"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1949,6 +2241,12 @@
     },
     "library.number.of %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1991,6 +2289,12 @@
     },
     "library.settings.sheet.refresh" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2193,6 +2497,12 @@
     },
     "location.local" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2203,6 +2513,12 @@
     },
     "location.remote" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remote"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2245,6 +2561,12 @@
     },
     "media.data.unavailable" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load information."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2255,16 +2577,28 @@
     },
     "media.detail.aspectratio" : {
       "localizations" : {
-        "fr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ASPECT RATIO"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RATIO"
           }
         }
       }
     },
     "media.detail.audio.channels" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUDIO CHANNELS"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2275,6 +2609,12 @@
     },
     "media.detail.audio.codec" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUDIO CODEC"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2285,6 +2625,12 @@
     },
     "media.detail.container" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTAINER"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2295,6 +2641,12 @@
     },
     "media.detail.date.added" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ADDED ON"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2305,6 +2657,12 @@
     },
     "media.detail.date.updated" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UPDATED ON"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2315,6 +2673,12 @@
     },
     "media.detail.debit" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BINARY RATE"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2325,6 +2689,12 @@
     },
     "media.detail.duration" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DURATION"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2335,6 +2705,12 @@
     },
     "media.detail.fps" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FRAMES PER SECOND"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2345,6 +2721,12 @@
     },
     "media.detail.height" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIGHT"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2355,6 +2737,12 @@
     },
     "media.detail.id" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2365,6 +2753,12 @@
     },
     "media.detail.language" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LANGUAGE"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2375,6 +2769,12 @@
     },
     "media.detail.name" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NAME"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2385,6 +2785,12 @@
     },
     "media.detail.path" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PATH"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2395,6 +2801,12 @@
     },
     "media.detail.type" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TYPE"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2405,6 +2817,12 @@
     },
     "media.detail.video.codec" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIDEO CODEC"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2415,6 +2833,12 @@
     },
     "media.detail.video.profile" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIDEO PROFILE"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2425,6 +2849,12 @@
     },
     "media.detail.video.resolution" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RESOLUTION"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2435,6 +2865,12 @@
     },
     "media.detail.width" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WIDTH"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2483,16 +2919,6 @@
             "value" : "Information not available."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Informations non disponibles."
-          }
-        }
-      }
-    },
-    "media.info.not.available." : {
-      "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2951,6 +3377,12 @@
     },
     "optional.message.alert" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reason (optional)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3041,6 +3473,12 @@
     },
     "Plex Pass" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plex Pass"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3195,6 +3633,12 @@
     },
     "prefs.unknown.field %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown field: %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3205,6 +3649,12 @@
     },
     "prefs.unsaved.changes.alert.leave" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3231,6 +3681,12 @@
     },
     "prefs.unsaved.changes.alert.stay" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stay"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3289,6 +3745,12 @@
     },
     "S%lld - E%lld" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld - E%2$lld"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "new",
@@ -3299,6 +3761,12 @@
     },
     "S%lld - E%lld - %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld - E%2$lld - %3$@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "new",
@@ -3421,6 +3889,12 @@
     },
     "Serveurs disponibles" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Available servers"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3445,6 +3919,22 @@
         }
       }
     },
+    "settings.application.section.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Application"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Application"
+          }
+        }
+      }
+    },
     "settings.button.logout" : {
       "localizations" : {
         "en" : {
@@ -3463,6 +3953,12 @@
     },
     "settings.server.change.title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change server"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3537,6 +4033,12 @@
     },
     "settings.server.details.general.sectio" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General information"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3755,10 +4257,32 @@
     },
     "settings.server.version %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Version %@"
+          }
+        }
+      }
+    },
+    "settings.theme" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thème"
           }
         }
       }
@@ -3893,6 +4417,12 @@
     },
     "TabItem.activity" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3903,6 +4433,12 @@
     },
     "TabItem.libraries" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Libraries"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3913,6 +4449,12 @@
     },
     "TabItem.search" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3923,10 +4465,64 @@
     },
     "TabItem.stats" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stats"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stats"
+          }
+        }
+      }
+    },
+    "theme.auto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatique"
+          }
+        }
+      }
+    },
+    "theme.dark" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sombre"
+          }
+        }
+      }
+    },
+    "theme.light" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clair"
           }
         }
       }
@@ -3997,6 +4593,12 @@
     },
     "top.media.detail.last.viewed %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last played: %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4007,6 +4609,12 @@
     },
     "top.media.detail.plays %lld" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of plays: %lld"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4017,6 +4625,12 @@
     },
     "top.media.row.duration %@" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration: %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4027,6 +4641,12 @@
     },
     "top.media.row.plays %lld" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plays: %lld"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4085,6 +4705,12 @@
     },
     "unknown.server" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown server"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",

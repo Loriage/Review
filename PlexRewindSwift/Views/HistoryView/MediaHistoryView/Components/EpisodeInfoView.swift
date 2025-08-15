@@ -33,7 +33,7 @@ struct EpisodeInfoView: View {
                     InfoRow(label: "media.info.with", value: formatList(cast))
                 }
             } else {
-                Text("media.info.not.available.")
+                Text("media.info.not.available")
                     .foregroundColor(.secondary)
             }
         }
