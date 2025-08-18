@@ -4,7 +4,7 @@ struct SettingsView: View {
     @EnvironmentObject var authManager: PlexAuthManager
     @EnvironmentObject var serverViewModel: ServerViewModel
     @StateObject private var viewModel: SettingsViewModel
-    @StateObject private var themeManager = ThemeManager()
+    @EnvironmentObject var themeManager: ThemeManager
 
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
     private let availableLanguages = LanguageManager.shared.availableLanguages

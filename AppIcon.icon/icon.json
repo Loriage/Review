@@ -1,0 +1,32 @@
+{
+  "fill" : "system-light",
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "Fichier 5Review.png",
+          "name" : "Fichier 5Review"
+        },
+        {
+          "hidden" : true,
+          "image-name" : "Fichier 4Review.png",
+          "name" : "Fichier 4Review"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
