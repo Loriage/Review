@@ -57,6 +57,8 @@ The app allows you to monitor current activity, explore your libraries, get deta
 
 You can install Review on your iOS device through the App Store or by sideloading the `.ipa` file from the [releases](https://github.com/Loriage/Review-Swift-App/releases/latest) page.
 
+<a href="https://apps.apple.com/us/app/review-for-plex/id6751126785"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1712361600" alt="Download on the App Store" style="border-radius: 13px; width: 200px; height: 66px;"></a>
+
 ## Support
 
 If you find this application useful and would like to support its development, you can do so through the following platforms:
